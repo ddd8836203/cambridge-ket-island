@@ -4,7 +4,9 @@
 --------------------------------------------------------------------------------
 - 建立日期：2026-11-12
 - 最後更新：2026-11-13
-- 當前狀態：Phase 6 完工（iPhone 15 Pro 直向手機模式 393×852、Firebase Realtime Database 跨設備雙向雲端同步、全教材 35 幅高解析插圖與全單元 206 項測試 100% PASS，系統正式就緒！）
+- 當前狀態：Phase 6 完工（iPhone 15 Pro 直向手機模式 393×852、Firebase Realtime Database 跨設備雙向雲端同步、全教材 35 幅高解析插圖與全單元 206 項測試 100% PASS，已自動建庫部署至 GitHub Pages！）
+- 線上網址 (GitHub Pages)：https://ddd8836203.github.io/cambridge-ket-island/
+- GitHub 倉庫：https://github.com/ddd8836203/cambridge-ket-island
 - 適用對象：Rex (國小六年級)、Hugo (國小五年級)、家長/教學人員、維護 AI Agent
 - 目標檢定：2 個月（60 天）內參加劍橋英檢 A2 Key (KET)，奪取 **13 個盾牌以上（Cambridge Scale 135~142+ 分 / Grade B Merit ~ Grade A Distinction，整體答對率 ≥ 82%）**
 - 下一步待辦 (Next Actions)：

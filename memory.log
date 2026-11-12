@@ -4,7 +4,9 @@
 --------------------------------------------------------------------------------
 - 建立日期：2026-11-12
 - 最後更新：2026-11-13
-- 當前狀態：Phase 6 完工（iPhone 15 Pro 模式、Firebase 跨設備雙向雲端同步、全系統 35 幅資產與 206 項測試全檢通過，系統正式就緒！）
+- 當前狀態：Phase 6 完工（iPhone 15 Pro 模式、Firebase 跨設備雙向雲端同步、全系統 35 幅資產與 206 項測試全檢通過，已部署上線 GitHub Pages！）
+- 線上網址 (GitHub Pages)：https://ddd8836203.github.io/cambridge-ket-island/
+- GitHub 倉庫：https://github.com/ddd8836203/cambridge-ket-island
 - 適用對象：AI Agent 跨視窗無縫交接、專案進度追蹤
 - 下一步待辦 (Next Actions)：
   1. Rex 與 Hugo 開始使用兩台 iPad 進行每日 20 分鐘單元闖關與 5 色錯題消滅特訓。

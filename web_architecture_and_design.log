@@ -5,6 +5,8 @@
 - 建立日期：2026-11-12
 - 最後更新：2026-11-13
 - 當前狀態：Phase 6 完工（iPhone 15 Pro 手機直向模式 393×852、Firebase RTDB 跨設備雙向同步 /ket_prep_v1_users/、35 幅資產 100% 關聯與 E2E 全檢全數通過，累計 206 項測試 100% PASS）
+- 線上網址 (GitHub Pages)：https://ddd8836203.github.io/cambridge-ket-island/
+- GitHub 倉庫：https://github.com/ddd8836203/cambridge-ket-island
 - 適用對象：Rex (6年級)、Hugo (5年級)、維護 AI Agent、英語教學人員
 - 目標設備：
   1. iPad 第 8 代 10.2" (`2160×1620` ➔ CSS `1080×810` @2x)
