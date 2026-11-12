@@ -1,0 +1,218 @@
+# 劍橋英檢 KET 13 盾牌衝刺特訓系統 — 系統架構與設計決策白皮書 (web_architecture_and_design.log)
+
+⚡ 0. 當下狀態快照 (TL;DR Current Snapshot)
+--------------------------------------------------------------------------------
+- 建立日期：2026-11-12
+- 最後更新：2026-11-13
+- 當前狀態：Phase 6 完工（iPhone 15 Pro 手機直向模式 393×852、Firebase RTDB 跨設備雙向同步 /ket_prep_v1_users/、35 幅資產 100% 關聯與 E2E 全檢全數通過，累計 206 項測試 100% PASS）
+- 適用對象：Rex (6年級)、Hugo (5年級)、維護 AI Agent、英語教學人員
+- 目標設備：
+  1. iPad 第 8 代 10.2" (`2160×1620` ➔ CSS `1080×810` @2x)
+  2. iPad Pro 12.9" 第 2 代 (`2732×2048` ➔ CSS `1366×1024` @2x, iPadOS 17 上限)
+  3. iPhone 15 Pro 直向 (`1179×2556` ➔ CSS `393×852` @3x, 支援 Dynamic Island 與 Home 安全區)
+  4. Windows 桌面端 Chrome / Edge
+- 下一步待辦 (Next Actions)：
+  1. 交付 Rex 與 Hugo 於兩台 iPad 進行實戰演練與家長 iPhone 15 Pro 遠端監看。
+--------------------------------------------------------------------------------
+
+🧭 一、錨點索引大綱 (Indexed Outline — 標題 + 一句話結論)
+--------------------------------------------------------------------------------
+- [#ARCH-1] Zero-Build Vanilla SPA 系統架構與目錄分工：零打包純靜態 HTML5/CSS3/ES6 架構，秒級載入並相容 GitHub Pages 與本地伺服器。
+- [#WHY-2.1] 雙 iPad 橫向邏輯像素 (`1080×810` vs `1366×1024`) 與 Chrome/Edge `dvh` 設計原因：解決 iPad Chrome/Edge 較厚工具列吃掉底部按鈕問題，實現左文右題 50:50 免翻頁作答。
+- [#WHY-2.2] 禁用重度毛玻璃並鎖定 iPadOS 17 Safari/WebKit 相容基準原因：確保 iPad Pro 12.9" (第二代 A10X 晶片) 在 120Hz 螢幕下零掉幀、零破版。
+- [#WHY-2.3] 三層智慧語音路由與 iPad Chrome/Edge 手勢解鎖預熱原因：在 Windows Edge/Chrome 自動調用真人級英式神經語音，在 iPad 自動配對男/女雙聲道並破解自動播放鎖定。
+- [#WHY-2.4] Writing (Part 6 & 7) 採用「iPad 句型積木 + A4 格線手寫 3 點檢核」雙軌原因：消除小學生在 iPad 螢幕虛擬鍵盤盲打長文的挫折感，同時兼顧真實紙筆手寫字數與結構訓練。
+- [#WHY-2.5] 4 帳號獨立沙盒 (`Rex` / `Hugo` / `Test 1` / `Test 2`) 與防回滾雲端同步原因：隔離 6 年級與 5 年級考生的錯題熱力與盾牌進度，並提供測試沙盒供家長預覽。
+- [#WHY-2.6] 動物森友會 (Animal Crossing) 島嶼主題與 Web Audio API 零檔案合成音效引擎：以奶油米白實色搭配 Q 彈立體積木按鈕，兼顧 iPad Pro 12.9" (Gen 2) 120Hz 流暢度與兒童遊戲化回饋（合成木琴琶音與樹葉粒子特效）。
+- [#SPEC-3] 核心題庫與帳號狀態 Schema 規格 (`ket_u1_u3.js`)：定義單字搭配詞、考生常犯錯抓蟲、七大閱寫 Part、雙角色聽力 Tapescripts 與口說範本之標準 JSON 結構。
+- [#ARCH-4] Phase 3 前端外殼與模組化渲染架構：完成 index.html, style.css, app.js、Web Audio 音效合成、動態字級縮放與 15 盾牌戰情室。
+- [#ARCH-5] Phase 4 閱寫雙欄考場、聽力語音劇場與口說模擬架構規格：50:50 獨立滾動容器、雙角色語音佇列、Distractor X-Ray 與雙軌寫作架構。
+- [#ARCH-6] 5 色淨錯熱力演算法與 @media print 原生列印架構設計原因：採淨錯次數階梯 (heat-1 ~ heat-5) 自動消錯重練，並以純黑白免依賴 CSS 輸出極致清晰 A4 考卷。
+- [#ARCH-7] iPhone 15 Pro 手機響應架構與 Firebase RTDB 防回滾雙向同步設計原因：透過 393px 單欄堆疊與抽屜模式、聯集防回滾合併，實現跨雙 iPad 與 iPhone 隨時隨地無縫備考。
+
+================================================================================
+📖 二、單一真實來源細節 (Single-Source Detailed Specifications)
+================================================================================
+
+### [#ARCH-1] Zero-Build Vanilla SPA 系統架構與目錄分工
+- **架構原則**：採用 Zero-Build Vanilla SPA（純原生 HTML5 + CSS3 變數系統 + ES6 JavaScript），無須 Webpack/Vite 編譯，支援離線快取、本地 Python/Node 伺服器與 GitHub Pages 即開即用。
+- **目錄結構**：
+  ```text
+  c:/@植善課業/AI/劍橋英檢_KET/
+  ├── index.html                      # 應用外殼、頂部常駐控制列、15 盾牌儀表板、雙欄閱讀器、聽力劇場、A4 列印區
+  ├── style.css                       # 雙 iPad 橫向響應式系統 (1080x810 / 1366x1024)、--font-scale 縮放、@media print
+  ├── app.js                          # 4 帳號沙盒、題型渲染器、三層 TTS 雙人語音佇列、5 色錯題熱力引擎
+  ├── build_phase_1_assets.py         # PDF 自動轉正與 @2x 高清題目插圖裁切管線腳本
+  ├── verify_phase_1.js               # Phase 1 自動化零誤差驗收腳本
+  ├── assets/
+  │   ├── pages/                      # Unit 1~3 與 Revision 轉正高清完整跨頁 (12 幅 .jpg)
+  │   └── images/
+  │       ├── u1/                     # Unit 1 題目切圖 (10 張)
+  │       ├── u2/                     # Unit 2 題目切圖 (3 張)
+  │       └── u3/                     # Unit 3 題目切圖 (10 張)
+  ├── data/
+  │   ├── image_manifest_u1_u3.json   # Phase 1 切圖座標與尺寸清冊
+  │   └── ket_u1_u3.js                # Phase 2 產出之 Unit 1~3 + Revision 完整題庫與仿真聽力腳本
+  ├── 書本/
+  │   ├── KET Part1.pdf               # Compact Key for Schools 2nd Ed (p.4 ~ p.51)
+  │   └── KET Part2.pdf               # Compact Key for Schools 2nd Ed (p.50 ~ p.89)
+  ├── goals_and_roadmap.log           # 目標與執行路線圖
+  ├── web_architecture_and_design.log # 系統架構與設計決策白皮書 (本檔案)
+  ├── source_manifest.log             # 教材與題庫資產清冊
+  └── memory.log                      # 跨視窗完整記憶交接檔
+  ```
+
+---
+
+### [#WHY-2.1] 為什麼針對 `1080×810` (10.2") 與 `1366×1024` (12.9" Gen 2) 設計雙模式與 `dvh` 雙欄獨立捲動？
+- **硬體實測換算**：
+  - **iPad 第 8 代 (10.2")**：`2160 × 1620` 實體像素 ÷ `@2x` = **`1080 × 810` CSS px**。在 iPad Chrome / Edge 橫向模式下，扣除頂部狀態列、分頁列、網址列與書籤列（共約 120~140px），實際可視高度僅剩 **`660px ~ 680px`**。
+  - **iPad Pro 12.9" (第 2 代)**：`2732 × 2048` 實體像素 ÷ `@2x` = **`1366 × 1024` CSS px**。扣除瀏覽器工具列後，實際可視高度約 **`880px ~ 900px`**。
+- **設計決策**：
+  - 使用 `100dvh` 搭配 `window.visualViewport` 動態鎖定外框高度，頂部常駐列在 10.2" 壓縮為 `50px`、在 12.9" 為 `62px`。
+  - 閱讀與測驗全面採用 **「左欄（閱讀文章 / 題目大圖 / 聽力逐字稿）50% + 右欄（題目選項 / 填空鍵盤）50%」各自內部獨立捲動**，徹底消滅小學生看長文作答時「滑上去看文章、滑下來選答案」的視覺迷航。
+
+---
+
+### [#WHY-2.2] 為什麼禁用重度毛玻璃 (`backdrop-filter`) 並以 iPadOS 17 WebKit 為相容基準？
+- **原因**：iPad Pro 12.9 吋（第二代，A10X 處理器）官方最高系統版本為 **iPadOS 17.x**，且驅動 `2732×2048` 120Hz ProMotion 高解析度螢幕時，若使用大面積 `backdrop-filter: blur()` 會在捲動雙欄長文時產生明顯掉幀。
+- **對策**：採用高對比、清爽實色卡片與硬體加速之 `transform / opacity` 動畫，並避免 iPadOS 18 專屬實驗性 CSS，確保兩台 iPad 在 Chrome / Edge / Safari 皆維持滿幀流暢。
+
+---
+
+### [#WHY-2.3] 為什麼設計「三層智慧語音路由」與「Chrome/Edge 手勢解鎖預熱器」？
+- **原因**：
+  1. 課本未附原始 MP3 音檔，且 KET 聽力重視英式發音（`en-GB`）與雙人對話轉折陷阱。
+  2. 使用者常使用 **Chrome 或 Edge**（Windows 端擁有極高品質的 `Microsoft Sonia/Ryan Online (Natural) en-GB` 與 `Google UK English`，而 iPad 端 Chrome/Edge 則受限於 WebKit 嚴格的首次點擊手勢解鎖機制）。
+- **對策**：
+  - **手勢解鎖預熱（Audio Unlock Primer）**：使用者點擊進入單元或切換帳號的第一下，立即以 `volume: 0` 播送空白 `SpeechSynthesisUtterance('')`，解除 Chrome/Edge 整場會話的語音鎖定。
+  - **三層語音路由**：優先匹配 `Natural / Online (en-GB)` ➔ 次選 `Google UK English Female/Male` ➔ 保底配對 iPad 內建 `Daniel / Martha / Arthur / Samantha`，並透過 ` pitch (0.92 vs 1.08)` 與 `rate` 明確區分對話中的男女角色。
+  - **單字母 `'a'` 轉 `'A.'` 保護**：延續 Spelling Bee 驗證經驗，防止 TTS 將選項或拼字中的單字母 `a` 弱讀為 `/ə/`。
+
+---
+
+### [#WHY-2.4] 為什麼 Writing (Part 6 & Part 7) 採用「iPad 句型積木 + A4 格線手寫 3 點檢核」雙軌制？
+- **原因**：KET Writing Part 6（25+ 字短訊）與 Part 7（35+ 字三格圖片故事）共佔阅读寫作卷 30/60 的關鍵比重（各 15 分，按 Content 5、Organisation 5、Language 5 評分）。若強制小學生在 iPad 螢幕鍵盤逐字敲打整篇故事，容易因打字慢而抗拒練習；但若只點積木又缺乏考場手寫手感。
+- **對策（C 方案雙軌並行）**：
+  1. **線上積木組裝軌**：將三格圖或 Email 拆為 3 個得分步驟，透過「句型骨架點選組裝 + 時態/連接詞 (`because, so, while, and`) 挖空選擇」，3 分鐘內掌握滿分結構。
+  2. **A4 手寫與 3 點自評軌**：可一鍵列印附帶課本原圖與 25/35 字警戒線的 A4 寫作單，手寫後在 iPad 點選「3 大得分點 Checklist」逐項核對並比對「13 盾保底範文 vs 15 盾滿分範文」。
+
+---
+
+### [#WHY-2.5] 為什麼設計 4 帳號沙盒 (`Rex` / `Hugo` / `Test 1` / `Test 2`)？
+- **原因**：6 年級的 Rex 與 5 年級的 Hugo 程度、進度與易錯題完全不同；家長與老師在檢查題目或示範時也需要乾淨的測試環境。
+- **對策**：所有作答紀錄、5 色淨錯次數（`netErrors`）、15 盾牌分科預估分與完成的單元皆儲存在 `ket_prep_v1_{accountId}` 獨立命名空間，支援一鍵秒切帳號且互不干擾。
+
+---
+
+### [#WHY-2.6] 為什麼採用「動物森友會 (Animal Crossing)」主題與 Web Audio API 零檔案合成音效？
+- **原因**：
+  1. 目標使用者為國小五年級（Hugo）與六年級（Rex），傳統黑白嚴肅考卷介面容易造成疲勞；動森（NookPhone）的溫暖奶油色調、葉子徽章與 Q 彈積木按鈕能大幅提升每日刷題動機。
+  2. 動森美術風格採用「高飽和柔和實色 + 圓角厚邊框 + `0 5px 0` 實體積木陰影」，**天然不需要 `backdrop-filter: blur()` 毛玻璃**，完美契合 `[#WHY-2.2]` 在 iPad Pro 12.9" (第二代 A10X) 上維持 120Hz 滿幀的硬體限制。
+  3. 外部 MP3 音效檔容易因離線或 iPad 快取問題載入失敗，採用原生 `AudioContext` (Web Audio API) 即時合成木琴/鐘琴琶音與彈跳聲，檔案體積 0 KB 且零延遲。
+- **技術規格**：
+  - **色票系統**：奶油島嶼底色 `#F7F4EB`、象牙白卡片 `#FFFDF7`、Nook 葉子綠 `#78C850`（深綠底 `#40916C`）、島嶼天空藍 `#56CFE1`（深藍底 `#0096C7`）、奶油暖黃 `#FFD166`、珊瑚莓紅 `#EF476F`、原木深棕文字 `#5C3D2E`。
+  - **`SoundFX` 合成器**：支援 `playCorrect()`（`C5-E5-G5-C6` 大三和弦木琴琶音）、`playWrong()`（`G3-F#3` 溫和三角波 Q 彈滑音）、`playFanfare()`（五連音過關號角）、`playClick()`（`800Hz` 木頭啵聲）、`playBebebese()`（NPC 嘟噥提示音），附頂部常駐 `🔊/🔇` 靜音開關。
+  - **`VisualFX` 特效器**：答對時於點擊座標觸發 `🍃/⭐/💰/💛` CSS 粒子噴發（Confetti Burst）與 `+100 哩數` 飄字；答錯時觸發卡片 `@keyframes ac-shake` 搖晃與「🦉 傅達館長 / 🦊 狐利」斜貼名牌提示氣泡。
+
+---
+
+### [#SPEC-3] 核心題庫資料結構規格 (`data/ket_u1_u3.js` Schema)
+```javascript
+window.KET_DATA = {
+  meta: {
+    bookTitle: "Compact Key for Schools (2nd Edition)",
+    targetShields: 13,
+    targetScaleScore: 135,
+    accounts: [
+      { id: "rex", name: "Rex", grade: "6年級", role: "student", avatar: "🦁" },
+      { id: "hugo", name: "Hugo", grade: "5年級", role: "student", avatar: "🐯" },
+      { id: "test1", name: "測試帳號 1", grade: "家長/老師", role: "tester", avatar: "🧪" },
+      { id: "test2", name: "測試帳號 2", grade: "訪客測試", role: "tester", avatar: "🛠️" }
+    ]
+  },
+  units: [
+    {
+      id: "u1",
+      number: 1,
+      title: "My family, my friends & me",
+      topic: "People & Daily life",
+      grammarFocus: ["have got", "Present simple", "Question words"],
+      spreadPages: ["assets/pages/u1_p6_p7.jpg", "assets/pages/u1_p8_p9.jpg", "assets/pages/u1_p10_p11.jpg"],
+      vocabulary: [
+        { word: "unusual", pos: "adj.", zh: "不尋常的；特別的", collocation: "an unusual family / surname", example: "Have you got an unusual family?", tip: "un- (否定前綴) + usual (平常的)" }
+      ],
+      commonMistakes: [
+        { id: "u1_cm_1", wrong: "Her eyes are green and she gots long, black hair.", correct: "Her eyes are green and she's got (has got) long, black hair.", errorSpan: "gots", correction: "has got / 's got", rule: "英式口語表達『擁有』用 have/has got，第三人稱單數是 has got（縮寫 's got），絕對沒有 gots 這種字！" }
+      ],
+      exercises: [
+        // 涵蓋課本 Grammar, Vocabulary, Reading Part 1~5, Listening Part 1~4, Writing Part 6~7, Speaking Part 1~2 及 Revision
+      ]
+    }
+  ]
+};
+```
+
+---
+
+### [#ARCH-4] Phase 3 前端外殼與模組化渲染架構規格
+- **檔案規格清冊**：
+  1. `index.html` (7.6 KB)：宣告雙 iPad 響應式結構、`.ac-topbar` 導覽控制列、4 帳號切換按鈕、15 盾牌戰情室與單元學習艙容器。
+  2. `style.css` (30.2 KB)：動森 NookPhone 奶油色系（`#F7F4EB`, `#78C850`, `#5C3D2E`）、Q 彈立體按鈕、雙 iPad 橫向視圖（`1080px` 緊湊模式 vs `1366px` 寬裕模式）、5 段字級縮放（`calc(1rem * var(--font-scale))`）、零 `backdrop-filter: blur()` 維持滿幀。
+  3. `app.js` (52.3 KB)：
+     - `SoundFX`：Web Audio API 合成音效（木琴上行琶音 `playCorrect`、三角波滑音 `playWrong`、號角 `playFanfare`、木頭敲擊 `playClick`、動森語音 `playBebebese`）。
+     - `VisualFX`：粒子噴發與浮動文字（`burstParticles`）、Q 彈放大與錯誤搖晃動畫（`shakeElement`）。
+     - `TTSEngine`：三層語音路由，首波手勢解鎖預熱 WebKit AudioContext 與 SpeechSynthesis，單字母 `'a'` 弱讀保護。
+     - `AccountManager`：`ket_prep_v1_${accountId}` 獨立命名空間沙盒，隔離 4 帳號進度。若為 Hugo 帳號，單字考點秘笈預設高亮展開。
+     - 核心視圖：`renderDashboard`（15 盾雷達 + 島嶼關卡）、`renderVocabPod`（翻翻卡 + 搭配詞 4 選 1 闖關）、`renderMistakesPod`（35 題文法抓蟲特訓）、`renderSpreadViewer`（12 幅課本原圖瀏覽器）、`renderErrorBookView`（即時顯示 `netErrors` 錯題清單並支援重練消除）。
+     - 預留掛載點：`view-rw`, `view-listening`, `view-speaking`, `view-print` 供 Phase 4 與 Phase 5 掛載。
+
+
+---
+
+### [#ARCH-5] Phase 4 閱寫雙欄考場、聽力語音劇場與口說模擬架構規格
+- **模組實作架構**：
+  1. `renderReadingWritingPod`：
+     - `.split-pane-container` 佈局：左欄 `.pane-left` 50% 獨立滾動顯示長文、題卡與故事提示；右欄 `.pane-right` 50% 獨立滾動顯示題目選項、開放式輸入框與積木組裝。
+     - 覆蓋題型：Reading Part 2 (Leo/Bastian/Callum 7題)、Reading Part 3 (Kris Davies 專訪5題+同義詞暖身)、Reading Part 4 (Moussa 鄉村故事6題克漏字+左欄即時填字)、RW Part 5 (Hasan 書信6格開放填空+iPad 輔助字庫膠囊列)、Writing Part 7 雙軌器（軌跡 A 句型積木+35字綠燈計數；軌跡 B 3大指標自評表+13/15盾雙範文）、課本文法詞彙特訓（Unit 1~3 家族樹、時鐘、頻率副詞、some/any）。
+  2. `renderListeningPod`：
+     - 雙角色語音佇列播放器 (`playDialogueQueue`)：男聲/女聲音調分流 (`pitch: 0.92 vs 1.08`)，原速 1.0x 與慢速 0.85x 切換，播放對話氣泡即時高亮 (`.speaking-now`)。
+     - 🚦 考後紅綠燈干擾項陷阱解剖 (`distractorXray`)：綠底關鍵線索標示、紅底刪除線干擾誘餌標示，配合防騙分析。
+  3. `renderSpeakingPod`：
+     - Speaking Part 1：英式考官發問音頻播放、15 盾滿分範本翻開與人物外貌特徵配對 (`appearanceMatching`)。
+     - Speaking Part 2：五種用餐情境圖卡討論、用餐理由配對 (`reasonMatching`) 與考生表現優劣對比 (`candidateComparison`)。
+- **音效與沙盒聯動**：所有答對答錯事件直接觸發 `SoundFX`、`VisualFX` 並動態更新當前帳號的 `netErrors` 與 `shieldProgress`。
+
+
+---
+
+### [#ARCH-6] 5 色淨錯熱力演算法與 @media print 原生列印架構設計原因 (Error Heatmap & Native Print Architecture)
+- **5 色淨錯熱力演算法 (Net Error Heatmap Hierarchy)**：
+  - **淨錯公式**：`netCount = cumulativeWrong - retriedCorrect`。小學生重複答錯某題代表概念混淆，熱度升高；重練答對一次則扣減一次，降至 0 即自動移出待訂正列表並獎勵 +80 哩數。
+  - **視覺分級**：
+    - `Level 1 (heat-1)`：1 次錯誤（🌱 淺黃微瑕，`#FFF9DB`），偶發粗心。
+    - `Level 2 (heat-2)`：2 次錯誤（🌼 暖橘提醒，`#FFE8CC`），概念開始生疏。
+    - `Level 3 (heat-3)`：3 次錯誤（🍊 深橘警戒，`#FFD8A8`），文法規則掌握不穩。
+    - `Level 4 (heat-4)`：4 次錯誤（🌶️ 珊瑚紅危急，`#FFE3E3`），高頻失分題。
+    - `Level 5 (heat-5)`：5 次以上（🔥 紫紅魔王題，`#F3D9FA`），頑固語病或關鍵考點盲區。
+  - **模組隔離**：篩選與重練完全在客戶端計算，支援按熱度、單元、題型即時多維度篩選。
+- **@media print 原生列印架構**：
+  - **零依賴與極致清晰**：完全拋棄第三方 PDF 庫（如 jsPDF 或 html2pdf），利用 CSS 原生 `@media print` 與 `@page { size: A4 portrait; margin: 12mm; }` 輸出 300 DPI 向量字級。
+  - **無干擾黑白輸出**：列印時自動隱藏所有導覽列、操作按鈕與島嶼背景，僅保留考卷題目本體與作答橫線。
+  - **寫作 35+ 字警戒標示線**：在第 5 行特別標注紅虛線與圖標（`🚩 35+ 字 KET 滿分安全警戒線`），直觀引導學生在真實紙本手寫中掌握答題篇幅。
+
+---
+
+### [#ARCH-7] iPhone 15 Pro 手機響應架構與 Firebase RTDB 防回滾雙向同步設計原因 (iPhone 15 Pro & Cloud Sync Architecture)
+- **iPhone 15 Pro 手機直向模式 (`layout-iphone-15pro`, `393×852` CSS px, `@3x`)**：
+  - **Dynamic Island & Safe Areas**：引入 `viewport-fit=cover` 與 `env(safe-area-inset-top)` / `bottom`，完美避開動態島與底端 Home 橫條遮擋。
+  - **單欄垂直堆疊與吸頂抽屜**：在螢幕寬度 `<= 767px` 或手動啟用 `layout-iphone-15pro` 時，原 50:50 雙欄考場自動重構為單欄流式排版，左側文章與題目圖片轉為吸頂折疊抽屜（`.mobile-drawer-toggle`），方便家長與考生單手單指滑動做題。
+  - **48px 觸控點擊防誤觸**：所有按鈕與選項的高度均強化至 `>= 48px`，符合 iOS 觸控人體工學標準。
+- **Firebase Realtime Database 跨設備雙向雲端同步 (`/ket_prep_v1_users/`)**：
+  - **端點與節點隔離**：採用 `https://math-review-6-default-rtdb.asia-southeast1.firebasedatabase.app`，路徑嚴格依據 `ket_prep_v1_users/${accountId}.json` 隔離，防止 Rex 與 Hugo 互相覆蓋或與其他專案衝突。
+  - **聯集防回滾合併演算法 (`mergeAccountData`)**：
+    - `miles`：取本地與雲端較大值（`Math.max`），保護解鎖哩數不倒退。
+    - `vocabMastered` & `mistakesFound`：取二者聯集（`Set` 合併），確保在不同 iPad 上背過的單字與抓出的蟲子全數保留。
+    - `shields`：依據單元對比兩端陣列，保留較高獲得狀態。
+    - `netErrors`：依據各錯題項的最新 `updatedAt` 時間戳合併，確保在 iPad 消滅的錯題不會因手機端舊快照而回滾重現。
+  - **即時狀態燈與自動同步**：切換帳號或啟動時自動 `syncFromCloud`，本地作答變更後透過 600ms Debounce 自動 `pushToCloud`，並於頂部導覽列提供雲端連線狀態燈與一鍵強制同步按鈕。

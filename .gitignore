@@ -1,0 +1,5 @@
+# Raw scanned PDFs exceed GitHub's 100MB file size limit (web app uses assets/pages/ and assets/images/)
+書本/*.pdf
+temp/
+.DS_Store
+Thumbs.db

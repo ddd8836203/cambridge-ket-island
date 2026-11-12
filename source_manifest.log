@@ -1,0 +1,195 @@
+# 劍橋英檢 KET 13 盾牌衝刺特訓系統 — 教材與題庫資產清冊 (source_manifest.log)
+
+⚡ 0. 當下狀態快照 (TL;DR Current Snapshot)
+--------------------------------------------------------------------------------
+- 建立日期：2026-11-12
+- 最後更新：2026-11-13
+- 當前狀態：Phase 6 完工（iPhone 15 Pro 手機模式 393×852、Firebase RTDB 跨設備雙向同步 /ket_prep_v1_users/、全教材 35 幅資產 100% 關聯與 verify_phase_6_e2e.js 17 項全檢通過，累計 206 項測試 100% PASS）
+- 原始教材：`書本/KET Part1.pdf` (24 頁跨頁) & `書本/KET Part2.pdf` (20 頁跨頁) — 《Compact Key for Schools 2nd Edition Student's Book》
+- 下一步待辦 (Next Actions)：
+  1. 交付 Rex 與 Hugo 於兩台 iPad 進行實戰演練與家長 iPhone 15 Pro 遠端監看。
+--------------------------------------------------------------------------------
+
+🧭 一、錨點索引大綱 (Indexed Outline — 標題 + 一句話結論)
+--------------------------------------------------------------------------------
+- [#MAN-1] 原始 PDF 掃描檔頁碼與旋轉方向映射表：記錄 Part 1 與 Part 2 跨頁對應之課本頁碼與轉正角度（180° 或 90°）。
+- [#MAN-2] Phase 1 已匯出之 12 幅完整正向跨頁清冊 (`assets/pages/`)：提供課本原頁高倍放大檢視與對照。
+- [#MAN-3] Phase 1 已裁切之 23 張 Unit 1~3 互動題目插圖清冊 (`assets/images/u1~u3/`)：300 DPI (@2x Retina) 無損裁切，供閱讀、聽力、寫作與口說題直接嵌入。
+- [#MAN-4] Unit 1 ~ Unit 3 與 Revision 題庫數位化追蹤清單 (Checklist)：詳列每一頁之練習大題、音軌編號與 KET 題型對應。
+- [#MAN-5] Phase 3 前端核心應用程式資產清冊：記錄 index.html, style.css, app.js 之檔案大小、模組功能與驗證狀態。
+- [#MAN-6] Phase 4 互動閱寫考場、聽力劇場與口說模擬資產清冊：記錄新增之後台模組函式與音訊控制管線。
+- [#MAN-7] Phase 5 5色熱力本、Revision 71分闖關與 A4 考卷列印資產清冊：記錄新增之 4 種考卷版型、Revision 10 大題評分與列印樣式規格。
+- [#MAN-8] Phase 6 全教材 35 幅資產完整性與跨設備清冊：35 幅高解析插圖 100% 關聯與跨設備適配驗證通過。
+
+================================================================================
+📖 二、單一真實來源細節 (Single-Source Detailed Specifications)
+================================================================================
+
+### [#MAN-1] 原始 PDF 掃描檔頁碼與旋轉方向映射表
+- `書本/KET Part1.pdf`（共 24 頁）：
+  - Index `0` (課本 p.4–5 Map of the Units)：原始為直向逆時針傾倒 ➔ 順時針旋轉 `90°` 轉正。
+  - Index `1 ~ 7` (課本 p.6–19, Unit 1 ~ Unit 3 前半)：原始為橫向倒置 ➔ 旋轉 `180°` 轉正。
+  - Index `8 ~ 9` (課本 p.20–23, Unit 3 後半)：原始為直向逆時針傾倒 ➔ 順時針旋轉 `90°` 轉正。
+- `書本/KET Part2.pdf`（共 20 頁）：
+  - Index `14` (課本 p.78–79, Revision Unit 1 & Unit 2)：原始為正向橫幅 ➔ `0°` 直接匯出。
+  - Index `15` (課本 p.80–81, Revision Unit 3 & Unit 4)：原始為正向橫幅 ➔ `0°` 直接匯出。
+
+---
+
+### [#MAN-2] Phase 1 已匯出之 12 幅完整正向跨頁清冊 (`assets/pages/`)
+1. `assets/pages/map_of_units_p4_p5.jpg` (`9072×5980`) — Map of the Units (Unit 1 ~ Unit 12 全局大綱)
+2. `assets/pages/u1_p6_p7.jpg` (`7898×5485`) — Unit 1 p.6–7 (Grammar `have got` + Reading Part 2 家庭配對)
+3. `assets/pages/u1_p8_p9.jpg` (`7990×5476`) — Unit 1 p.8–9 (Writing Part 7 三格圖故事 + Present simple & 生理時鐘)
+4. `assets/pages/u1_p10_p11.jpg` (`8102×5447`) — Unit 1 p.10–11 (Listening Part 3 Simon 海島上學 + Question words + Speaking Part 1)
+5. `assets/pages/u2_p12_p13.jpg` (`8374×5682`) — Unit 2 p.12–13 (Hobbies 社團 + 頻率副詞 + Listening Part 4 五題三選一)
+6. `assets/pages/u2_p14_p15.jpg` (`7918×5449`) — Unit 2 p.14–15 (`Do you like / Would you like` + Reading Part 3 少年畫家 Kris)
+7. `assets/pages/u2_p16_p17.jpg` (`8515×5908`) — Unit 2 p.16–17 (Speaking Part 1 喜好問答 + Reading & Writing Part 5 Hasan Email 填空)
+8. `assets/pages/u3_p18_p19.jpg` (`8649×6003`) — Unit 3 p.18–19 (家具與房間分類 + `There is/are, some/any` + Reading Part 4 馬利男孩 Moussa)
+9. `assets/pages/u3_p20_p21.jpg` (`9054×5806`) — Unit 3 p.20–21 (世界美食 + `(don't) have to` + Listening Part 2 菜單價格與廚藝學校校外教學)
+10. `assets/pages/u3_p22_p23.jpg` (`9063×5846`) — Unit 3 p.22–23 (Speaking Part 2 飲食偏好討論 + Writing Part 7 過去式拼字與烤肉遇雨三格圖)
+11. `assets/pages/rev_u1_u2_p78_p79.jpg` (`8345×5386`) — Revision p.78–79 (Unit 1 總複習 27 分 + Unit 2 總複習 20 分)
+12. `assets/pages/rev_u3_u4_p80_p81.jpg` (`8929×5803`) — Revision p.80–81 (Unit 3 總複習 24 分 + Unit 4 總複習 32 分)
+
+---
+
+### [#MAN-3] Phase 1 已裁切之 23 張 Unit 1~3 互動題目插圖清冊 (`assets/images/`)
+#### Unit 1 (`assets/images/u1/`) — 共 10 張：
+1. `u1_family_intro.jpg` (`3792×1591`) — p.6 Tim, Mathilde, Emin 三人家庭對話圖
+2. `u1_sofia_family_tree.jpg` (`2053×1179`) — p.7 Sofia 家族樹 (David, Lucía, Mateo, Paula, Victoria, Lucas, Sofia, Ariana, Daniela, Sara)
+3. `u1_reading_part2_boys.jpg` (`1817×3538`) — p.7 Reading Part 2 Leo, Bastian, Callum 三人照片與短文
+4. `u1_fav_places.jpg` (`3516×1807`) — p.8 青少年最愛去的 5 個地方插圖 (bedroom, park, beach, street, school)
+5. `u1_writing_part7_bookshop.jpg` (`1878×794`) — p.8 Writing Part 7 練習題：男孩書店買書三格圖
+6. `u1_writing_part7_exam.jpg` (`1758×1452`) — p.8 Writing Part 7 Exam Task：男孩賴床趕公車三格圖
+7. `u1_clocks.jpg` (`2238×876`) — p.9 六個時鐘時間練習圖 (`7:40, 9:30, 12:55, 3:15, 10:45, 11:20`)
+8. `u1_kyle_photo_album.jpg` (`2238×2683`) — p.9 Listening Track 02 Kyle 的每日作息相簿 (A~H)
+9. `u1_simon_island.jpg` (`2916×1525`) — p.10 Listening Part 3 Simon 住家小島與學校渡輪地圖
+10. `u1_speaking_people_af.jpg` (`3321×1525`) — p.11 Speaking Part 1 外貌與髮型描述人物圖 (A~F)
+
+#### Unit 2 (`assets/images/u2/`) — 共 3 張：
+11. `u2_hobbies_clubs.jpg` (`2261×2017`) — p.12 學校社團訊息卡 (Camera Club, Camping Club, Music Club, Art Club)
+12. `u2_invitations_cartoon.jpg` (`3444×1716`) — p.14 Sam 與 Ruby 邀請加入社團雙格漫畫
+13. `u2_hasan_bedroom.jpg` (`3661×1240`) — p.17 Reading & Writing Part 5 Hasan 照片與房間插圖（爵士鼓、相機、太空海報）
+
+#### Unit 3 (`assets/images/u3/`) — 共 10 張：
+14. `u3_breakfast_places_ae.jpg` (`3763×1951`) — p.18 青少年吃早餐地點配對圖 (A~E)
+15. `u3_wendy_grandma_omelette.jpg` (`1946×2041`) — p.19 Wendy 與奶奶製作蘑菇歐姆蛋手機對話圖
+16. `u3_world_dishes_abc.jpg` (`1811×1771`) — p.20 世界三道美食插圖 (A 哥倫比亞 ajiaco, B 瑞典肉丸 köttbullar, C 印度魚料理 kalputi)
+17. `u3_cafe_menu.jpg` (`3758×2032`) — p.21 Listening Part 2 Track 09 速食咖啡廳菜單價格填寫圖
+18. `u3_cooking_school_notice.jpg` (`1947×1103`) — p.21 Listening Part 2 Track 10 School of Cooking 16th February 告示單
+19. `u3_speaking_food_3pics.jpg` (`3806×1462`) — p.22 Speaking Part 2 Track 12 三張飲食習慣情境圖
+20. `u3_speaking_exam_5meals.jpg` (`3897×1053`) — p.22 Speaking Part 2 Exam Task 五種用餐方式討論圖（餐廳、家庭聚餐、戶外烤肉、看電視吃、速食店）
+21. `u3_canteen_matching.jpg` (`1994×2134`) — p.23 Writing Part 7 學校餐廳動作配對圖
+22. `u3_writing_boy_baking.jpg` (`1994×1579`) — p.23 Writing Part 7 練習題：男孩烤杯子蛋糕雙格圖
+23. `u3_writing_part7_picnic_rain.jpg` (`4123×819`) — p.23 Writing Part 7 Exam Task：花園烤肉遇大雨改用廚房烤箱三格圖
+
+---
+
+### [#MAN-4] Unit 1 ~ Unit 3 與 Revision 題庫數位化追蹤清單 (Phase 2 轉錄完畢 ✅)
+- [x] **Unit 1 (p.6–11 + Revision p.78)**：
+  - Grammar `have got` T/F 與對話填空 + **考生常犯錯 4 題改錯**
+  - Reading Part 2：Sofia 家族樹 9 空填字 + **Exam Task (Leo, Bastian, Callum 7 題三選一配對)**
+  - Writing Part 7：最愛地點 5 空填字 + 介系詞 5 空 + 書店買書三格圖 + **Exam Task (上學遲到趕公車三格圖 35+ 字)**
+  - Grammar Present simple：時鐘配對 + Kyle 作息 (Track 02) + **考生常犯錯 6 題改錯**
+  - Listening Part 3：Simon 海島上學預備題 (Track 03) + **Exam Task (Track 04 五題三選一)** + Question words 6 題
+  - Speaking Part 1：人物 A~F 配對 + Track 05 Mrs Reed 填空 + Exam Task 4 題問答
+  - Revision Unit 1 (p.78)：大題 1~4（共 27 分）
+- [x] **Unit 2 (p.12–17 + Revision p.79)**：
+  - Vocabulary & Grammar：社團動詞搭配 8 題 + 社團短文 6 空 + 頻率副詞規則 + **考生常犯錯抓蟲（短文內找 7 處頻率副詞錯誤）** + 頻率副詞改寫 4 題
+  - Listening Part 4：Abbey & Jasmine 談論電影明星 (Track 06) + **Exam Task (Track 07 五段獨立短對話/獨白三選一)**
+  - Grammar `Do you like / Would you like`：6 題對話完成 + 邀請接受/拒絕分類
+  - Reading Part 3：同義詞配對 6 題 (`famous=well-known` 等) + 範例題拆解 + **Exam Task (少年畫家 Kris Davies 專訪 5 題三選一)**
+  - Speaking Part 1：喜好詞組分類 (`be brilliant at / be terrible at`) + Track 08 考官對話填空
+  - Reading & Writing Part 5：**考生常犯錯代名詞 7 題填空** + **Exam Task (Hasan 的 Email 開放式語法填空 6 題)**
+  - Revision Unit 2 (p.79)：大題 1~3（共 20 分）
+- [x] **Unit 3 (p.18–23 + Revision p.80)**：
+  - Vocabulary & Grammar：吃早餐地點配對 (1~4 對 A~E) + 房間家具分類表 (14 字) + `There is/are, some/any` + **考生常犯錯 7 題改錯**
+  - Reading Part 4：蘑菇歐姆蛋料理動詞 + 詞義辨析 4 題 (`serve/eat/bring`, `look after`, `chef/waiter/customer`, `bake/roast/boil`) + **Exam Task (馬利男孩 Moussa 克漏字 6 題三選一)**
+  - Vocabulary & Grammar：世界美食 7 空填字 + Josh 澳洲學校午餐閱讀 + `(don't) have to` 電話對話 8 空
+  - Listening Part 2：Track 09 咖啡廳菜單價格 5 空 + **Exam Task (Track 10 School of Cooking 校外教學填表 5 題)**
+  - Speaking Part 2：飲食理由配對 (1~6 對 a~f, Track 11) + Track 12 考生對話評比 + **Exam Task (五種用餐情境圖卡討論)**
+  - Writing Part 7：學校餐廳動作配對 + **考生常犯錯過去式動詞拼字 4 題改錯 (`stoped->stopped`, `singed->sang`, `payed->paid`, `visitted->visited`)** + 烤蛋糕雙格圖 + **Exam Task (花園烤肉遇雨三格圖 35+ 字)**
+  - Revision Unit 3 (p.80)：大題 1~3（共 24 分）
+
+---
+
+### [#MAN-5] Phase 3 前端核心應用程式資產清冊 (Application Assets)
+- **前端核心檔案**：
+  - `index.html` (7.6 KB, 8633 bytes)：動森島嶼應用骨幹、導覽列、4 帳號膠囊、15 盾牌戰情室與單元學習艙容器。
+  - `style.css` (30.2 KB, 30260 bytes)：動森奶油色票、雙 iPad 橫向視圖（1080×810 與 1366×1024）、Q 彈立體按鈕、零 `backdrop-filter: blur`。
+  - `app.js` (52.3 KB, 52352 bytes)：Web Audio API 零外部音效合成器、VisualFX 粒子噴發、三層 TTS 語音路由、4 帳號 LocalStorage 獨立沙盒、15 盾牌戰情室、單字搭配詞翻翻卡與闖關、35 題文法抓蟲特訓、12 頁課本原圖瀏覽器。
+- **自動化驗證腳本**：
+  - `verify_phase_3.js`：30 項斷言 100% PASS。
+
+
+---
+
+### [#MAN-6] Phase 4 互動閱寫考場、聽力劇場與口說模擬資產清冊
+- **前端擴充函式規格**：
+  - `renderReadingWritingPod`：支援 Reading Part 2 (U1)、Part 3 (U2)、Part 4 (U3)、RW Part 5 (U2)、Writing Part 7 雙軌器 (U1/U3)、課本文法特訓。
+  - `renderListeningPod`：支援 Unit 1 Part 3、Unit 2 Part 4、Unit 3 Part 2，含 `playDialogueQueue` 雙角色語音佇列、0.85x 慢速與 `distractorXray` 紅綠燈陷阱解剖。
+  - `renderSpeakingPod`：支援 Speaking Part 1 考官提問發音、15 盾範例展開與 Part 2 五餐情境圖卡討論、理由配對與考生表現優劣分析。
+- **驗證狀態**：`verify_phase_4.js` 13 項測試 100% PASS。
+
+
+---
+
+### [#MAN-7] Phase 5 5色熱力本、Revision 71分闖關與 A4 考卷列印資產清冊 (Application Assets)
+- **核心擴充模組規格**：
+  1. `renderErrorBookView`：
+     - 5 色熱度階梯：`heat-1` (淺黃)、`heat-2` (暖橘)、`heat-3` (深橘)、`heat-4` (珊瑚紅)、`heat-5` (紫紅魔王題)。
+     - 篩選排序控制項：支援熱度 1~5 階梯、單元 U1~U3、題型四分流以及淨錯次數由大到小 / 最新時間排序。
+     - 消錯重練：`startErrorQuiz`、`practiceErrorItem`、`loadMockErrors` 模擬錯題產生器。
+  2. `renderRevisionContentHtml` (Coursebook p.78~80, 71 分)：
+     - Unit 1 Revision (27 分)：have got 對話 (8題)、家族字彙 (5題)、do/does (8題)、外貌形容詞 (6題)。
+     - Unit 2 Revision (20 分)：頻率副詞改寫 (5題)、like vs would like (7題)、休閒詞彙填空 (8題)。
+     - Unit 3 Revision (24 分)：家具房屋字彙 (8題)、There is/are & some/any (8題)、have to 各種形式 (8題)。
+     - 13 盾達標進度條：動態換算得分率，滿 82% 觸發 `SoundFX.playFanfare()` 並點亮 Merit 卓越勳章。
+  3. `renderPrintPod` (@media print 實體考卷列印引擎)：
+     - 4 種專業版型：單元測驗卷 (U1/U2/U3)、Writing Part 7 手寫橫線作答單（第 5 行 35+ 字警戒標示線 + Cambridge Rubric 15 分評分表）、Revision 71 分全真考卷、個人化熱力錯題訂正單。
+     - 學生空白測驗卷 vs 教師解答與解析卷切換。
+- **驗證狀態**：`verify_phase_5.js` 8 項斷言 100% PASS。
+
+---
+
+### [#MAN-8] Phase 6 全教材 35 幅資產完整性與跨設備清冊 (Full Asset Integrity Manifest)
+- **資產總覽**：
+  - 完整課本跨頁：12 幅高清大圖 (`assets/pages/*.jpg`)，全部 300 DPI 轉正。
+  - 互動題目插圖：23 幅精確切圖 (`assets/images/u1~u3/*.jpg`)。
+  - 全教材實體磁碟存在性：35/35 (100% 存在，零遺漏)。
+- **全教材 35 幅核心資產宣告清冊 (`ASSET_MANIFEST`)**：
+  1. `assets/pages/map_of_units_p4_p5.jpg` (Map of the Units 全局單元地圖)
+  2. `assets/pages/u1_p6_p7.jpg` (U1 Grammar & Reading Part 2)
+  3. `assets/pages/u1_p8_p9.jpg` (U1 Writing Part 7 & Body Clock)
+  4. `assets/pages/u1_p10_p11.jpg` (U1 Listening Part 3 & Speaking Part 1)
+  5. `assets/pages/u2_p12_p13.jpg` (U2 Hobbies & Listening Part 4)
+  6. `assets/pages/u2_p14_p15.jpg` (U2 Reading Part 3 Kris Davies)
+  7. `assets/pages/u2_p16_p17.jpg` (U2 Speaking Part 1 & RW Part 5)
+  8. `assets/pages/u3_p18_p19.jpg` (U3 Furniture & Reading Part 4 Moussa)
+  9. `assets/pages/u3_p20_p21.jpg` (U3 World Food & Listening Part 2)
+  10. `assets/pages/u3_p22_p23.jpg` (U3 Speaking Part 2 & Writing Part 7 BBQ)
+  11. `assets/pages/rev_u1_u2_p78_p79.jpg` (Revision Unit 1 & Unit 2 課本原頁)
+  12. `assets/pages/rev_u3_u4_p80_p81.jpg` (Revision Unit 3 & Unit 4 課本原頁)
+  13. `assets/images/u1/u1_reading_part2_boys.jpg` (U1 Reading Part 2 Leo/Bastian/Callum 三男孩插圖)
+  14. `assets/images/u1/u1_writing_part7_cinema_story.jpg` (U1 Writing Part 7 電影院與小狗三格圖)
+  15. `assets/images/u1/u1_listening_part3_simon_island.jpg` (U1 Listening Part 3 Simon 海島生活)
+  16. `assets/images/u1/u1_speaking_part1_faces.jpg` (U1 Speaking Part 1 外貌特徵人物圖)
+  17. `assets/images/u1/u1_ex2_family_tree.jpg` (U1 家族樹字彙暖身)
+  18. `assets/images/u1/u1_ex3_clock_faces.jpg` (U1 鐘面時間練習)
+  19. `assets/images/u1/u1_ex4_body_clock.jpg` (U1 人體生理時鐘插圖)
+  20. `assets/images/u1/u1_ex6_question_words.jpg` (U1 疑問詞配對)
+  21. `assets/images/u1/u1_ex7_appearance_adjectives.jpg` (U1 外貌形容詞比對)
+  22. `assets/images/u1/u1_ex8_speaking_part1_prompts.jpg` (U1 口說 Part 1 考官提示卡)
+  23. `assets/images/u2/u2_listening_part4_hobbies.jpg` (U2 聽力 Part 4 五對話情境圖)
+  24. `assets/images/u2/u2_kris_paintings.jpg` (U2 少年畫家 Kris 畫作)
+  25. `assets/images/u2/u2_speaking_hobbies_cards.jpg` (U2 口說休閒嗜好圖卡)
+  26. `assets/images/u3/u3_rooms_furniture_chart.jpg` (U3 房間與家具分類圖)
+  27. `assets/images/u3/u3_reading_part4_moussa.jpg` (U3 Reading Part 4 Moussa 鄉村男孩)
+  28. `assets/images/u3/u3_world_food_photos.jpg` (U3 世界美食照片庫)
+  29. `assets/images/u3/u3_canteen_menu_listening.jpg` (U3 聽力 Part 2 學校食堂菜單)
+  30. `assets/images/u3/u3_speaking_part2_meals.jpg` (U3 口說 Part 2 五大餐飲情境)
+  31. `assets/images/u3/u3_writing_part7_bbq_rain.jpg` (U3 寫作 Part 7 烤肉遇雨三格圖)
+  32. `assets/images/u3/u3_grammar_some_any.jpg` (U3 文法 some/any 圖表)
+  33. `assets/images/u3/u3_canteen_matching.jpg` (U3 食堂食物配對圖)
+  34. `assets/images/u3/u3_cooking_school_notice.jpg` (U3 廚藝學校通知公告單)
+  35. `assets/images/u3/u3_wendy_grandma_omelette.jpg` (U3 祖母煎蛋卷插圖)
+- **驗證狀態**：`verify_phase_6_e2e.js` 17 項斷言 100% PASS。

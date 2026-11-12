@@ -1,0 +1,147 @@
+# 劍橋英檢 KET 13 盾牌衝刺特訓系統 — 跨視窗完整記憶交接檔 (memory.log)
+
+⚡ 0. 當下狀態快照 (TL;DR Current Snapshot)
+--------------------------------------------------------------------------------
+- 建立日期：2026-11-12
+- 最後更新：2026-11-13
+- 當前狀態：Phase 6 完工（iPhone 15 Pro 模式、Firebase 跨設備雙向雲端同步、全系統 35 幅資產與 206 項測試全檢通過，系統正式就緒！）
+- 適用對象：AI Agent 跨視窗無縫交接、專案進度追蹤
+- 下一步待辦 (Next Actions)：
+  1. Rex 與 Hugo 開始使用兩台 iPad 進行每日 20 分鐘單元闖關與 5 色錯題消滅特訓。
+  2. 後續依排程擴充 Unit 4 ~ Unit 12 題庫。
+--------------------------------------------------------------------------------
+
+🧭 一、錨點索引大綱 (Indexed Outline — 標題 + 一句話結論)
+--------------------------------------------------------------------------------
+- [#MEM-1] 2026-11-12 專案啟動與需求對齊 (Pre-Flight Grill)：確立 2 個月衝刺 KET 13 盾牌目標、Unit 1~3 首發驗證策略、4 帳號沙盒與雙 iPad Chrome/Edge 硬體規格。
+- [#MEM-2] 2026-11-12 Phase 1 教材轉正、23 張 @2x 切圖與 4-Log 初始化完工：完成 `build_phase_1_assets.py`、匯出 12 幅跨頁與 23 張題目切圖並通過 `verify_phase_1.js` 驗收。
+- [#MEM-3] 2026-11-12 Phase 2 Unit 1~3 + Revision 題庫 100% 數位化完工：派發 3 大 Flash 平行子代理，建置 58 核心詞彙、35 題改錯、七大閱寫、雙人聽力腳本（含紅綠燈干擾項）與 Revision 71 分總複習，通過 `verify_phase_2.js` 80 項全檢。
+- [#MEM-4] 2026-11-12 Phase 3 動物森友會主題外殼、4 帳號沙盒、Web Audio 音效與單字/抓蟲學習艙完工：完成 index.html, style.css, app.js 並通過 verify_phase_3.js 30 項斷言。
+- [#MEM-5] 2026-11-13 Phase 4 閱讀寫作雙欄考場、聽力雙人劇場與口說模擬室完工：完成 renderReadingWritingPod, renderListeningPod, renderSpeakingPod 並通過 verify_phase_4.js 13 項斷言。
+- [#MEM-6] 2026-11-13 Phase 5 5色淨錯熱力本、Revision 71分總複習闖關與 @media print A4 列印引擎完工：實作 renderErrorBookView, renderRevisionContentHtml, renderPrintPod 並通過 verify_phase_5.js 8 項全檢。
+- [#MEM-7] 2026-11-13 Phase 6 iPhone 15 Pro 模式、Firebase 跨設備雲端同步與 E2E 總體檢完工：通過 verify_phase_6_e2e.js 17 項斷言與全系統 206 項測試。
+
+================================================================================
+📖 二、單一真實來源細節 (Single-Source Detailed Specifications)
+================================================================================
+
+### [#MEM-1] 2026-11-12 專案啟動與需求對齊 (Pre-Flight Grill)
+- **使用者核心需求**：
+  1. 依據 `C:\@植善課業\AI\劍橋英檢_KET\書本` 內之 `KET Part1.pdf` 與 `KET Part2.pdf`（實測為《Compact Key for Schools 2nd Edition》共 12 Units + Revision p.78~89）製作學習與模擬測驗網頁。
+  2. 目標：2 個月內參加劍橋英檢 KET 獲得 **13 個盾牌以上**（對應 Cambridge Scale 135~142+ 分 / Grade B Merit 以上，答對率需 ≥ 82%）。
+  3. 採穩健推進策略：**先針對 Unit 1 ~ Unit 3（含 Revision Unit 1~3）製作完整功能**，確認沒問題再往下擴充 Unit 4 ~ 12。
+  4. **帳號設計**：支援 6 年級 `Rex`、5 年級同事小孩 `Hugo`、以及 2 個測試帳號（`測試帳號 1`、`測試帳號 2`）獨立切換，避免錯題混淆。
+  5. **硬體與瀏覽器精準規格**：
+     - 設備一：**iPad 第 8 代 (10.2 吋)**，實體解析度 `2160 × 1620` ➔ CSS 橫向邏輯像素 **`1080 × 810`** (`@2x`)。
+     - 設備二：**iPad Pro 12.9 吋 (第 2 代)**，實體解析度 `2732 × 2048` ➔ CSS 橫向邏輯像素 **`1366 × 1024`** (`@2x`，最高支援 iPadOS 17)。
+     - 常用瀏覽器：**Chrome 或 Edge**（需處理 iPad Chrome/Edge 較高工具列之 `100dvh` 高度預算、WebKit 語音自動播放手勢解鎖，並善用 Windows Edge/Chrome 內建之英式神經網路語音）。
+  6. **無音檔解決方案**：手邊無原始 MP3，同意採用 AI 重構課本仿真英式雙人對話腳本（Tapescripts）搭配雙角色語音引擎（1.0x/0.85x 雙速 + 考後紅綠燈陷阱逐字稿）。
+  7. **Writing (Part 6 & 7) 方案**：採用 **C 方案（兩者皆提供）** — 兼具「iPad 句型積木點選組裝練骨架」與「印出 A4 格線紙手寫 + 線上核對 3 大評分點」。
+
+---
+
+### [#MEM-2] 2026-11-12 Phase 1 教材轉正、23 張 @2x 切圖與 4-Log 初始化完工
+- **實作產出**：
+  1. `build_phase_1_assets.py`：自動判斷 `KET Part1.pdf` 與 `KET Part2.pdf` 各頁面的旋轉角度（橫向倒置頁轉 `180°`、直向頁順時針轉 `90°`），以 240 DPI 高清渲染。
+  2. `assets/pages/`：匯出 Map of the Units、Unit 1~3（p.6~23）與 Revision Unit 1~4（p.78~81）共 12 幅完整正向跨頁。
+  3. `assets/images/u1~u3/`：精準裁切 23 張題目專用高清插圖（含 Sofia 家族樹、Leo/Bastian/Callum 短文圖、上學遲到三格圖、Kyle 作息相簿、Simon 海島地圖、Speaking 人物圖、社團卡、Hasan 房間圖、早餐地點圖、蘑菇歐姆蛋對話、世界美食、咖啡廳菜單、廚藝學校告示、五種用餐討論圖、花園烤肉遇雨三格圖等），索引寫入 `data/image_manifest_u1_u3.json`。
+  4. 建立四大核心 Log 檔（`goals_and_roadmap.log`, `web_architecture_and_design.log`, `source_manifest.log`, `memory.log`），100% 符合 `AGENTS.md` 三段式漸進揭露結構。
+  5. 撰寫並執行 `verify_phase_1.js` 驗證全數通過（`exit code 0`）。
+
+---
+
+### [#MEM-3] 2026-11-12 Phase 2 Unit 1~3 + Revision 題庫 100% 數位化完工
+- **執行流程**：
+  1. 派發 3 大 Flash 平行子代理：
+     - 子代理 1 (`592dbf76`)：負責 Unit 1 (p.6~11) + Revision Unit 1 (p.78)，產出 `data/u1_raw.json` (70.6 KB)。
+     - 子代理 2 (`1addab95`)：負責 Unit 2 (p.12~17) + Revision Unit 2 (p.79)，產出 `data/u2_raw.json` (77.3 KB)。
+     - 子代理 3 (`590449e7`)：負責 Unit 3 (p.18~23) + Revision Unit 3 (p.80)，產出 `data/u3_raw.json` (79.8 KB)。
+  2. 撰寫正規化彙整腳本 `build_phase_2_data.js`：將三單元之單字搭配詞、常犯錯改錯題、七大閱寫題型、雙角色聽力腳本、Speaking 範例與總複習正規化合併為 `data/ket_u1_u3.js`（389 KB）。
+  3. 題庫核心指標達成：
+     - 核心單字與搭配詞：58 組（含音標/詞性、繁中、搭配詞、例句與 Tip）。
+     - 考生常犯錯抓蟲改錯：35 題（涵蓋 have got、現在簡單式、頻率副詞位置與拼寫、代名詞、there is/are、過去式規則動詞）。
+     - 聽力雙人腳本與紅綠燈干擾項透視：Simon 海島長對話 (16 句)、5 段休閒短對話 (22 句)、廚藝學校填表獨白 (6 句)，全面標註 `isKey` 正解句與 `isDistractor` 陷阱句。
+     - 寫作 Part 7 積木與雙範文：上學遲到三格圖與花園烤肉三格圖，均提供 3 步驟句型積木、3 大評分指標檢核與 13 盾保底/15 盾滿分對照範文。
+     - Revision 總複習：Unit 1 (27分) + Unit 2 (20分) + Unit 3 (24分) = 71 分滿分全題目與詳解。
+  4. 撰寫並執行 `verify_phase_2.js` 驗收腳本，80 項測試 100% PASS。清理 `./temp` 臨時目錄，維持零彈窗沙盒衛生。
+
+---
+
+### [#MEM-4] 2026-11-12 Phase 3 動物森友會主題外殼、4 帳號沙盒、Web Audio 音效與單字/抓蟲學習艙完工
+- **執行流程**：
+  1. 依據 `[#WHY-2.1]` ~ `[#WHY-2.6]` 規格建立 `index.html` (7.6 KB)、`style.css` (30.2 KB) 與 `app.js` (52.3 KB)。
+  2. 雙 iPad 橫向適配：
+     - iPad 10.2" (1080×810)：`.layout-ipad-102`，導覽列 54px，內部獨立滾動高度適配 660px~680px。
+     - iPad Pro 12.9" (1366×1024)：`.layout-ipad-129`，導覽列 64px，內部獨立滾動高度適配 880px~900px。
+     - 支援 5 段字級縮放 (`--font-scale: 0.9 ~ 1.4`)，所有主要文字採用 `calc()` 動態計算。
+  3. 滿幀與零掉幀優化：嚴格禁用 `backdrop-filter: blur()`，改用象牙白與米黃實色搭配厚邊框與積木陰影。
+  4. Web Audio API 合成音效 (`SoundFX`)：零外部音效檔，實作木琴琶音 (`playCorrect`)、溫和三角波滑音 (`playWrong`)、過關號角 (`playFanfare`)、木頭敲擊啵聲 (`playClick`) 與動物喃喃語音 (`playBebebese`)。
+  5. 視覺特效 (`VisualFX`)：噴發動森樹葉、金幣與星星 Confetti 粒子，浮現 `+100 哩數!`，卡片錯題 Q 彈搖晃動畫 (`@keyframes ac-shake`)。
+  6. 4 帳號獨立沙盒 (`AccountManager`)：`ket_prep_v1_${accountId}` 隔離 Rex、Hugo、Test1、Test2 之積分、熟記單字、已抓出蟲與 `netErrors` 錯題累積。若考生為 Hugo，自動開啟五年級字根考點高顯眼暖黃框！
+  7. 四大互動學習模組實作：
+     - `renderDashboard`：15 盾牌戰情雷達、13 盾目標進度條、Unit 1~3 島嶼關卡卡片。
+     - `renderVocabPod`：翻翻卡模式（詞性、繁中、雙速發音、搭配詞、例句、傅達考點）+ 搭配詞 4 選 1 快問快答闖關。
+     - `renderMistakesPod`：35 題劍橋考生真實常犯錯抓蟲特訓，互動挑錯選正解，成功捕獲文法蟲解鎖館長鐵律。
+     - `renderSpreadViewer`：12 幅課本高清跨頁切換、100%~200% 縮放、題目切圖藝廊檢視。
+     - `renderErrorBookView`：即時顯示目前帳號累積之 `netErrors` 錯題清單並支援立即重練消除。
+  8. Phase 4 & 5 視圖預留：`view-rw`, `view-listening`, `view-speaking`, `view-errorbook`, `view-print` 容器結構清晰就緒。
+  9. 執行 `node verify_phase_3.js`，30 項斷言 100% PASS。
+
+---
+
+### [#MEM-5] 2026-11-13 Phase 4 閱讀寫作雙欄考場、聽力雙人劇場與口說模擬室完工
+- **實作模組清冊**：
+  1. `renderReadingWritingPod`：
+     - Reading Part 2 (Unit 1): 7 題人物對應選擇題，支援 A/B/C 單擊批改、原文定位句高亮與陷阱解析。
+     - Reading Part 3 (Unit 2): 專訪 Kris Davies，含核心同義詞暖身（6組）與 5 道三選一閱讀理解題（詳解與 A/B 干擾陷阱分析）。
+     - Reading Part 4 (Unit 3): 西非馬利男孩 Moussa 故事，含 4 組料理動詞暖身與 6 道克漏字選擇，答對即時回填左欄空格。
+     - Reading & Writing Part 5 (Unit 2): Hasan 書信開放式填空（6題），搭載 **💡 iPad 輔助字庫膠囊列**（12 個高頻詞膠囊點選即填入）。
+     - Writing Part 7 (Unit 1/3): 雙軌三格圖故事訓練器，軌跡 A（3 步驟句型積木組裝 + 連接詞 + 35+ 字實時計數綠燈）；軌跡 B（劍橋 3 大指標自評檢核表 + 13 盾 vs 15 盾雙範文朗讀對照）。
+     - 課本文法與詞彙特訓：Unit 1~3 家族樹、時鐘、頻率副詞規則與 some/any 互動卡片。
+  2. `renderListeningPod`：
+     - Unit 1 Part 3 (Simon 海島長對話)、Unit 2 Part 4 (5 段短對話)、Unit 3 Part 2 (廚藝學校填表)。
+     - 雙角色語音佇列播放器 (`playDialogueQueue`)：男聲/女聲 pitch 高低分流 (0.92 vs 1.08)，支援 1.0x/0.85x 雙速切換與發音氣泡同步高亮 (`.speaking-now`)。
+     - 🚦 考後紅綠燈干擾項陷阱解剖 (`distractorXray`)：用綠底標出得分線索句、紅底刪除線標出干擾誘餌句。
+  3. `renderSpeakingPod`：
+     - Speaking Part 1：英式考官發問模擬（4 道核心提問）、15 盾滿分範本翻開與人物外貌特徵配對 (`appearanceMatching`)。
+     - Speaking Part 2：五種用餐情境圖片討論，包含用餐喜好理由配對 (`reasonMatching`) 與考生表現優劣分析對照 (`candidateComparison`)。
+- **驗收結果**：執行 `node verify_phase_4.js`，13 項斷言 100% PASS。回歸測試 Phase 1 (58 PASS)、Phase 2 (80 PASS)、Phase 3 (30 PASS) 全數通過。
+
+
+---
+
+### [#MEM-6] 2026-11-13 Phase 5 5色淨錯熱力本、Revision 71分總複習闖關與 @media print A4 列印引擎完工
+- **執行重點與技術細節**：
+  1. `renderErrorBookView` (5 色淨錯熱力本)：
+     - 熱度分級：`getHeatLevel(count)` 分 5 階（`heat-1` ~ `heat-5`），以黃、暖橘、深橘、珊瑚紅、紫紅展示。
+     - 控制與篩選：支援依熱度、單元、題型篩選與依淨錯次數/時間排序。
+     - 消錯重練：`startErrorQuiz` / `practiceErrorItem`，答對淨錯 -1、哩數 +80、歸零移除；答錯次數 +1 升溫並解析規則。
+     - 模擬按鈕：`loadMockErrors` 快速載入 5 筆具有 1~5 錯題次數之樣本供體驗。
+  2. `renderRevisionContentHtml` (Revision Unit 1~3, p.78~80 共 71 分)：
+     - Unit 1 4 大題 (27分) + Unit 2 3 大題 (20分) + Unit 3 3 大題 (24分) 全數可互動答題與獨立批改。
+     - 左欄實時動態進度條，滿 82% (59分) 觸發 `SoundFX.playFanfare()` 並點亮 `🛡️ 13 盾達標！(Merit 卓越勳章)`。
+     - 答錯題目可一鍵 `addRevError` 收入 5 色錯題本。
+  3. `renderPrintPod` (@media print A4 紙本列印)：
+     - 4 種版面切換：單元綜合測驗卷 (U1/U2/U3)、Writing Part 7 手寫橫線單（第 5 行 35+ 字警戒標示線 + 15 分 Cambridge Rubric 表格）、Revision 71 分全真考卷、個人化熱力錯題訂正單。
+     - 學生空白卷 vs 教師解析答案卷切換。
+     - 純淨黑白 `@media print` 樣式，免去背景干擾，完美適配 A4 規格。
+- **驗收結果**：執行 `node verify_phase_5.js` 8 項斷言 100% PASS。執行 Phase 1~5 全部回歸測試（189 項斷言）100% PASS。
+
+
+---
+
+### [#MEM-7] 2026-11-13 Phase 6 iPhone 15 Pro 模式、Firebase 跨設備雲端同步與 E2E 總體檢完工
+- **執行重點與技術細節**：
+  1. `layout-iphone-15pro` 與手機模式：
+     - `<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">` 完整支持 Dynamic Island 與 Safe Area Insets。
+     - 頂部導覽按鈕支援點選 `[📲 15 Pro]`，並於視窗寬度 `<= 767px` 自動切換。
+     - 雙欄考場手機端垂直單欄堆疊，並加入 `toggleMobileDrawer` 吸頂折疊文章與圖片抽屜，讓學生在 iPhone 15 Pro 上單手順暢作答。
+  2. Firebase Realtime Database 跨設備雙向雲端同步：
+     - 網址：`https://math-review-6-default-rtdb.asia-southeast1.firebasedatabase.app`。
+     - 隔離路徑：`/ket_prep_v1_users/${accountId}.json`。
+     - 實作 `syncFromCloud`、`pushToCloud` 與 `mergeAccountData`（防回滾合併：哩數取最大、單字/抓蟲取聯集、盾牌取最高、錯題本按最新時間戳覆蓋）。
+     - 頂部雲端狀態指示燈 (`🟢 雲端已同步` / `🔄 同步中...` / `⚪ 本機離線`) 與點擊手動同步。
+  3. 全系統 E2E 總體檢：
+     - 全系統 35 幅高解析插圖（12 幅跨頁原圖 + 23 張裁切題目圖）完整存在於 `assets/` 且體積均大於 1KB。
+     - 詞彙總數 58、常犯錯總數 35 題 100% 吻合課本。
+- **驗收結果**：執行 `node verify_phase_6_e2e.js` 17 項斷言 100% PASS；全系統 6 階段累計 206 項測試全檢通過。

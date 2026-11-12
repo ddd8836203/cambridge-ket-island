@@ -1,0 +1,166 @@
+{
+  "spreads_count": 12,
+  "crops": [
+    {
+      "path": "assets/images/u1/u1_family_intro.jpg",
+      "width": 3792,
+      "height": 1591,
+      "source_spread": 2,
+      "description": "Unit 1 p.6 Tim, Mathilde & Emin unusual family intro"
+    },
+    {
+      "path": "assets/images/u1/u1_sofia_family_tree.jpg",
+      "width": 2053,
+      "height": 1179,
+      "source_spread": 2,
+      "description": "Unit 1 p.7 Sofia's family tree diagram"
+    },
+    {
+      "path": "assets/images/u1/u1_reading_part2_boys.jpg",
+      "width": 1817,
+      "height": 3538,
+      "source_spread": 2,
+      "description": "Unit 1 p.7 Reading Part 2 My family (Leo, Bastian, Callum)"
+    },
+    {
+      "path": "assets/images/u1/u1_fav_places.jpg",
+      "width": 3516,
+      "height": 1807,
+      "source_spread": 3,
+      "description": "Unit 1 p.8 Teenagers' five favourite places"
+    },
+    {
+      "path": "assets/images/u1/u1_writing_part7_bookshop.jpg",
+      "width": 1878,
+      "height": 794,
+      "source_spread": 3,
+      "description": "Unit 1 p.8 Practice 3-picture story (boy in bookshop)"
+    },
+    {
+      "path": "assets/images/u1/u1_writing_part7_exam.jpg",
+      "width": 1758,
+      "height": 1452,
+      "source_spread": 3,
+      "description": "Unit 1 p.8 Exam Task Writing Part 7 (boy late for school bus 3 pictures)"
+    },
+    {
+      "path": "assets/images/u1/u1_clocks.jpg",
+      "width": 2238,
+      "height": 876,
+      "source_spread": 3,
+      "description": "Unit 1 p.9 Six clocks telling the time"
+    },
+    {
+      "path": "assets/images/u1/u1_kyle_photo_album.jpg",
+      "width": 2238,
+      "height": 2683,
+      "source_spread": 3,
+      "description": "Unit 1 p.9 Kyle's daily routine photo album (A-H)"
+    },
+    {
+      "path": "assets/images/u1/u1_simon_island.jpg",
+      "width": 2916,
+      "height": 1525,
+      "source_spread": 4,
+      "description": "Unit 1 p.10 Listening Part 3 Simon home & school island map"
+    },
+    {
+      "path": "assets/images/u1/u1_speaking_people_af.jpg",
+      "width": 3321,
+      "height": 1525,
+      "source_spread": 4,
+      "description": "Unit 1 p.11 Speaking Part 1 People descriptions (A-F)"
+    },
+    {
+      "path": "assets/images/u2/u2_hobbies_clubs.jpg",
+      "width": 2261,
+      "height": 2017,
+      "source_spread": 5,
+      "description": "Unit 2 p.12 School clubs messages (Camera, Camping, Music, Art)"
+    },
+    {
+      "path": "assets/images/u2/u2_invitations_cartoon.jpg",
+      "width": 3444,
+      "height": 1716,
+      "source_spread": 6,
+      "description": "Unit 2 p.14 Sam & Ruby invitations cartoons"
+    },
+    {
+      "path": "assets/images/u2/u2_hasan_bedroom.jpg",
+      "width": 3661,
+      "height": 1240,
+      "source_spread": 7,
+      "description": "Unit 2 p.17 Hasan and his bedroom (drums, camera, books)"
+    },
+    {
+      "path": "assets/images/u3/u3_breakfast_places_ae.jpg",
+      "width": 3763,
+      "height": 1951,
+      "source_spread": 8,
+      "description": "Unit 3 p.18 Where do you have breakfast pictures (A-E)"
+    },
+    {
+      "path": "assets/images/u3/u3_wendy_grandma_omelette.jpg",
+      "width": 1946,
+      "height": 2041,
+      "source_spread": 8,
+      "description": "Unit 3 p.19 Wendy & Grandma mushroom omelette text chat"
+    },
+    {
+      "path": "assets/images/u3/u3_world_dishes_abc.jpg",
+      "width": 1811,
+      "height": 1771,
+      "source_spread": 9,
+      "description": "Unit 3 p.20 World dishes (A ajiaco, B kottbullar, C kalputi)"
+    },
+    {
+      "path": "assets/images/u3/u3_cafe_menu.jpg",
+      "width": 3758,
+      "height": 2032,
+      "source_spread": 9,
+      "description": "Unit 3 p.21 Listening Part 2 Fast food cafe menu"
+    },
+    {
+      "path": "assets/images/u3/u3_cooking_school_notice.jpg",
+      "width": 1947,
+      "height": 1103,
+      "source_spread": 9,
+      "description": "Unit 3 p.21 School of Cooking 16th February notice"
+    },
+    {
+      "path": "assets/images/u3/u3_speaking_food_3pics.jpg",
+      "width": 3806,
+      "height": 1462,
+      "source_spread": 10,
+      "description": "Unit 3 p.22 Speaking Part 2 Food habits 3 pictures"
+    },
+    {
+      "path": "assets/images/u3/u3_speaking_exam_5meals.jpg",
+      "width": 3897,
+      "height": 1053,
+      "source_spread": 10,
+      "description": "Unit 3 p.22 Speaking Part 2 Exam Task 5 types of meals"
+    },
+    {
+      "path": "assets/images/u3/u3_canteen_matching.jpg",
+      "width": 1994,
+      "height": 2134,
+      "source_spread": 10,
+      "description": "Unit 3 p.23 School canteen actions matching"
+    },
+    {
+      "path": "assets/images/u3/u3_writing_boy_baking.jpg",
+      "width": 1994,
+      "height": 1579,
+      "source_spread": 10,
+      "description": "Unit 3 p.23 Practice 2-picture story (boy baking cakes)"
+    },
+    {
+      "path": "assets/images/u3/u3_writing_part7_picnic_rain.jpg",
+      "width": 4123,
+      "height": 819,
+      "source_spread": 10,
+      "description": "Unit 3 p.23 Exam Task Writing Part 7 (barbecue rain 3 pictures)"
+    }
+  ]
+}

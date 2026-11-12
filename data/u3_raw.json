@@ -1,0 +1,1725 @@
+{
+  "id": "u3",
+  "number": 3,
+  "title": "Eating in, eating out",
+  "topic": "House & Food",
+  "grammarFocus": [
+    "There is / are, a / an, some & any",
+    "(don't) have to",
+    "Past simple spelling"
+  ],
+  "spreadPages": [
+    "assets/pages/u3_p18_p19.jpg",
+    "assets/pages/u3_p20_p21.jpg",
+    "assets/pages/u3_p22_p23.jpg"
+  ],
+  "vocabulary": [
+    {
+      "word": "cupboard",
+      "pos": "n.",
+      "zh": "碗櫥；壁櫥",
+      "collocation": "kitchen cupboard / in the cupboard",
+      "example": "We put all the plates, cups and glasses in this cupboard.",
+      "tip": "cup (杯子) + board (板/架子)。注意字母 'p' 不發音，讀作 /ˈkʌb.əd/。"
+    },
+    {
+      "word": "fridge",
+      "pos": "n.",
+      "zh": "冰箱",
+      "collocation": "in the fridge / keep food in the fridge",
+      "example": "You have to put milk, cheese and meat in the fridge so they stay fresh.",
+      "tip": "口語中 refrigerator 的簡稱，注意中間拼字有 'd' (fridge)。"
+    },
+    {
+      "word": "cooker",
+      "pos": "n.",
+      "zh": "爐具；炊具（爐子）",
+      "collocation": "gas cooker / electric cooker",
+      "example": "To make a cake, fry an egg or boil vegetables, you need a cooker.",
+      "tip": "⚠️ 劍橋常考陷阱：cook 才是名詞「廚師」或動詞「煮」；cooker 是「廚具/爐子」，絕對不是廚師！"
+    },
+    {
+      "word": "omelette",
+      "pos": "n.",
+      "zh": "歐姆蛋；西式煎蛋捲",
+      "collocation": "mushroom omelette / cheese omelette / make an omelette",
+      "example": "Grandma showed Wendy how to make a delicious mushroom omelette in butter.",
+      "tip": "來自法語的外來詞，注意以母音開頭，單數前面搭配冠詞 'an omelette'。"
+    },
+    {
+      "word": "boil",
+      "pos": "v.",
+      "zh": "水煮；沸騰",
+      "collocation": "boil water / boil vegetables / boiled egg",
+      "example": "When you boil food, you cook it in boiling water.",
+      "tip": "常見料理四動詞辨析：boil (水煮)、bake (烘焙麵包/蛋糕)、roast (烤肉/烤馬鈴薯)、fry (油煎)。"
+    },
+    {
+      "word": "roast",
+      "pos": "v. / adj.",
+      "zh": "（在烤箱中或炭火上）烘烤；烤的",
+      "collocation": "roast chicken / roast potatoes / roast meat",
+      "example": "On Sundays my parents often roast chicken and potatoes for dinner.",
+      "tip": "roast 常用於烤肉類或整顆根莖類蔬菜；bake 則專用於麵粉烘焙類（cakes, bread, biscuits）。"
+    },
+    {
+      "word": "serve",
+      "pos": "v.",
+      "zh": "端上（飯菜）；供應；招待",
+      "collocation": "serve main courses / serve food / waiting to be served",
+      "example": "That restaurant doesn't serve main courses, but you can get a snack and a drink there.",
+      "tip": "餐廳必備高頻詞。'waiting to be served' 表示顧客在座位上等待服務生前來點餐或送餐。"
+    },
+    {
+      "word": "look after",
+      "pos": "phr. v.",
+      "zh": "照顧；照料",
+      "collocation": "look after a younger sibling / look after a pet",
+      "example": "Moussa gets up early and looks after his little brother while their mother makes breakfast.",
+      "tip": "⚠️ KET 片語動詞辨析：look after (照顧) vs look for (尋找) vs look at (注視)。"
+    },
+    {
+      "word": "canteen",
+      "pos": "n.",
+      "zh": "（學校、工廠）餐廳；食堂",
+      "collocation": "school canteen / eat in the canteen",
+      "example": "I never eat in my school canteen because the food there isn't very good.",
+      "tip": "英式英語常用 canteen 指學生或員工餐廳；美式英語多用 cafeteria。"
+    },
+    {
+      "word": "tuck shop",
+      "pos": "n.",
+      "zh": "（學校的）零食部；小吃販賣部",
+      "collocation": "buy lunch from the tuck shop",
+      "example": "There isn't a school canteen, so students buy sandwiches from the tuck shop.",
+      "tip": "英式與澳洲校園傳統用語，專門販售簡餐、麵包與零食的福利社。"
+    },
+    {
+      "word": "wash up",
+      "pos": "phr. v.",
+      "zh": "洗碗盤；洗餐具",
+      "collocation": "wash up the dishes / do the washing-up",
+      "example": "We don't have to wash up because we use paper plates and plastic forks.",
+      "tip": "⚠️ 英式英語中 wash up 特指「洗餐具、洗碗盤」；美式英語中常指「洗臉洗手」。"
+    },
+    {
+      "word": "barbecue",
+      "pos": "n. / v.",
+      "zh": "戶外烤肉；燒烤野餐",
+      "collocation": "have a barbecue / barbecue sausages in the garden",
+      "example": "We planned to have a barbecue in the garden, but suddenly it started raining.",
+      "tip": "日常對話常縮寫為 BBQ。KET Writing Part 7 經典常考主題。"
+    },
+    {
+      "word": "vegetable",
+      "pos": "n.",
+      "zh": "蔬菜",
+      "collocation": "fresh vegetables / grow vegetables",
+      "example": "For lunch the family often has vegetables which they have grown themselves.",
+      "tip": "發音注意中間字母 'e' 弱化不發音 /ˈvedʒ.tə.bəl/，日常多用複數 vegetables。"
+    },
+    {
+      "word": "delicious",
+      "pos": "adj.",
+      "zh": "美味的；可口的",
+      "collocation": "delicious meal / taste delicious",
+      "example": "Grandma's homemade mushroom omelette smells and tastes delicious.",
+      "tip": "極限形容詞（strong adjective），前面可搭配 really 或 absolutely 修飾，但通常不加 very。"
+    },
+    {
+      "word": "meat",
+      "pos": "n.",
+      "zh": "肉類",
+      "collocation": "meat and potatoes / eat meat",
+      "example": "I don't want any meat for lunch; I prefer a bowl of vegetable soup.",
+      "tip": "不可數名詞，不可加 a 或 s；否定句中表達「沒有任何肉」用 'not ... any meat'。"
+    },
+    {
+      "word": "potatoes",
+      "pos": "n.",
+      "zh": "馬鈴薯；土豆",
+      "collocation": "roast potatoes / mashed potatoes / eat meatballs with potatoes",
+      "example": "Swedish meatballs are traditionally served with potatoes and jam.",
+      "tip": "單數為 potato，複數名詞字尾為 -es (potatoes)。類似規則如 tomato ➔ tomatoes。"
+    },
+    {
+      "word": "tidy",
+      "pos": "v. / adj.",
+      "zh": "整理；收拾；整潔的",
+      "collocation": "tidy one's bedroom / keep the room tidy",
+      "example": "Do you have to tidy your room every morning before going to school?",
+      "tip": "動詞變化：現在式單數 tidies，過去式 tidied。相反詞為 untidy。"
+    },
+    {
+      "word": "shelf",
+      "pos": "n.",
+      "zh": "架子；隔板",
+      "collocation": "bookshelf / on the top shelf",
+      "example": "There is a small wooden shelf above my desk for dictionaries and clocks.",
+      "tip": "複數形態為規則不規則變化：f 改成 ves ➔ shelves。同類變化如 knife ➔ knives。"
+    },
+    {
+      "word": "waiter",
+      "pos": "n.",
+      "zh": "男服務生；侍者",
+      "collocation": "ask the waiter for the bill / call the waiter",
+      "example": "Shall we ask the waiter to bring us the dessert menu?",
+      "tip": "女服務生為 waitress；主廚為 chef；用餐顧客為 customer。"
+    },
+    {
+      "word": "grow",
+      "pos": "v.",
+      "zh": "種植；生長",
+      "collocation": "grow vegetables / grow plants / grow up",
+      "example": "They eat fresh tomatoes and lettuce which they have grown in their backyard.",
+      "tip": "三態不規則變化：grow - grew - grown。過去分詞修飾已種植完成的蔬果。"
+    }
+  ],
+  "commonMistakes": [
+    {
+      "id": "u3_cm_1",
+      "page": 18,
+      "exercise": 4,
+      "itemNumber": 1,
+      "wrong": "Can you bring with you any lemonade and crisps?",
+      "correct": "Can you bring with you some lemonade and crisps?",
+      "errorSpan": "any",
+      "correction": "some",
+      "rule": "雖然疑問句一般用 any，但在表示「提出請求 (Can/Could you...?)」或「委婉提供 (Would you like...?)」並期望得到肯定答覆時，必須使用 some。"
+    },
+    {
+      "id": "u3_cm_2",
+      "page": 18,
+      "exercise": 4,
+      "itemNumber": 2,
+      "wrong": "My mum works as a assistant chef.",
+      "correct": "My mum works as an assistant chef.",
+      "errorSpan": "a assistant",
+      "correction": "an assistant",
+      "rule": "單數可數名詞或形容詞若以母音音素（vowel sound，如 /ə/）開頭，不定冠詞必須使用 an 而非 a。"
+    },
+    {
+      "id": "u3_cm_3",
+      "page": 18,
+      "exercise": 4,
+      "itemNumber": 3,
+      "wrong": "In my room is there a sofa.",
+      "correct": "In my room there is a sofa.",
+      "errorSpan": "is there",
+      "correction": "there is",
+      "rule": "本句為肯定陳述句（敘述房間裡有張沙發），語序必須是正常的 there is；只有在疑問句時才倒裝為 is there。"
+    },
+    {
+      "id": "u3_cm_4",
+      "page": 18,
+      "exercise": 4,
+      "itemNumber": 4,
+      "wrong": "It's free so you don't need some money.",
+      "correct": "It's free so you don't need any money.",
+      "errorSpan": "some",
+      "correction": "any",
+      "rule": "在否定句（don't need）中，修飾不可數名詞 money 或複數名詞時，必須使用 any（一點也不...），不能用 some。"
+    },
+    {
+      "id": "u3_cm_5",
+      "page": 18,
+      "exercise": 4,
+      "itemNumber": 5,
+      "wrong": "I bought some jeans and a beautiful trainers.",
+      "correct": "I bought some jeans and beautiful trainers.",
+      "errorSpan": "a beautiful trainers",
+      "correction": "beautiful trainers / a pair of beautiful trainers",
+      "rule": "trainers（球鞋/運動鞋）是複數名詞，前面不能直接加單數不定冠詞 a！應直接去冠詞或改用 'a pair of beautiful trainers'。"
+    },
+    {
+      "id": "u3_cm_6",
+      "page": 18,
+      "exercise": 4,
+      "itemNumber": 6,
+      "wrong": "It's very small and there are a small bed and a desk.",
+      "correct": "It's very small and there is a small bed and a desk.",
+      "errorSpan": "there are",
+      "correction": "there is",
+      "rule": "There be 句型中若列出多個主詞，be 動詞遵循「就近原則 (Proximity Rule)」，緊鄰的第一個名詞 'a small bed' 為單數，因此使用 there is。"
+    },
+    {
+      "id": "u3_cm_7",
+      "page": 18,
+      "exercise": 4,
+      "itemNumber": 7,
+      "wrong": "It's an interesting place because there is a lot of different things to see.",
+      "correct": "It's an interesting place because there are a lot of different things to see.",
+      "errorSpan": "there is",
+      "correction": "there are",
+      "rule": "後方主詞為複數名詞 'different things'，a lot of 修飾可數複數名詞時，there be 動詞必須採用複數形式 there are。"
+    },
+    {
+      "id": "u3_cm_8",
+      "page": 23,
+      "exercise": 3,
+      "itemNumber": 1,
+      "wrong": "After that it stoped raining and it was sunny.",
+      "correct": "After that it stopped raining and it was sunny.",
+      "errorSpan": "stoped",
+      "correction": "stopped",
+      "rule": "stop 為單音節短母音動詞，字尾為「單一母音 (o) + 單一子音 (p)」，形成過去式時必須雙寫字尾子音再加 -ed ➔ stopped。"
+    },
+    {
+      "id": "u3_cm_9",
+      "page": 23,
+      "exercise": 3,
+      "itemNumber": 2,
+      "wrong": "At the party we danced and singed. It was very nice.",
+      "correct": "At the party we danced and sang. It was very nice.",
+      "errorSpan": "singed",
+      "correction": "sang",
+      "rule": "sing 為常見不規則變化動詞（sing - sang - sung），其過去式為 sang，絕不可加 -ed（singed 意思是燒焦）。"
+    },
+    {
+      "id": "u3_cm_10",
+      "page": 23,
+      "exercise": 3,
+      "itemNumber": 3,
+      "wrong": "I went to a shopping centre to buy a new skirt and I payed 45 pounds for it.",
+      "correct": "I went to a shopping centre to buy a new skirt and I paid 45 pounds for it.",
+      "errorSpan": "payed",
+      "correction": "paid",
+      "rule": "pay 的過去式拼寫為不規則的 paid（y 改為 id），不是 payed（payed 僅在航海繩索術語使用）。"
+    },
+    {
+      "id": "u3_cm_11",
+      "page": 23,
+      "exercise": 3,
+      "itemNumber": 4,
+      "wrong": "I swam, went shopping and visitted my aunt.",
+      "correct": "I swam, went shopping and visited my aunt.",
+      "errorSpan": "visitted",
+      "correction": "visited",
+      "rule": "visit 的重音在第一音節 (/ˈvɪz.ɪt/)，字尾音節非重讀，過去式直接加 -ed ➔ visited，不可雙寫字母 t。"
+    }
+  ],
+  "exercises": {
+    "grammarVocabDrills": [
+      {
+        "id": "u3_drill_p18_ex1",
+        "title": "Where do you have breakfast?",
+        "instruction": "Match the texts (1-4) with the pictures (A-E). There is one extra picture.",
+        "type": "matching",
+        "sourcePage": "assets/pages/u3_p18_p19.jpg",
+        "image": "assets/images/u3/u3_breakfast_places_ae.jpg",
+        "items": [
+          {
+            "id": "u3_d1_1",
+            "speaker": "Angela, 13",
+            "text": "'There's never much time before school to sit down and have a big breakfast. I usually sit and have some biscuits before class on the steps outside school.'",
+            "correct": "C",
+            "explanation": "Angela 提到在學校外面的階梯 (steps outside school) 吃餅乾，對應圖片 C。"
+          },
+          {
+            "id": "u3_d1_2",
+            "speaker": "Noelia, 12",
+            "text": "'In my house, we always have breakfast together in the kitchen. My mum usually puts some flowers from our garden on the table.'",
+            "correct": "E",
+            "explanation": "Noelia 提到全家在廚房 (kitchen) 圍著桌子吃早餐，桌上有花園摘來的花 (flowers)，對應圖片 E。"
+          },
+          {
+            "id": "u3_d1_3",
+            "speaker": "Harun, 12",
+            "text": "'On the sofa in the living room, of course! If there aren't any cartoons on TV, I usually watch sports.'",
+            "correct": "B",
+            "explanation": "Harun 說自己在客廳沙發上 (sofa in the living room) 邊看電視體育節目邊吃早餐，對應圖片 B。"
+          },
+          {
+            "id": "u3_d1_4",
+            "speaker": "Victor, 14",
+            "text": "'Don't tell my mum but I sometimes have breakfast in my bedroom. I love hot chocolate. If there isn't any hot chocolate left, then I have some orange juice.'",
+            "correct": "A",
+            "explanation": "Victor 提到偷偷在臥室 (bedroom) 喝熱巧克力與吃早餐，對應圖片 A。"
+          }
+        ],
+        "extraOption": {
+          "code": "D",
+          "description": "Picture D shows a girl standing up in the hallway/kitchen having toast and tea by herself, which is not described by any student."
+        }
+      },
+      {
+        "id": "u3_drill_p18_ex2",
+        "title": "House Furniture and Rooms Classification",
+        "instruction": "Complete the table with these words (some items can go in more than one room).",
+        "type": "table_classification",
+        "sourcePage": "assets/pages/u3_p18_p19.jpg",
+        "wordPool": [
+          "bed",
+          "bookshelf",
+          "chair",
+          "cooker",
+          "cupboard",
+          "fridge",
+          "desk",
+          "lamp",
+          "mirror",
+          "shelf",
+          "shower",
+          "sofa",
+          "toilet"
+        ],
+        "categories": {
+          "bedroom": [
+            "bed",
+            "bookshelf",
+            "chair",
+            "cupboard",
+            "desk",
+            "lamp",
+            "mirror",
+            "shelf"
+          ],
+          "bathroom": [
+            "cupboard",
+            "mirror",
+            "shelf",
+            "shower",
+            "toilet"
+          ],
+          "living room": [
+            "bookshelf",
+            "chair",
+            "desk",
+            "lamp",
+            "mirror",
+            "shelf",
+            "sofa"
+          ],
+          "kitchen": [
+            "chair",
+            "cooker",
+            "cupboard",
+            "fridge",
+            "shelf"
+          ]
+        }
+      },
+      {
+        "id": "u3_drill_p18_ex3",
+        "title": "Whose house is it?",
+        "instruction": "Write Angela, Noelia, Harun or Victor for each sentence.",
+        "type": "fill_in_the_blank",
+        "sourcePage": "assets/pages/u3_p18_p19.jpg",
+        "items": [
+          {
+            "id": "u3_d3_1",
+            "statement": "There's some hot chocolate on the desk in the bedroom.",
+            "answer": "Victor",
+            "explanation": "Victor 說他會在房間喝熱巧克力 (I love hot chocolate in my bedroom)。"
+          },
+          {
+            "id": "u3_d3_2",
+            "statement": "There are some biscuits on the floor next to the stairs.",
+            "answer": "Angela",
+            "explanation": "Angela 在學校外的階梯吃餅乾 (have some biscuits on the steps outside school)。"
+          },
+          {
+            "id": "u3_d3_3",
+            "statement": "There aren't any cartoons on TV this morning so this person's watching sports.",
+            "answer": "Harun",
+            "explanation": "Harun 說沒卡通看就看體育 (If there aren't any cartoons on TV, I usually watch sports)。"
+          },
+          {
+            "id": "u3_d3_4",
+            "statement": "There's a garden with some flowers.",
+            "answer": "Noelia",
+            "explanation": "Noelia 提到媽媽常把花園裡的花放在餐桌上 (puts some flowers from our garden on the table)。"
+          }
+        ]
+      },
+      {
+        "id": "u3_drill_p20_ex1_ex2",
+        "title": "World Dishes & Food Descriptions",
+        "instruction": "Complete the descriptions with words from the box. Then match the descriptions (1-3) with pictures (A-C).",
+        "type": "fill_and_match",
+        "sourcePage": "assets/pages/u3_p20_p21.jpg",
+        "image": "assets/images/u3/u3_world_dishes_abc.jpg",
+        "boxWords": [
+          "bread",
+          "burger",
+          "cheese",
+          "chicken",
+          "egg",
+          "fish",
+          "jam",
+          "juice",
+          "meat",
+          "milk",
+          "omelette",
+          "onions",
+          "potatoes",
+          "rice",
+          "salad",
+          "soup",
+          "vegetables"
+        ],
+        "dishes": [
+          {
+            "id": "u3_dish_1",
+            "name": "Köttbullar (Swedish meatballs)",
+            "country": "Sweden",
+            "text": "I love köttbullar. These are Swedish meatballs. In our house we usually eat them with (1) [potatoes] and a little bit of jam. We have a glass of (2) [milk] with it.",
+            "blanks": [
+              {
+                "gap": 1,
+                "answer": "potatoes"
+              },
+              {
+                "gap": 2,
+                "answer": "milk"
+              }
+            ],
+            "matchedPicture": "B",
+            "explanation": "圖片 B 顯示經典瑞典肉丸佐馬鈴薯泥、果醬以及一杯牛奶。"
+          },
+          {
+            "id": "u3_dish_2",
+            "name": "Kalputi",
+            "country": "Goa, India",
+            "text": "I'm from Goa in India. We live next to the sea and we eat a lot of (3) [fish] with (4) [rice] and vegetables. My mum cooks kalputi once a week - it's great. She fries fish with onions.",
+            "blanks": [
+              {
+                "gap": 3,
+                "answer": "fish"
+              },
+              {
+                "gap": 4,
+                "answer": "rice"
+              }
+            ],
+            "matchedPicture": "C",
+            "explanation": "圖片 C 顯示印度果阿傳統魚咖哩 (kalputi) 搭配米飯與洋蔥蔬菜。"
+          },
+          {
+            "id": "u3_dish_3",
+            "name": "Ajiaco",
+            "country": "Colombia",
+            "text": "I'm from Colombia and my favourite food is ajiaco. It's a kind of (5) [soup] with (6) [chicken], potatoes and corn. I often drink (7) [juice] with it.",
+            "blanks": [
+              {
+                "gap": 5,
+                "answer": "soup"
+              },
+              {
+                "gap": 6,
+                "answer": "chicken"
+              },
+              {
+                "gap": 7,
+                "answer": "juice"
+              }
+            ],
+            "matchedPicture": "A",
+            "explanation": "圖片 A 顯示哥倫比亞經典玉米雞肉濃湯 (ajiaco)，旁邊附一杯果汁。"
+          }
+        ]
+      },
+      {
+        "id": "u3_drill_p20_ex3_ex4",
+        "title": "Interview: Josh from Melbourne, Australia",
+        "instruction": "Read the interview and answer the questions. Then decide if the sentences are true (T) or false (F).",
+        "type": "reading_comprehension",
+        "sourcePage": "assets/pages/u3_p20_p21.jpg",
+        "readingText": "THIS WEEK WE MEET JOSH. HE'S FROM MELBOURNE, AUSTRALIA.\nWhat's your favourite food?\n'I love fast food like burgers and pizza but I also like salad and vegetables.'\nWhere do you usually have lunch?\n'We all have to stay at school for lunch. There isn't a school canteen (a kind of restaurant) so I buy my lunch from the tuck shop. That's a kind of school café. I have to pay for my lunch before school starts. At lunchtime, two students have to collect our food from the tuck shop and we eat it in the classroom. We don't have to wash up because we use paper plates and plastic forks.'\nWho cooks in your house? Do you have to help?\n'Both my mum and my dad. No, I don't have to help.'",
+        "questions": [
+          {
+            "id": "u3_josh_q1",
+            "question": "What is Josh's favourite food?",
+            "answer": "Fast food like burgers and pizza (and he also likes salad and vegetables)."
+          },
+          {
+            "id": "u3_josh_q2",
+            "question": "Where does he usually have lunch?",
+            "answer": "At school in his classroom (buying food from the tuck shop)."
+          }
+        ],
+        "trueFalseItems": [
+          {
+            "id": "u3_josh_tf1",
+            "statement": "Josh can have his lunch at home on a school day.",
+            "answer": "F",
+            "explanation": "文章說 'We all have to stay at school for lunch.'，因此不能回家吃。"
+          },
+          {
+            "id": "u3_josh_tf2",
+            "statement": "Josh pays for his lunch before he eats it.",
+            "answer": "T",
+            "explanation": "文章說 'I have to pay for my lunch before school starts.'，先付錢才能拿餐。"
+          },
+          {
+            "id": "u3_josh_tf3",
+            "statement": "The people in the tuck shop take the food to the classrooms.",
+            "answer": "F",
+            "explanation": "文章說 'two students have to collect our food from the tuck shop'，是由學生自己去拿。"
+          },
+          {
+            "id": "u3_josh_tf4",
+            "statement": "Josh often washes up the plates at school.",
+            "answer": "F",
+            "explanation": "文章說 'We don't have to wash up because we use paper plates and plastic forks.'，用紙盤塑膠叉不用洗。"
+          }
+        ]
+      },
+      {
+        "id": "u3_drill_p20_ex5",
+        "title": "Phone Conversation: (don't) have to in Costa Rica",
+        "instruction": "Josh's friend Susanna lives in Costa Rica in Central America. Complete their phone conversation with the correct form of (don't) have to and the verbs in brackets.",
+        "type": "dialogue_completion",
+        "sourcePage": "assets/pages/u3_p20_p21.jpg",
+        "items": [
+          {
+            "id": "u3_haveto_1",
+            "prompt": "Susanna: Terrible! My school day is very long and then we (1) ................ (do) a lot of homework.",
+            "answer": "have to do",
+            "explanation": "主詞是 we，肯定必須做功課用 have to do。"
+          },
+          {
+            "id": "u3_haveto_2",
+            "prompt": "Josh: Oh, really! (2) ................ (you / wake up) very early?",
+            "answer": "Do you have to wake up",
+            "explanation": "you 的現在簡單式疑問句以 Do 開頭：Do you have to wake up...?"
+          },
+          {
+            "id": "u3_haveto_3",
+            "prompt": "Susanna: Yes, I do. I (3) ................ (get up) at 6.30 a.m. because the school bus leaves at seven o'clock.",
+            "answer": "have to get up",
+            "explanation": "校車七點開，所以六點半「必須起床」：I have to get up。"
+          },
+          {
+            "id": "u3_haveto_4",
+            "prompt": "Josh: (4) ................ (you / tidy) your room before school?",
+            "answer": "Do you have to tidy",
+            "explanation": "疑問句：Do you have to tidy your room...?"
+          },
+          {
+            "id": "u3_haveto_5",
+            "prompt": "Susanna: No, I (5) ................ (tidy) my room...",
+            "answer": "don't have to tidy",
+            "explanation": "依據答句 No，表示「不需要整理」：don't have to tidy。"
+          },
+          {
+            "id": "u3_haveto_6",
+            "prompt": "Susanna: ...but I (6) ................ (make) my bed.",
+            "answer": "have to make",
+            "explanation": "轉折詞 but 表示整理床鋪是必須的：have to make my bed。"
+          },
+          {
+            "id": "u3_haveto_7",
+            "prompt": "Susanna: My brother (7) ................ (make) the breakfast...",
+            "answer": "has to make",
+            "explanation": "第三人稱單數 My brother，必須用 has to make。"
+          },
+          {
+            "id": "u3_haveto_8",
+            "prompt": "Susanna: ...but I often don't have time to eat it at home so I (8) ................ (eat) it on the bus.",
+            "answer": "have to eat",
+            "explanation": "在家沒時間吃，所以只好「必須」在公車上吃：have to eat。"
+          }
+        ]
+      }
+    ],
+    "readingPart4": {
+      "id": "u3_reading_part4",
+      "title": "Reading Part 4: Where I live (Moussa from Mali)",
+      "sourcePage": "assets/pages/u3_p18_p19.jpg",
+      "vocabularyPreparation": {
+        "title": "Exercise 4: Word Choice in Food & Daily Life",
+        "instruction": "Choose the correct option, A, B or C to complete these sentences.",
+        "items": [
+          {
+            "id": "u3_r4_prep_1",
+            "sentence": "That restaurant doesn't ................ main courses, but you can get a snack and a drink there.",
+            "options": [
+              "serve",
+              "eat",
+              "bring"
+            ],
+            "answer": "A",
+            "explanation": "serve main courses 指餐廳「供應主餐」。餐廳本身不能 eat，而 bring 需要指明帶來的方向受詞。"
+          },
+          {
+            "id": "u3_r4_prep_2",
+            "sentence": "When I look ................ my little cousin, we often make cakes together.",
+            "options": [
+              "for",
+              "after",
+              "at"
+            ],
+            "answer": "B",
+            "explanation": "look after 是片語動詞「照顧/照料表妹」。look for 為尋找，look at 為看著。"
+          },
+          {
+            "id": "u3_r4_prep_3",
+            "sentence": "Shall we ask the ................ to bring us the menu?",
+            "options": [
+              "chef",
+              "waiter",
+              "customer"
+            ],
+            "answer": "B",
+            "explanation": "waiter (男服務生) 負責外場接待與遞送菜單。chef 是內場廚師，customer 是用餐客人。"
+          },
+          {
+            "id": "u3_r4_prep_4",
+            "sentence": "When you ................ food, you cook it in water.",
+            "options": [
+              "bake",
+              "roast",
+              "boil"
+            ],
+            "answer": "C",
+            "explanation": "boil 指在水中水煮/沸煮。bake 是烤箱烘焙（麵包蛋糕），roast 是烘烤肉類。"
+          }
+        ]
+      },
+      "examTask": {
+        "title": "Exam task: Where I live",
+        "instruction": "For each question, choose the correct answer.",
+        "article": "Moussa is 13 years old and he lives on a small (1) .............. in Mali, West Africa. There are only two rooms in his house; one for his parents and the other for Moussa and his little brother, Sekou.\nMoussa gets up early and looks (2) .............. Sekou while their mother makes breakfast. The family has breakfast together. They usually have bread with milk and (3) .............. a little sugar to it. Moussa walks to school with his friends. It (4) .............. them about ten minutes. When they get to school, they have to clean the classroom. At noon, Moussa goes home for lunch. For lunch the family often has vegetables which they have (5) .............. themselves. When lunch is finished, Moussa (6) .............. to school for afternoon lessons, and then goes home again for dinner in the evening.",
+        "questions": [
+          {
+            "number": 1,
+            "options": {
+              "A": "forest",
+              "B": "farm",
+              "C": "village"
+            },
+            "answer": "B",
+            "collocation": "live on a farm",
+            "explanation": "關鍵在於前方的介系詞 'on'！英文習慣說 'on a farm'（在農場上）；若要選 village 或 forest，介系詞必須是 'in'（in a village / in a forest）。因此只有 farm 正確。"
+          },
+          {
+            "number": 2,
+            "options": {
+              "A": "after",
+              "B": "up",
+              "C": "around"
+            },
+            "answer": "A",
+            "collocation": "look after someone",
+            "explanation": "look after 為高頻片語動詞，意為「照顧、照看」年幼的弟弟 Sekou。look up 是查閱字典，look around 是環顧四周。"
+          },
+          {
+            "number": 3,
+            "options": {
+              "A": "include",
+              "B": "join",
+              "C": "add"
+            },
+            "answer": "C",
+            "collocation": "add something to something",
+            "explanation": "搭配詞固定句型為 'add ... to ...'（把少許糖加進牛奶麵包裡）。include 與 join 後面不接介系詞 to。"
+          },
+          {
+            "number": 4,
+            "options": {
+              "A": "takes",
+              "B": "needs",
+              "C": "keeps"
+            },
+            "answer": "A",
+            "collocation": "It takes sb. some time",
+            "explanation": "花費時間的固定句型為 'It takes + 人 + 時間'（花了他們大約十分鐘）。need 主詞一般為人，keep 意思是保持。"
+          },
+          {
+            "number": 5,
+            "options": {
+              "A": "brought",
+              "B": "grown",
+              "C": "left"
+            },
+            "answer": "B",
+            "collocation": "grow vegetables",
+            "explanation": "蔬菜是用「種植」出來的，動詞用 grow，完成式為 have grown themselves。brought 是帶來，left 是留下。"
+          },
+          {
+            "number": 6,
+            "options": {
+              "A": "enters",
+              "B": "arrives",
+              "C": "returns"
+            },
+            "answer": "C",
+            "collocation": "return to school",
+            "explanation": "Moussa 中午回家吃午餐，結束後「返回」學校上下午的課，且搭配介系詞 'to'，故選 returns。enter 是及物動詞直接加受詞（enter the room，不加 to）；arrive 後面接 at 或 in（arrive at school，不加 to）。"
+          }
+        ]
+      }
+    },
+    "listeningPart2": {
+      "id": "u3_listening_part2",
+      "title": "Listening Part 2: Fast Food Café & School of Cooking",
+      "sourcePage": "assets/pages/u3_p20_p21.jpg",
+      "track09_menuPrices": {
+        "title": "Track 09: Fast Food Café Menu Prices",
+        "instruction": "Listen to a conversation in a fast food café and complete the menu with the prices.",
+        "image": "assets/images/u3/u3_cafe_menu.jpg",
+        "tapescript": [
+          {
+            "speaker": "Server",
+            "role": "female",
+            "text": "Good morning! Welcome to Sunny Café. What can I get for you today?"
+          },
+          {
+            "speaker": "Boy",
+            "role": "male",
+            "text": "Hi! Can I look at the breakfast menu, please? How much is a fried egg?"
+          },
+          {
+            "speaker": "Server",
+            "role": "female",
+            "text": "A fried egg is one pound seventy-five."
+          },
+          {
+            "speaker": "Boy",
+            "role": "male",
+            "text": "That's good. And what about a cheese omelette?"
+          },
+          {
+            "speaker": "Server",
+            "role": "female",
+            "text": "A cheese omelette is three pounds fifty (£3.50). It comes with fresh salad."
+          },
+          {
+            "speaker": "Boy",
+            "role": "male",
+            "text": "Great! Are drinks expensive? How much are hot drinks like tea and coffee?"
+          },
+          {
+            "speaker": "Server",
+            "role": "female",
+            "text": "Well, our special iced tea is two pounds, but all standard hot drinks are ninety-five pence (95p)."
+          },
+          {
+            "speaker": "Boy",
+            "role": "male",
+            "text": "OK. Could I also have some bread and butter with my egg?"
+          },
+          {
+            "speaker": "Server",
+            "role": "female",
+            "text": "Certainly. Bread and butter is one pound twenty (£1.20) for two slices."
+          },
+          {
+            "speaker": "Boy",
+            "role": "male",
+            "text": "Perfect. And for dessert, my friend wants some cake. How much is a piece of cake?"
+          },
+          {
+            "speaker": "Server",
+            "role": "female",
+            "text": "Our whole fruit pie is four pounds, but a piece of chocolate cake is two pounds forty (£2.40)."
+          },
+          {
+            "speaker": "Boy",
+            "role": "male",
+            "text": "Excellent. I'll have the fried egg, bread and butter, and a hot chocolate, please!"
+          }
+        ],
+        "menuItems": [
+          {
+            "id": "u3_menu_1",
+            "item": "A fried egg",
+            "unit": "£",
+            "price": "1.75",
+            "isExample": true
+          },
+          {
+            "id": "u3_menu_2",
+            "item": "A cheese omelette",
+            "unit": "£",
+            "price": "3.50",
+            "isExample": false,
+            "explanation": "店員清楚回答 'A cheese omelette is three pounds fifty.'，填寫 3.50。"
+          },
+          {
+            "id": "u3_menu_3",
+            "item": "Hot drinks",
+            "unit": "p",
+            "price": "95",
+            "isExample": false,
+            "explanation": "店員先提到 iced tea 是 £2 (干擾項)，接著指出 'all standard hot drinks are ninety-five pence'，表格單位為 p，填寫 95。"
+          },
+          {
+            "id": "u3_menu_4",
+            "item": "Bread and butter",
+            "unit": "£",
+            "price": "1.20",
+            "isExample": false,
+            "explanation": "店員說明 'Bread and butter is one pound twenty'，填寫 1.20。"
+          },
+          {
+            "id": "u3_menu_5",
+            "item": "A piece of cake",
+            "unit": "£",
+            "price": "2.40",
+            "isExample": false,
+            "explanation": "店員提到整份派是 £4 (干擾項)，但一塊蛋糕是 'two pounds forty'，填寫 2.40。"
+          }
+        ]
+      },
+      "track10_examTask": {
+        "title": "Track 10 Exam Task: School Trip to School of Cooking",
+        "instruction": "You will hear a teacher telling students about a school trip. For each question, write the correct answer in the gap. Write one word or a number or a date or a time.",
+        "image": "assets/images/u3/u3_cooking_school_notice.jpg",
+        "tapescript": [
+          {
+            "speaker": "Teacher",
+            "role": "female",
+            "text": "Good morning, class! Please listen carefully. I want to give you all the details about our upcoming school trip next month. As you know, the date of the trip is Friday the sixteenth of February."
+          },
+          {
+            "speaker": "Teacher",
+            "role": "female",
+            "text": "We are going to visit a very famous cooking academy. The name of the school of cooking is the Castle School. That's spelled C-A-S-T-L-E, Castle. It is located just outside the town centre."
+          },
+          {
+            "speaker": "Teacher",
+            "role": "female",
+            "text": "Now, about how we'll get there. We usually take the train for our excursions, but the railway station is closed for repairs that week. Therefore, we are going to travel by bus. A private coach will take us directly there."
+          },
+          {
+            "speaker": "Teacher",
+            "role": "female",
+            "text": "The cooking lesson begins at nine fifteen, but we need time to register and board. So, the time to meet is eight thirty (8.30) a.m. in the main school playground. Please do not be late, because the bus leaves promptly at eight forty-five!"
+          },
+          {
+            "speaker": "Teacher",
+            "role": "female",
+            "text": "What will we do there? Last year students baked sweet biscuits, but this year the head chef will teach everyone how to prepare an authentic Italian pizza! You will make your own dough and choose your favourite toppings to bake."
+          },
+          {
+            "speaker": "Teacher",
+            "role": "female",
+            "text": "Finally, the total price for the trip. The cooking lesson costs twelve pounds, and the bus journey is six pounds. That means the total price each student must pay is eighteen pounds (£18). Please bring the money to the school office before next Friday. Thank you!"
+          }
+        ],
+        "questions": [
+          {
+            "id": "u3_l2_q1",
+            "label": "Name of school of cooking:",
+            "key": "Castle",
+            "acceptedAnswers": [
+              "Castle",
+              "castle"
+            ],
+            "distractorXray": {
+              "isKey": true,
+              "explanation": "老師在逐字稿中清晰拼讀 'C-A-S-T-L-E, Castle'，正解為 Castle。"
+            }
+          },
+          {
+            "id": "u3_l2_q2",
+            "label": "How we'll get there: by",
+            "key": "bus",
+            "acceptedAnswers": [
+              "bus",
+              "coach"
+            ],
+            "distractorXray": {
+              "isKey": true,
+              "distractor": "train",
+              "explanation": "【干擾項陷阱】：老師提到平時校外教學常搭火車 (train)，但火車站正在維修，所以這次改搭公車 (travel by bus)。因此 train 是干擾項，bus 才是本次正確交通方式！"
+            }
+          },
+          {
+            "id": "u3_l2_q3",
+            "label": "Time to meet:",
+            "unit": "a.m.",
+            "key": "8.30",
+            "acceptedAnswers": [
+              "8.30",
+              "8:30",
+              "eight thirty",
+              "8.30 a.m.",
+              "8:30 a.m."
+            ],
+            "distractorXray": {
+              "isKey": true,
+              "distractor": "9.15, 8.45",
+              "explanation": "【干擾項陷阱】：老師提到廚藝課 9.15 開始、公車 8.45 開車，但學生必須集合的時間 (time to meet) 是 8.30！9.15 與 8.45 均為時間干擾項。"
+            }
+          },
+          {
+            "id": "u3_l2_q4",
+            "label": "What we'll make:",
+            "key": "pizza",
+            "acceptedAnswers": [
+              "pizza",
+              "pizzas"
+            ],
+            "distractorXray": {
+              "isKey": true,
+              "distractor": "biscuits",
+              "explanation": "【干擾項陷阱】：老師提到去年學生烤的是餅乾 (biscuits - past event)，但今年要製作的是義大利披薩 (pizza - this year's plan)！biscuits 為過去干擾項。"
+            }
+          },
+          {
+            "id": "u3_l2_q5",
+            "label": "Total price: £",
+            "key": "18",
+            "acceptedAnswers": [
+              "18",
+              "18.00",
+              "eighteen"
+            ],
+            "distractorXray": {
+              "isKey": true,
+              "distractor": "12, 6",
+              "explanation": "【干擾項陷阱】：課程費用為 £12，交通費用為 £6，題目要求填寫「總費用 (Total price)」，即 12 + 6 = 18 英鎊。12 與 6 為細項干擾數字。"
+            }
+          }
+        ]
+      },
+      "questions": [
+        {
+          "id": "u3_l2_q1",
+          "label": "Name of school of cooking:",
+          "key": "Castle",
+          "acceptedAnswers": [
+            "Castle",
+            "castle"
+          ],
+          "distractorXray": {
+            "isKey": true,
+            "explanation": "老師在逐字稿中清晰拼讀 'C-A-S-T-L-E, Castle'，正解為 Castle。"
+          }
+        },
+        {
+          "id": "u3_l2_q2",
+          "label": "How we'll get there: by",
+          "key": "bus",
+          "acceptedAnswers": [
+            "bus",
+            "coach"
+          ],
+          "distractorXray": {
+            "isKey": true,
+            "distractor": "train",
+            "explanation": "【干擾項陷阱】：老師提到平時校外教學常搭火車 (train)，但火車站正在維修，所以這次改搭公車 (travel by bus)。因此 train 是干擾項，bus 才是本次正確交通方式！"
+          }
+        },
+        {
+          "id": "u3_l2_q3",
+          "label": "Time to meet:",
+          "unit": "a.m.",
+          "key": "8.30",
+          "acceptedAnswers": [
+            "8.30",
+            "8:30",
+            "eight thirty",
+            "8.30 a.m.",
+            "8:30 a.m."
+          ],
+          "distractorXray": {
+            "isKey": true,
+            "distractor": "9.15, 8.45",
+            "explanation": "【干擾項陷阱】：老師提到廚藝課 9.15 開始、公車 8.45 開車，但學生必須集合的時間 (time to meet) 是 8.30！9.15 與 8.45 均為時間干擾項。"
+          }
+        },
+        {
+          "id": "u3_l2_q4",
+          "label": "What we'll make:",
+          "key": "pizza",
+          "acceptedAnswers": [
+            "pizza",
+            "pizzas"
+          ],
+          "distractorXray": {
+            "isKey": true,
+            "distractor": "biscuits",
+            "explanation": "【干擾項陷阱】：老師提到去年學生烤的是餅乾 (biscuits - past event)，但今年要製作的是義大利披薩 (pizza - this year's plan)！biscuits 為過去干擾項。"
+          }
+        },
+        {
+          "id": "u3_l2_q5",
+          "label": "Total price: £",
+          "key": "18",
+          "acceptedAnswers": [
+            "18",
+            "18.00",
+            "eighteen"
+          ],
+          "distractorXray": {
+            "isKey": true,
+            "distractor": "12, 6",
+            "explanation": "【干擾項陷阱】：課程費用為 £12，交通費用為 £6，題目要求填寫「總費用 (Total price)」，即 12 + 6 = 18 英鎊。12 與 6 為細項干擾數字。"
+          }
+        }
+      ],
+      "tapescript": [
+        {
+          "speaker": "Teacher",
+          "role": "female",
+          "text": "Good morning, class! Please listen carefully. I want to give you all the details about our upcoming school trip next month. As you know, the date of the trip is Friday the sixteenth of February."
+        },
+        {
+          "speaker": "Teacher",
+          "role": "female",
+          "text": "We are going to visit a very famous cooking academy. The name of the school of cooking is the Castle School. That's spelled C-A-S-T-L-E, Castle. It is located just outside the town centre.",
+          "isKey": true,
+          "keyFor": "Name of school: Castle"
+        },
+        {
+          "speaker": "Teacher",
+          "role": "female",
+          "text": "Now, about how we'll get there. We usually take the train for our excursions, but the railway station is closed for repairs that week. Therefore, we are going to travel by bus. A private coach will take us directly there.",
+          "isKey": true,
+          "isDistractor": true,
+          "keyFor": "Transport: bus",
+          "distractor": "train (closed for repairs)"
+        },
+        {
+          "speaker": "Teacher",
+          "role": "female",
+          "text": "The cooking lesson begins at nine fifteen, but we need time to register and board. So, the time to meet is eight thirty (8.30) a.m. in the main school playground. Please do not be late, because the bus leaves promptly at eight forty-five!",
+          "isKey": true,
+          "isDistractor": true,
+          "keyFor": "Meeting time: 8.30",
+          "distractor": "9.15 (lesson start), 8.45 (bus departure)"
+        },
+        {
+          "speaker": "Teacher",
+          "role": "female",
+          "text": "What will we do there? Last year students baked sweet biscuits, but this year the head chef will teach everyone how to prepare an authentic Italian pizza! You will make your own dough and choose your favourite toppings to bake.",
+          "isKey": true,
+          "isDistractor": true,
+          "keyFor": "What we'll make: pizza",
+          "distractor": "biscuits (last year's dish)"
+        },
+        {
+          "speaker": "Teacher",
+          "role": "female",
+          "text": "Finally, the total price for the trip. The cooking lesson costs twelve pounds, and the bus journey is six pounds. That means the total price each student must pay is eighteen pounds (£18). Please bring the money to the school office before next Friday. Thank you!",
+          "isKey": true,
+          "isDistractor": true,
+          "keyFor": "Total price: £18",
+          "distractor": "£12 (lesson), £6 (bus)"
+        }
+      ],
+      "distractorXray": true
+    },
+    "speakingPart2": {
+      "id": "u3_speaking_part2",
+      "title": "Speaking Part 2: Food Preferences & 5 Meal Situations",
+      "sourcePage": "assets/pages/u3_p22_p23.jpg",
+      "reasonMatching": {
+        "title": "Exercise 1 & 2 (Track 11): Matching Likes/Dislikes with Reasons",
+        "instruction": "Match each reason (a-f) with what people like or don't like (1-6). Then listen to six short conversations to check.",
+        "image": "assets/images/u3/u3_speaking_food_3pics.jpg",
+        "items": [
+          {
+            "id": "u3_sp_m1",
+            "preference": "1 I like strawberries because",
+            "matchedCode": "f",
+            "reason": "they're fresh and sweet.",
+            "audioDialogue": {
+              "speakerA": "Do you like fruit, especially strawberries?",
+              "speakerB": "Oh yes, I love strawberries because they're fresh and sweet in summer!"
+            }
+          },
+          {
+            "id": "u3_sp_m2",
+            "preference": "2 I don't like fast food because",
+            "matchedCode": "e",
+            "reason": "it's not good for your health.",
+            "audioDialogue": {
+              "speakerA": "Do you eat a lot of burgers and chips?",
+              "speakerB": "No, I don't like fast food because it's really not good for your health."
+            }
+          },
+          {
+            "id": "u3_sp_m3",
+            "preference": "3 I never eat in my school canteen because",
+            "matchedCode": "a",
+            "reason": "the food there isn't very good.",
+            "audioDialogue": {
+              "speakerA": "Why do you bring sandwiches from home?",
+              "speakerB": "I never eat in my school canteen because the food there isn't very good."
+            }
+          },
+          {
+            "id": "u3_sp_m4",
+            "preference": "4 I love breakfast because",
+            "matchedCode": "b",
+            "reason": "I'm always hungry when I wake up!",
+            "audioDialogue": {
+              "speakerA": "What is your favourite meal of the day?",
+              "speakerB": "Definitely breakfast. I love breakfast because I'm always hungry when I wake up!"
+            }
+          },
+          {
+            "id": "u3_sp_m5",
+            "preference": "5 I like going to restaurants because",
+            "matchedCode": "d",
+            "reason": "I can try new kinds of food.",
+            "audioDialogue": {
+              "speakerA": "Do you enjoy eating out at weekends?",
+              "speakerB": "Yes, I like going to restaurants because I can try new kinds of food from different countries."
+            }
+          },
+          {
+            "id": "u3_sp_m6",
+            "preference": "6 I enjoy cooking because",
+            "matchedCode": "c",
+            "reason": "it's fun to learn new things.",
+            "audioDialogue": {
+              "speakerA": "Do you help your parents in the kitchen?",
+              "speakerB": "Yes, I really enjoy cooking because it's fun to learn new things and bake cakes."
+            }
+          }
+        ]
+      },
+      "candidateComparison": {
+        "title": "Exercise 3 (Track 12): Candidate Response Comparison",
+        "instruction": "Look at the three pictures (cooking at home, buying fast food, eating on a park bench). Listen to two exam candidates talking about them. Which candidate gives the best answer? Why?",
+        "candidateA": {
+          "name": "Candidate A",
+          "script": "Examiner: Do you like cooking at home?\nCandidate A: Yes, I do.\nExaminer: Why?\nCandidate A: It is good. I like cakes.\nExaminer: Do you like fast food?\nCandidate A: Yes, burgers are nice.",
+          "critique": "Candidate A 回答過於簡短，僅使用單詞與極短句子，沒有主動使用 because 展開說明理由，口語流暢度與語法豐富度不足（僅得 10-11 盾）。"
+        },
+        "candidateB": {
+          "name": "Candidate B",
+          "script": "Examiner: Do you like cooking at home?\nCandidate B: Yes, I love cooking at home with my grandmother because it's really fun to learn new recipes, and homemade food is much healthier than fast food.\nExaminer: What about buying snacks in the park?\nCandidate B: I enjoy having an apple or a sandwich on a park bench when the weather is sunny, because it's very relaxing to sit outside with friends.",
+          "critique": "Candidate B 給出最佳表現（滿分 15 盾標準）！使用完整句型，主動運用 because, and, when 延伸理由，展現豐富詞彙（homemade, healthier, relaxing, sunny weather）。"
+        },
+        "bestCandidate": "Candidate B",
+        "why": "Candidate B speaks in full sentences, gives clear and detailed reasons using 'because', compares choices, and shows better vocabulary."
+      },
+      "examTask": {
+        "title": "Speaking Part 2 Exam Task: 5 Types of Meals Discussion",
+        "instruction": "Now, in this part of the test you are going to talk together. Here are some pictures that show different types of meals. Do you like these different types of meals? Say why or why not.",
+        "image": "assets/images/u3/u3_speaking_exam_5meals.jpg",
+        "mealTypes": [
+          {
+            "id": "u3_meal_1",
+            "title": "Eating at a café / restaurant with friends",
+            "questions": [
+              "Do you like eating out at restaurants with your friends?",
+              "Why or why not?"
+            ],
+            "reasonsFor": [
+              "It is exciting to try international dishes like Italian pasta or tacos.",
+              "It's a great way to celebrate birthdays and chat happily with friends."
+            ],
+            "reasonsAgainst": [
+              "Eating out in restaurants can be quite expensive.",
+              "Sometimes the service is slow and you have to wait a long time."
+            ]
+          },
+          {
+            "id": "u3_meal_2",
+            "title": "Eating dinner at home with family",
+            "questions": [
+              "Do you like having dinner together with your family around the table?",
+              "Why or why not?"
+            ],
+            "reasonsFor": [
+              "My parents cook fresh, healthy and delicious food every day.",
+              "It's important to talk about our school day together as a family."
+            ],
+            "reasonsAgainst": [
+              "Sometimes we have to eat vegetables like broccoli that I don't really like.",
+              "You have to help wash up all the plates and tidy the table afterwards."
+            ]
+          },
+          {
+            "id": "u3_meal_3",
+            "title": "Having a barbecue (BBQ) outdoors in the garden",
+            "questions": [
+              "Do you like having a barbecue outside in the garden or park?",
+              "Why or why not?"
+            ],
+            "reasonsFor": [
+              "Barbecue sausages and grilled burgers taste amazing with smoky flavour.",
+              "It's fun to play outdoor games with cousins while food is cooking on the grill."
+            ],
+            "reasonsAgainst": [
+              "If it suddenly rains, everyone has to run inside.",
+              "The smoke from the fire can get in your eyes and make clothes smell."
+            ]
+          },
+          {
+            "id": "u3_meal_4",
+            "title": "Eating snacks / fast food on the sofa in front of the TV",
+            "questions": [
+              "Do you like eating snacks or dinner on the sofa watching TV?",
+              "Why or why not?"
+            ],
+            "reasonsFor": [
+              "It is very relaxing to watch your favourite film or football match while having pizza.",
+              "You feel comfortable on the soft sofa after a tiring day."
+            ],
+            "reasonsAgainst": [
+              "It's easy to spill food or drinks and make the sofa dirty.",
+              "Watching TV while eating means you don't talk to your family."
+            ]
+          },
+          {
+            "id": "u3_meal_5",
+            "title": "Having a meal at an upscale restaurant / buffet",
+            "questions": [
+              "Do you like having a buffet or formal dinner in a hotel restaurant?",
+              "Why or why not?"
+            ],
+            "reasonsFor": [
+              "At a buffet, you can choose whatever food you want and take as many desserts as you like.",
+              "The dining room is beautiful and comfortable with great music."
+            ],
+            "reasonsAgainst": [
+              "You have to dress up smartly and follow strict table manners.",
+              "It is often too noisy when there are a lot of customers."
+            ]
+          }
+        ],
+        "keyPhrases": [
+          "Do you like ...? / What do you think about ...?",
+          "I really like ... because ...",
+          "I prefer ... to ... because ...",
+          "I don't really enjoy ... because it's too ...",
+          "In my opinion, having meals with family is better than eating alone in front of TV."
+        ]
+      },
+      "questions": [
+        "Do you like eating out at restaurants with your friends? Why or why not?",
+        "Do you like having dinner together with your family around the table? Why or why not?",
+        "Do you like having a barbecue outside in the garden or park? Why or why not?",
+        "Do you like eating snacks or dinner on the sofa watching TV? Why or why not?",
+        "Do you like having a buffet or formal dinner in a hotel restaurant? Why or why not?"
+      ],
+      "dialogue": {
+        "title": "Exercise 3 (Track 12): Candidate Response Comparison",
+        "instruction": "Look at the three pictures (cooking at home, buying fast food, eating on a park bench). Listen to two exam candidates talking about them. Which candidate gives the best answer? Why?",
+        "candidateA": {
+          "name": "Candidate A",
+          "script": "Examiner: Do you like cooking at home?\nCandidate A: Yes, I do.\nExaminer: Why?\nCandidate A: It is good. I like cakes.\nExaminer: Do you like fast food?\nCandidate A: Yes, burgers are nice.",
+          "critique": "Candidate A 回答過於簡短，僅使用單詞與極短句子，沒有主動使用 because 展開說明理由，口語流暢度與語法豐富度不足（僅得 10-11 盾）。"
+        },
+        "candidateB": {
+          "name": "Candidate B",
+          "script": "Examiner: Do you like cooking at home?\nCandidate B: Yes, I love cooking at home with my grandmother because it's really fun to learn new recipes, and homemade food is much healthier than fast food.\nExaminer: What about buying snacks in the park?\nCandidate B: I enjoy having an apple or a sandwich on a park bench when the weather is sunny, because it's very relaxing to sit outside with friends.",
+          "critique": "Candidate B 給出最佳表現（滿分 15 盾標準）！使用完整句型，主動運用 because, and, when 延伸理由，展現豐富詞彙（homemade, healthier, relaxing, sunny weather）。"
+        },
+        "bestCandidate": "Candidate B",
+        "why": "Candidate B speaks in full sentences, gives clear and detailed reasons using 'because', compares choices, and shows better vocabulary."
+      }
+    },
+    "writingPart7": {
+      "id": "u3_writing_part7",
+      "title": "Writing Part 7: 3-Picture Story (Barbecue in the Rain)",
+      "sourcePage": "assets/pages/u3_p22_p23.jpg",
+      "canteenMatching": {
+        "title": "Exercise 1 & 2: School Canteen Actions & Past Simple Verbs",
+        "instruction": "Look at the picture of students in a school canteen. Match phrases to people, and change verbs into past simple.",
+        "image": "assets/images/u3/u3_canteen_matching.jpg",
+        "actions": [
+          {
+            "phrase": "sitting at a table",
+            "pastSimple": "sat at a table"
+          },
+          {
+            "phrase": "walking to a table",
+            "pastSimple": "walked to a table"
+          },
+          {
+            "phrase": "serving the food",
+            "pastSimple": "served the food"
+          },
+          {
+            "phrase": "carrying lunch",
+            "pastSimple": "carried lunch"
+          },
+          {
+            "phrase": "taking a picture of lunch with a phone",
+            "pastSimple": "took a picture of lunch with a phone"
+          },
+          {
+            "phrase": "eating lunch",
+            "pastSimple": "ate lunch"
+          },
+          {
+            "phrase": "chatting with friends",
+            "pastSimple": "chatted with friends"
+          },
+          {
+            "phrase": "waiting to be served",
+            "pastSimple": "waited to be served"
+          }
+        ]
+      },
+      "cakeStoryPractice": {
+        "title": "Exercise 4: Practice Story (Boy Baking Cakes)",
+        "instruction": "Look at these two pictures, which tell a story. Write three sentences about what happened.",
+        "image": "assets/images/u3/u3_writing_boy_baking.jpg",
+        "suggestedModel": "A boy was in the kitchen preparing to make sweet cakes. First, he mixed the flour, butter and eggs together in a big bowl. Then, he put the cakes into the oven to bake them until they smelled delicious."
+      },
+      "examTask": {
+        "title": "Writing Part 7 Exam Task: Barbecue in the Rain",
+        "instruction": "Look at the three pictures. Write the story shown in the pictures. Write 35 words or more.",
+        "picturePrompt": "assets/images/u3/u3_writing_part7_picnic_rain.jpg",
+        "wordCountTarget": "35+ words (recommended 45-65 words)",
+        "threeStepStory": {
+          "picture1": "A father and children having an outdoor barbecue in the garden on a sunny afternoon.",
+          "picture2": "Dark clouds appear and heavy rain suddenly pours down, forcing everyone to grab food and run inside.",
+          "picture3": "They move into the kitchen; dad finishes cooking the meat in the oven, and the family enjoys eating together indoors."
+        },
+        "blocks": [
+          {
+            "step": 1,
+            "scene": "Picture 1: Starting the barbecue",
+            "promptZh": "步驟一：設定時間、人物與花園烤肉場景",
+            "scaffoldOptions": [
+              "On a sunny Sunday afternoon, Tom and his family decided to have a barbecue in the garden.",
+              "His father was happily cooking sausages and burgers on the barbecue grill.",
+              "Everyone was sitting together, drinking lemonade and waiting for the delicious food."
+            ]
+          },
+          {
+            "step": 2,
+            "scene": "Picture 2: Sudden rainstorm and running inside",
+            "promptZh": "步驟二：天氣突變下起大雨，眾人奔跑避雨",
+            "scaffoldOptions": [
+              "Suddenly, the sky turned dark and it started raining heavily.",
+              "Everyone shouted and quickly picked up their plates and cups.",
+              "They ran as fast as they could into the house to escape the rain."
+            ]
+          },
+          {
+            "step": 3,
+            "scene": "Picture 3: Kitchen cooking in the oven and happy meal",
+            "promptZh": "步驟三：進廚房改用烤箱完成烹飪，溫馨享用",
+            "scaffoldOptions": [
+              "Inside the warm kitchen, his father put the meat into the oven to finish cooking.",
+              "Soon, the food smelled wonderful and they sat at the dining table.",
+              "In the end, the family enjoyed their lunch together happily."
+            ]
+          }
+        ],
+        "rubricChecklist": {
+          "content": {
+            "maxMarks": 5,
+            "criteria": "完整涵蓋三張圖片所有關鍵情節：1. 花園烤肉 ➔ 2. 突降大雨奔回屋內 ➔ 3. 廚房烤箱完成料理並用餐。無遺漏任何一張圖。"
+          },
+          "organisation": {
+            "maxMarks": 5,
+            "criteria": "使用清晰的時間與邏輯連接詞（One day, Suddenly, so, then, inside the kitchen, in the end），故事連貫流暢。"
+          },
+          "language": {
+            "maxMarks": 5,
+            "criteria": "時態全程一致（全文使用過去式：had, was cooking, started, ran, went, baked, ate），動詞規則與不規則變化拼字完全正確（stopped, rained, sausages），字數超過 35 字。"
+          }
+        },
+        "sampleAnswers": {
+          "shield13_pass": {
+            "title": "13 盾保底穩過範文 (Grade B Merit, 46 words)",
+            "text": "Last Saturday, Tom and his family had a barbecue in the garden. His father cooked meat on the grill. Suddenly, it started raining heavily, so they ran into the house. In the kitchen, his father cooked the food in the oven and they ate together happily.",
+            "analysis": "46 字，完整交待三張圖核心情節。時態全部使用過去簡單式 (had, cooked, started, ran, cooked, ate)，拼字完全正確，邏輯連接詞清晰，能穩穩拿到 13 盾。"
+          },
+          "shield15_distinction": {
+            "title": "15 盾滿分卓越範文 (Grade A Distinction, 64 words)",
+            "text": "On a warm Sunday afternoon, Ben and his family were having a wonderful barbecue in the backyard. His father was grilling delicious sausages when suddenly dark clouds arrived and it began to rain heavily. They quickly grabbed their food and ran into the kitchen. Fortunately, his father finished baking the sausages in the oven, and everyone enjoyed the meal together.",
+            "analysis": "64 字，具備生動修飾語 (warm Sunday afternoon, wonderful barbecue, delicious sausages, dark clouds, began to rain heavily, grabbed, fortunately, enjoyed the meal together)。過去進行式與過去簡單式交互運用，展現劍橋 A2 最高層次語言能力！"
+          }
+        }
+      },
+      "picturePrompt": "assets/images/u3/u3_writing_part7_picnic_rain.jpg",
+      "blocks": [
+        {
+          "step": 1,
+          "scene": "Picture 1: Starting the barbecue",
+          "promptZh": "步驟一：設定時間、人物與花園烤肉場景",
+          "scaffoldOptions": [
+            "On a sunny Sunday afternoon, Tom and his family decided to have a barbecue in the garden.",
+            "His father was happily cooking sausages and burgers on the barbecue grill.",
+            "Everyone was sitting together, drinking lemonade and waiting for the delicious food."
+          ]
+        },
+        {
+          "step": 2,
+          "scene": "Picture 2: Sudden rainstorm and running inside",
+          "promptZh": "步驟二：天氣突變下起大雨，眾人奔跑避雨",
+          "scaffoldOptions": [
+            "Suddenly, the sky turned dark and it started raining heavily.",
+            "Everyone shouted and quickly picked up their plates and cups.",
+            "They ran as fast as they could into the house to escape the rain."
+          ]
+        },
+        {
+          "step": 3,
+          "scene": "Picture 3: Kitchen cooking in the oven and happy meal",
+          "promptZh": "步驟三：進廚房改用烤箱完成烹飪，溫馨享用",
+          "scaffoldOptions": [
+            "Inside the warm kitchen, his father put the meat into the oven to finish cooking.",
+            "Soon, the food smelled wonderful and they sat at the dining table.",
+            "In the end, the family enjoyed their lunch together happily."
+          ]
+        }
+      ],
+      "rubricChecklist": {
+        "content": {
+          "maxMarks": 5,
+          "criteria": "完整涵蓋三張圖片所有關鍵情節：1. 花園烤肉 ➔ 2. 突降大雨奔回屋內 ➔ 3. 廚房烤箱完成料理並用餐。無遺漏任何一張圖。"
+        },
+        "organisation": {
+          "maxMarks": 5,
+          "criteria": "使用清晰的時間與邏輯連接詞（One day, Suddenly, so, then, inside the kitchen, in the end），故事連貫流暢。"
+        },
+        "language": {
+          "maxMarks": 5,
+          "criteria": "時態全程一致（全文使用過去式：had, was cooking, started, ran, went, baked, ate），動詞規則與不規則變化拼字完全正確（stopped, rained, sausages），字數超過 35 字。"
+        }
+      },
+      "sampleAnswer": {
+        "pass13": "Last Saturday, Tom and his family had a barbecue in the garden. His father cooked meat on the grill. Suddenly, it started raining heavily, so they ran into the house. In the kitchen, his father cooked the food in the oven and they ate together happily.",
+        "merit13": "Last Saturday, Tom and his family had a barbecue in the garden. His father cooked meat on the grill. Suddenly, it started raining heavily, so they ran into the house. In the kitchen, his father cooked the food in the oven and they ate together happily.",
+        "distinction15": "On a warm Sunday afternoon, Ben and his family were having a wonderful barbecue in the backyard. His father was grilling delicious sausages when suddenly dark clouds arrived and it began to rain heavily. They quickly grabbed their food and ran into the kitchen. Fortunately, his father finished baking the sausages in the oven, and everyone enjoyed the meal together.",
+        "shield13_pass": {
+          "title": "13 盾保底穩過範文 (Grade B Merit, 46 words)",
+          "text": "Last Saturday, Tom and his family had a barbecue in the garden. His father cooked meat on the grill. Suddenly, it started raining heavily, so they ran into the house. In the kitchen, his father cooked the food in the oven and they ate together happily.",
+          "analysis": "46 字，完整交待三張圖核心情節。時態全部使用過去簡單式 (had, cooked, started, ran, cooked, ate)，拼字完全正確，邏輯連接詞清晰，能穩穩拿到 13 盾。"
+        },
+        "shield15_distinction": {
+          "title": "15 盾滿分卓越範文 (Grade A Distinction, 64 words)",
+          "text": "On a warm Sunday afternoon, Ben and his family were having a wonderful barbecue in the backyard. His father was grilling delicious sausages when suddenly dark clouds arrived and it began to rain heavily. They quickly grabbed their food and ran into the kitchen. Fortunately, his father finished baking the sausages in the oven, and everyone enjoyed the meal together.",
+          "analysis": "64 字，具備生動修飾語 (warm Sunday afternoon, wonderful barbecue, delicious sausages, dark clouds, began to rain heavily, grabbed, fortunately, enjoyed the meal together)。過去進行式與過去簡單式交互運用，展現劍橋 A2 最高層次語言能力！"
+        }
+      }
+    },
+    "revisionUnit3": {
+      "id": "rev_u3",
+      "title": "Unit 3 Revision (Coursebook Page 80)",
+      "sourcePage": "assets/pages/rev_u3_u4_p80_p81.jpg",
+      "totalMarks": 24,
+      "exercise1": {
+        "number": 1,
+        "title": "Read the sentences and write the word (Furniture & House)",
+        "instruction": "Read the sentences and write the word.",
+        "maxScore": 8,
+        "items": [
+          {
+            "id": "u3_rev_1_1",
+            "prompt": "1 We put all the plates, cups and glasses in this.",
+            "firstLetter": "C",
+            "answer": "cupboard",
+            "fullWord": "Cupboard",
+            "explanation": "放盤子、杯子與玻璃杯的廚房櫥櫃是 cupboard。"
+          },
+          {
+            "id": "u3_rev_1_2",
+            "prompt": "2 I look at this when I brush my hair.",
+            "firstLetter": "m",
+            "answer": "mirror",
+            "fullWord": "mirror",
+            "explanation": "梳頭髮時看著鏡子：mirror。"
+          },
+          {
+            "id": "u3_rev_1_3",
+            "prompt": "3 If it's too dark, turn this on.",
+            "firstLetter": "l",
+            "answer": "lamp",
+            "fullWord": "lamp",
+            "explanation": "太暗時打開燈具：lamp。"
+          },
+          {
+            "id": "u3_rev_1_4",
+            "prompt": "4 All my family sit on this and watch TV together.",
+            "firstLetter": "s",
+            "answer": "sofa",
+            "fullWord": "sofa",
+            "explanation": "全家人一起坐在上面看電視的沙發：sofa。"
+          },
+          {
+            "id": "u3_rev_1_5",
+            "prompt": "5 I sit at this and do my homework.",
+            "firstLetter": "d",
+            "answer": "desk",
+            "fullWord": "desk",
+            "explanation": "坐在書桌前寫功課：desk。"
+          },
+          {
+            "id": "u3_rev_1_6",
+            "prompt": "6 At night, you lie down on this and go to sleep.",
+            "firstLetter": "b",
+            "answer": "bed",
+            "fullWord": "bed",
+            "explanation": "晚上躺在床上睡覺：bed。"
+          },
+          {
+            "id": "u3_rev_1_7",
+            "prompt": "7 You have to put milk, cheese and meat in this.",
+            "firstLetter": "f",
+            "answer": "fridge",
+            "fullWord": "fridge",
+            "explanation": "牛奶、起司與肉類要保鮮放入冰箱：fridge。"
+          },
+          {
+            "id": "u3_rev_1_8",
+            "prompt": "8 To make a cake, fry an egg or boil vegetables, you need this.",
+            "firstLetter": "c",
+            "answer": "cooker",
+            "fullWord": "cooker",
+            "explanation": "做蛋糕、煎蛋或水煮蔬菜需要爐具/炊具：cooker。"
+          }
+        ]
+      },
+      "exercise2": {
+        "number": 2,
+        "title": "Choose the correct word to complete the sentences (There is/are, some/any, a/an)",
+        "instruction": "Choose the correct word to complete the sentences.",
+        "maxScore": 8,
+        "items": [
+          {
+            "id": "u3_rev_2_1",
+            "sentence": "1 Let's buy some / any ice cream for the party.",
+            "options": [
+              "some",
+              "any"
+            ],
+            "answer": "some",
+            "explanation": "Let's 提議句為肯定語氣，修飾不可數名詞 ice cream 用 some。"
+          },
+          {
+            "id": "u3_rev_2_2",
+            "sentence": "2 There is / are two burgers and some / any potatoes on the table.",
+            "optionsPart1": [
+              "is",
+              "are"
+            ],
+            "optionsPart2": [
+              "some",
+              "any"
+            ],
+            "answer": "are, some",
+            "answers": [
+              "are",
+              "some"
+            ],
+            "explanation": "主詞 two burgers 為複數，用 are；肯定句修飾複數 potatoes 用 some。"
+          },
+          {
+            "id": "u3_rev_2_3",
+            "sentence": "3 I'd like a / an salad for lunch.",
+            "options": [
+              "a",
+              "an"
+            ],
+            "answer": "a",
+            "explanation": "salad 開頭為子音音素 /s/，不定冠詞用 a。"
+          },
+          {
+            "id": "u3_rev_2_4",
+            "sentence": "4 There is / are a table and four chairs in the kitchen. We can eat there.",
+            "options": [
+              "is",
+              "are"
+            ],
+            "answer": "is",
+            "explanation": "There be 句型遵循「就近原則」，最靠近的名詞 a table 為單數，因此用 is。"
+          },
+          {
+            "id": "u3_rev_2_5",
+            "sentence": "5 I don't want some / any meat.",
+            "options": [
+              "some",
+              "any"
+            ],
+            "answer": "any",
+            "explanation": "否定句 (don't want) 修飾不可數名詞 meat 必須用 any。"
+          },
+          {
+            "id": "u3_rev_2_6",
+            "sentence": "6 Can I have a / an omelette?",
+            "options": [
+              "a",
+              "an"
+            ],
+            "answer": "an",
+            "explanation": "omelette 開頭為母音音素 /ˈɒm.lət/，不定冠詞用 an。"
+          },
+          {
+            "id": "u3_rev_2_7",
+            "sentence": "7 Can you make some / any rice for lunch?",
+            "options": [
+              "some",
+              "any"
+            ],
+            "answer": "some",
+            "explanation": "Can you...? 提出請求且期待對方答應時，用 some。"
+          },
+          {
+            "id": "u3_rev_2_8",
+            "sentence": "8 We haven't got some / any jam.",
+            "options": [
+              "some",
+              "any"
+            ],
+            "answer": "any",
+            "explanation": "haven't got 為否定句，修飾不可數名詞 jam 必須用 any。"
+          }
+        ]
+      },
+      "exercise3": {
+        "number": 3,
+        "title": "Complete the sentences with the correct form of have to",
+        "instruction": "Complete the sentences with the correct form of have to.",
+        "maxScore": 8,
+        "items": [
+          {
+            "id": "u3_rev_3_1",
+            "sentence": "1 I live near my school so I .................................... get up very early in the morning.",
+            "answer": "don't have to",
+            "explanation": "住學校附近所以「不需要」很早起床：don't have to。"
+          },
+          {
+            "id": "u3_rev_3_2",
+            "sentence": "2 My mum says breakfast is very important so I .................................... have a big breakfast every day.",
+            "answer": "have to",
+            "explanation": "媽媽說早餐很重要，所以「必須」吃豐盛早餐：have to。"
+          },
+          {
+            "id": "u3_rev_3_3",
+            "sentence": "3 We .................................... wear a school uniform. It's grey and dark blue.",
+            "answer": "have to",
+            "explanation": "校規規定穿制服，主詞為 We，用 have to。"
+          },
+          {
+            "id": "u3_rev_3_4",
+            "sentence": "4 We go to school from Monday to Friday. We .................................... go to school on Saturday or Sunday.",
+            "answer": "don't have to",
+            "explanation": "週一到週五上學，週末「不需要」去上學：don't have to。"
+          },
+          {
+            "id": "u3_rev_3_5",
+            "sentence": "5 .................................... (you) stay at school every afternoon until 4 p.m.?",
+            "answer": "Do you have to",
+            "explanation": "現在簡單式疑問句：Do you have to stay...?"
+          },
+          {
+            "id": "u3_rev_3_6",
+            "sentence": "6 I do homework every weekend but my sister .................................... do homework because she's only five years old.",
+            "answer": "doesn't have to",
+            "explanation": "妹妹只有五歲，第三人稱單數否定「不需要做作業」：doesn't have to。"
+          },
+          {
+            "id": "u3_rev_3_7",
+            "sentence": "7 After dinner I .................................... wash up and my sister sometimes helps me.",
+            "answer": "have to",
+            "explanation": "飯後我「必須」洗碗：I have to。"
+          },
+          {
+            "id": "u3_rev_3_8",
+            "sentence": "8 My sister .................................... go to bed at 8 p.m. but I usually go to bed at 9.30.",
+            "answer": "has to",
+            "explanation": "主詞為第三人稱單數 My sister，肯定句「必須去睡覺」用 has to。"
+          }
+        ]
+      },
+      "totalPoints": 24
+    }
+  }
+}

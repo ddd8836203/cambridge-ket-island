@@ -1,0 +1,1758 @@
+{
+  "unitMetadata": {
+    "id": "u1",
+    "number": 1,
+    "title": "My family, my friends & me",
+    "topic": "People & Daily life",
+    "grammarFocus": [
+      "have got",
+      "Present simple",
+      "Question words"
+    ],
+    "spreadPages": [
+      "assets/pages/u1_p6_p7.jpg",
+      "assets/pages/u1_p8_p9.jpg",
+      "assets/pages/u1_p10_p11.jpg"
+    ],
+    "revisionPage": "assets/pages/rev_u1_u2_p78_p79.jpg",
+    "images": {
+      "familyIntro": "assets/images/u1/u1_family_intro.jpg",
+      "sofiaFamilyTree": "assets/images/u1/u1_sofia_family_tree.jpg",
+      "readingPart2Boys": "assets/images/u1/u1_reading_part2_boys.jpg",
+      "favPlaces": "assets/images/u1/u1_fav_places.jpg",
+      "writingPart7Bookshop": "assets/images/u1/u1_writing_part7_bookshop.jpg",
+      "writingPart7Exam": "assets/images/u1/u1_writing_part7_exam.jpg",
+      "clocks": "assets/images/u1/u1_clocks.jpg",
+      "kylePhotoAlbum": "assets/images/u1/u1_kyle_photo_album.jpg",
+      "simonIsland": "assets/images/u1/u1_simon_island.jpg",
+      "speakingPeopleAF": "assets/images/u1/u1_speaking_people_af.jpg"
+    }
+  },
+  "vocabulary": [
+    {
+      "word": "unusual",
+      "pos": "adj.",
+      "zh": "特別的、不尋常的",
+      "collocation": "have an unusual family / name / surname",
+      "example": "Have you got an unusual family?",
+      "tip": "KET 高頻形容詞。注意反義詞為 usual 或 ordinary。"
+    },
+    {
+      "word": "surname",
+      "pos": "n.",
+      "zh": "姓氏",
+      "collocation": "an unusual surname / change one's surname",
+      "example": "He hasn't got an unusual surname, it's Roberts.",
+      "tip": "同義詞為 last name 或 family name。KET 聽力 Part 1/2 常考姓氏字母拼讀。"
+    },
+    {
+      "word": "nickname",
+      "pos": "n.",
+      "zh": "綽號、外號",
+      "collocation": "have a nickname / give sb a nickname",
+      "example": "I've got a nickname. It's Skater Blue because I've got a blue skateboard!",
+      "tip": "定義：this isn't your real name, but the name your friends or family call you。"
+    },
+    {
+      "word": "twin",
+      "pos": "n.",
+      "zh": "雙胞胎（之一）",
+      "collocation": "twin brother / twin sister / identical twins",
+      "example": "I've got a twin brother and we've got two sisters. They're also twins!",
+      "tip": "注意可數名詞單複數：twin 指一人，雙胞胎兩人合稱 twins。"
+    },
+    {
+      "word": "cousin",
+      "pos": "n.",
+      "zh": "堂（表）兄弟姊妹",
+      "collocation": "visit cousins / stay with a cousin",
+      "example": "I have cousins in Germany and Australia, so I don't see them very often.",
+      "tip": "英文 cousin 不分性別與長幼，皆用同一個單字。"
+    },
+    {
+      "word": "daughter",
+      "pos": "n.",
+      "zh": "女兒",
+      "collocation": "have a daughter / the eldest daughter",
+      "example": "Mateo and Paula have got two daughters, Sofia and Ariana.",
+      "tip": "反義詞為 son。注意拼字中的 -ugh- 不發音。"
+    },
+    {
+      "word": "son",
+      "pos": "n.",
+      "zh": "兒子",
+      "collocation": "have a son / the youngest son",
+      "example": "They haven't got any sons, only daughters.",
+      "tip": "反義詞為 daughter。發音與 sun 相同（同音異義詞 homophone）。"
+    },
+    {
+      "word": "parents",
+      "pos": "n. pl.",
+      "zh": "父母雙親",
+      "collocation": "live with parents / both parents",
+      "example": "Bastian lives with his parents and his brother in the USA.",
+      "tip": "雙親合稱加 -s（parents）；單數 parent 意指父親或母親其中一人。"
+    },
+    {
+      "word": "crowded",
+      "pos": "adj.",
+      "zh": "擁擠的、熱鬧的",
+      "collocation": "a crowded house / a crowded room / crowded streets",
+      "example": "Our house is crowded, so I'm never alone or bored.",
+      "tip": "由動詞 crowd（聚集）衍生而來，用以形容人滿為患的地方。"
+    },
+    {
+      "word": "alone",
+      "pos": "adj./adv.",
+      "zh": "獨自一人的",
+      "collocation": "be alone / feel alone / live alone",
+      "example": "There are seven of us, so I am never alone.",
+      "tip": "alone 表客觀「獨自一人」；lonely 表主觀心境「孤獨寂寞」。"
+    },
+    {
+      "word": "look after",
+      "pos": "phr v.",
+      "zh": "照料、照顧",
+      "collocation": "look after children / look after pets / look after grandparents",
+      "example": "My grandparents often look after us when my parents are working.",
+      "tip": "KET 高頻片語，同義詞為 take care of。聽力與閱讀常考兩者同義代換。"
+    },
+    {
+      "word": "tidy up",
+      "pos": "phr v.",
+      "zh": "整理、收拾",
+      "collocation": "tidy up the house / tidy up the bedroom",
+      "example": "Mum and Dad go out to work, so sometimes I tidy up the house.",
+      "tip": "動詞片語可分開：tidy the room up 或 tidy up the room。"
+    },
+    {
+      "word": "wake up",
+      "pos": "phr v.",
+      "zh": "醒來、叫醒",
+      "collocation": "wake up early / wake sb up at 7 o'clock",
+      "example": "Simon's mum wakes him up at 6.15 every weekday.",
+      "tip": "wake up 指意識清醒；get up 指離開床鋪起身。"
+    },
+    {
+      "word": "leave home",
+      "pos": "phr.",
+      "zh": "出門、離家",
+      "collocation": "leave home for school / leave home at 7 a.m.",
+      "example": "He leaves home at seven o'clock to walk to the ferry terminal.",
+      "tip": "leave 後面接出發地點（home/school），不加介系詞 to。"
+    },
+    {
+      "word": "get home",
+      "pos": "phr.",
+      "zh": "到家",
+      "collocation": "get home from work / get home late",
+      "example": "My mother gets home from work at six o'clock in the evening.",
+      "tip": "home 為地方副詞，前方不可加介系詞 to（嚴禁寫成 get to home）。"
+    },
+    {
+      "word": "walk to school",
+      "pos": "phr.",
+      "zh": "步行上學",
+      "collocation": "walk to school with friends / walk along the street to school",
+      "example": "Mariana doesn't walk to school because it's too far from her house.",
+      "tip": "同義代換為 go to school on foot。"
+    },
+    {
+      "word": "curly",
+      "pos": "adj.",
+      "zh": "捲曲的（指頭髮）",
+      "collocation": "short curly hair / have curly hair",
+      "example": "Jason's got short, curly hair and blue eyes.",
+      "tip": "反義詞為 straight（筆直的）。"
+    },
+    {
+      "word": "straight",
+      "pos": "adj.",
+      "zh": "筆直的（指頭髮）",
+      "collocation": "long straight hair / straight blond hair",
+      "example": "Jenny's quite short. She's got long, dark, straight hair and green eyes.",
+      "tip": "注意拼字 -aigh-。形容頭髮時反義詞為 curly 或 wavy。"
+    },
+    {
+      "word": "island",
+      "pos": "n.",
+      "zh": "島嶼",
+      "collocation": "live on an island / travel to an island",
+      "example": "Simon lives on an island and travels by boat to the mainland every day.",
+      "tip": "注意首字母 s 不發音（讀為 /ˈaɪ.lənd/）。介系詞固定搭配 on an island。"
+    },
+    {
+      "word": "hurry up",
+      "pos": "phr v.",
+      "zh": "趕快、快點",
+      "collocation": "hurry up or you'll miss the bus",
+      "example": "His dad shouted, 'Hurry up! You are going to miss the bus!'",
+      "tip": "寫作 Part 7 常用的對話呼喊動詞，能生動呈現趕時間情境。"
+    }
+  ],
+  "commonMistakes": {
+    "haveGotMistakes": [
+      {
+        "id": "cm_hg_1",
+        "wrong": "Her eyes are green and she gots long, black hair.",
+        "correct": "Her eyes are green and she has got long, black hair.",
+        "errorSpan": "she gots",
+        "correction": "she has got / she's got",
+        "rule": "第三人稱單數主詞（she/he/it）搭配 has got，動詞 got 本身絕不可加 -s 寫成 gots。"
+      },
+      {
+        "id": "cm_hg_2",
+        "wrong": "Please help her if she got any problems.",
+        "correct": "Please help her if she has got any problems.",
+        "errorSpan": "she got",
+        "correction": "she has got / she's got",
+        "rule": "現在式表示「擁有」時，got 前方不可省略助動詞 has/have。"
+      },
+      {
+        "id": "cm_hg_3",
+        "wrong": "I'm got some friends. My best friend is Juan Manuel.",
+        "correct": "I've got some friends. My best friend is Juan Manuel.",
+        "errorSpan": "I'm got",
+        "correction": "I've got / I have got",
+        "rule": "have got 的縮寫是 've got（I've got），不可誤混為 be 動詞的縮寫 'm got（I'm got）。"
+      },
+      {
+        "id": "cm_hg_4",
+        "wrong": "We had to move because my father gets a new job here.",
+        "correct": "We had to move because my father has got a new job here.",
+        "errorSpan": "gets",
+        "correction": "has got / 's got",
+        "rule": "在英式英語中，表示目前獲得或擁有新工作、物品時，習慣使用 has got 表達狀態。"
+      }
+    ],
+    "presentSimpleMistakes": [
+      {
+        "id": "cm_ps_1",
+        "wrong": "The class starts at 2 p.m. and finishs at 3 p.m.",
+        "correct": "The class starts at 2 p.m. and finishes at 3 p.m.",
+        "errorSpan": "finishs",
+        "correction": "finishes",
+        "rule": "動詞字尾為 -s, -sh, -ch, -x 時，第三人稱單數現在式必須加 -es（finish -> finishes），不可直接加 -s。"
+      },
+      {
+        "id": "cm_ps_2",
+        "wrong": "The room don't have any furniture.",
+        "correct": "The room doesn't have any furniture.",
+        "errorSpan": "don't have",
+        "correction": "doesn't have",
+        "rule": "主詞 the room 為第三人稱單數（it），現在簡單式否定句助動詞應使用 doesn't，而非 don't。"
+      },
+      {
+        "id": "cm_ps_3",
+        "wrong": "My mother want me to be at home at 9 p.m.",
+        "correct": "My mother wants me to be at home at 9 p.m.",
+        "errorSpan": "want",
+        "correction": "wants",
+        "rule": "主詞 my mother 為第三人稱單數（she），一般動詞現在式肯定句字尾必須加上 -s（wants）。"
+      },
+      {
+        "id": "cm_ps_4",
+        "wrong": "My sister do this sport and she's very good.",
+        "correct": "My sister does this sport and she's very good.",
+        "errorSpan": "do",
+        "correction": "does",
+        "rule": "主詞 my sister 為第三人稱單數（she），動詞 do 需變形為 does。"
+      },
+      {
+        "id": "cm_ps_5",
+        "wrong": "What you think about this class?",
+        "correct": "What do you think about this class?",
+        "errorSpan": "What you think",
+        "correction": "What do you think",
+        "rule": "現在簡單式特殊疑問句結構為「疑問詞 + 助動詞 do/does + 主詞 + 原形動詞」，不可遺漏助動詞 do。"
+      },
+      {
+        "id": "cm_ps_6",
+        "wrong": "It doesnt matter that you can't find the information.",
+        "correct": "It doesn't matter that you can't find the information.",
+        "errorSpan": "doesnt",
+        "correction": "doesn't",
+        "rule": "否定助動詞縮寫必須正確標記撇號 apostrophe（doesn't），KET 寫作中遺漏標點符號會扣語言分。"
+      }
+    ]
+  },
+  "exercises": {
+    "readingPart2": {
+      "title": "Reading Part 2 - Three Teenagers Talking About Their Families",
+      "examTip": "In Part 2, read the three texts carefully. Don't just match words in the text with the questions. A text can include words from the question and be the wrong answer.",
+      "image": "assets/images/u1/u1_reading_part2_boys.jpg",
+      "texts": {
+        "leo": {
+          "name": "Leo",
+          "code": "A",
+          "content": "There are a lot of us in my family, and I love it. Our house is crowded, so I'm never alone or bored. I've got a brother and three sisters. My brother and I have one bedroom, and my sisters have another. Mum and Dad work a lot, and my grandparents live near us, so they often look after us when my parents are working. My grandfather is from France, and he sometimes helps me with my French homework."
+        },
+        "bastian": {
+          "name": "Bastian",
+          "code": "B",
+          "content": "I live with my mum, dad and brother. My brother and I have our own bedrooms. He's only a year older than me, so we do lots of things together, which is fun. We've got an aunt and uncle who live in the same street as us, together with their daughter - our cousin - and our grandparents. Dad works in an office, and Mum is a teacher. She was born in Italy, but she came to live here in the USA a long time ago."
+        },
+        "callum": {
+          "name": "Callum",
+          "code": "C",
+          "content": "My family is big, but we don't all live in the same place. I have cousins in Germany and Australia, so I don't see them very often. My parents, my sister and I share a house with my grandma, but my sister and I have our own bedrooms. Mum and Dad go out to work, and they don't have much free time, so sometimes I tidy up the house. Mum likes it when I do that."
+        }
+      },
+      "questions": [
+        {
+          "id": "r_p2_q1",
+          "number": 1,
+          "question": "Which person has got family members in different countries?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Leo"
+            },
+            {
+              "label": "B",
+              "text": "Bastian"
+            },
+            {
+              "label": "C",
+              "text": "Callum"
+            }
+          ],
+          "answer": "C",
+          "locationQuote": "I have cousins in Germany and Australia, so I don't see them very often.",
+          "explanation": "Callum 明確提到他的堂表兄弟姊妹住在德國 (Germany) 和澳洲 (Australia)，分佈在不同國家。",
+          "trapAnalysis": "陷阱選項：Leo 提到祖父來自法國 (My grandfather is from France)，但他現在住在附近 (live near us)；Bastian 提到媽媽出生於義大利 (born in Italy)，但很久以前就搬來美國 (USA) 同住了。只有 Callum 的親戚目前人在國外。"
+        },
+        {
+          "id": "r_p2_q2",
+          "number": 2,
+          "question": "Which person shares a bedroom with another member of his family?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Leo"
+            },
+            {
+              "label": "B",
+              "text": "Bastian"
+            },
+            {
+              "label": "C",
+              "text": "Callum"
+            }
+          ],
+          "answer": "A",
+          "locationQuote": "My brother and I have one bedroom, and my sisters have another.",
+          "explanation": "Leo 和他的哥哥/弟弟共用一間臥室 (have one bedroom)，三個姊妹共用另一間。",
+          "trapAnalysis": "干擾項：Bastian 說 'My brother and I have our own bedrooms'（各自有獨立房間）；Callum 說 'my sister and I have our own bedrooms'。兩人皆為 own bedrooms，並未 share。"
+        },
+        {
+          "id": "r_p2_q3",
+          "number": 3,
+          "question": "Which person has got a cousin who lives near him?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Leo"
+            },
+            {
+              "label": "B",
+              "text": "Bastian"
+            },
+            {
+              "label": "C",
+              "text": "Callum"
+            }
+          ],
+          "answer": "B",
+          "locationQuote": "We've got an aunt and uncle who live in the same street as us, together with their daughter - our cousin - and our grandparents.",
+          "explanation": "Bastian 提到姑叔一家人以及他們的表妹 (their daughter - our cousin) 住在他家同一條街上 (in the same street as us)，近在咫尺。",
+          "trapAnalysis": "干擾項：Callum 雖然有表親，但住在德國與澳洲 (don't see them very often)；Leo 只有祖父母住在附近，未提及表親。"
+        },
+        {
+          "id": "r_p2_q4",
+          "number": 4,
+          "question": "Which person helps someone in his family?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Leo"
+            },
+            {
+              "label": "B",
+              "text": "Bastian"
+            },
+            {
+              "label": "C",
+              "text": "Callum"
+            }
+          ],
+          "answer": "C",
+          "locationQuote": "Mum and Dad go out to work, and they don't have much free time, so sometimes I tidy up the house. Mum likes it when I do that.",
+          "explanation": "Callum 在父母忙於工作時，主動幫忙打掃整理家裡 (tidy up the house)，為家人分擔家務。",
+          "trapAnalysis": "極高頻陷阱：Leo 說 'he [grandfather] sometimes helps me with my French homework'，這是祖父幫助 Leo，而不是 Leo 幫助家人！題目主詞為 'Which person helps someone'（主動幫人）。"
+        },
+        {
+          "id": "r_p2_q5",
+          "number": 5,
+          "question": "Which person lives with a grandparent?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Leo"
+            },
+            {
+              "label": "B",
+              "text": "Bastian"
+            },
+            {
+              "label": "C",
+              "text": "Callum"
+            }
+          ],
+          "answer": "C",
+          "locationQuote": "My parents, my sister and I share a house with my grandma...",
+          "explanation": "Callum 全家與祖母同住在一棟房子裡 (share a house with my grandma)。",
+          "trapAnalysis": "干擾項：Leo 說 'my grandparents live near us'（祖父母住附近，非同住）；Bastian 說祖父母住在同一條街上 ('together with... our grandparents')，亦非同住一屋。"
+        },
+        {
+          "id": "r_p2_q6",
+          "number": 6,
+          "question": "Which person enjoys spending time with one member of his family?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Leo"
+            },
+            {
+              "label": "B",
+              "text": "Bastian"
+            },
+            {
+              "label": "C",
+              "text": "Callum"
+            }
+          ],
+          "answer": "B",
+          "locationQuote": "He's only a year older than me, so we do lots of things together, which is fun.",
+          "explanation": "Bastian 提到哥哥只大他一歲，兩人經常一起做很多事，非常有趣開心 (which is fun)。",
+          "trapAnalysis": "干擾項：Leo 雖然說喜歡熱鬧的家庭 (There are a lot of us in my family, and I love it)，但並未針對特定一位家人指出享受相處時光；Bastian 精確指涉其哥哥 (brother)。"
+        },
+        {
+          "id": "r_p2_q7",
+          "number": 7,
+          "question": "Which person thinks it is good to have a big family?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Leo"
+            },
+            {
+              "label": "B",
+              "text": "Bastian"
+            },
+            {
+              "label": "C",
+              "text": "Callum"
+            }
+          ],
+          "answer": "A",
+          "locationQuote": "There are a lot of us in my family, and I love it. Our house is crowded, so I'm never alone or bored.",
+          "explanation": "Leo 表示家裡有很多人且他非常熱愛 (I love it)，因為家裡熱鬧，他永遠不會感到無聊或孤單。",
+          "trapAnalysis": "干擾項：Callum 雖然也說 'My family is big'，但下一句接的是 'but we don't all live in the same place'，並未表達熱愛大家庭的讚賞心態；只有 Leo 明確肯定大家庭的好處。"
+        }
+      ]
+    },
+    "writingPart7": {
+      "title": "Writing Part 7 - 3-Picture Story (Late for the School Bus)",
+      "examTip": "You often need to write about the places you can see in the three pictures. Remember to use the correct preposition (in, at, to, out of, etc.) for each place. Write 35 words or more.",
+      "picturePrompt": "assets/images/u1/u1_writing_part7_exam.jpg",
+      "storyTitle": "Rushing for the School Bus",
+      "blocks": {
+        "step1": {
+          "scene": "Picture 1: Boy relaxing in his bedroom",
+          "options": [
+            "One morning, Jack was sitting on his bed in his bedroom.",
+            "He was wearing his uniform and listening to music on his phone.",
+            "He felt relaxed and didn't check what time it was."
+          ],
+          "keyVocab": [
+            "bedroom",
+            "on his bed",
+            "relaxing",
+            "uniform"
+          ],
+          "hint": "說明時間背景、人物在臥室放鬆、未注意時間。"
+        },
+        "step2": {
+          "scene": "Picture 2: Father pointing at the wall clock in the kitchen",
+          "options": [
+            "Suddenly, his father rushed into the kitchen and pointed at the wall clock.",
+            "It was already half past eight! His sister was quickly finishing her breakfast.",
+            "His father shouted angrily, 'Look at the time! You're going to miss the bus!'"
+          ],
+          "keyVocab": [
+            "kitchen",
+            "pointed at the clock",
+            "half past eight",
+            "eating breakfast"
+          ],
+          "hint": "說明圖二轉折：爸爸指著時鐘提醒快遲到，妹妹正在吃早餐。"
+        },
+        "step3": {
+          "scene": "Picture 3: Running down the street to catch the red school bus",
+          "options": [
+            "Jack and his sister quickly picked up their school bags and ran out of the house.",
+            "The big red school bus was already leaving the stop down the street.",
+            "His sister waved her arm and ran as fast as she could to catch it."
+          ],
+          "keyVocab": [
+            "ran out of the house",
+            "along the street",
+            "red school bus",
+            "waved her hand",
+            "catch the bus"
+          ],
+          "hint": "說明結果：抓起書包衝出家門，朝著即將開走的紅色校車奔跑招手。"
+        }
+      },
+      "rubricChecklist": {
+        "content": {
+          "maxScore": 5,
+          "name": "Content (內容完整性)",
+          "requirements": [
+            "Mention Picture 1: 男孩在臥室床上放鬆/聽音樂，沒有意識到時間流逝。",
+            "Mention Picture 2: 爸爸在廚房憤怒或著急地指著時鐘，妹妹正在吃早餐/麥片。",
+            "Mention Picture 3: 衝出門跑向街道，向即將開走的紅色公車招手趕車。"
+          ]
+        },
+        "organisation": {
+          "maxScore": 5,
+          "name": "Organisation (組織與連貫性)",
+          "requirements": [
+            "故事符合三張圖的時間邏輯順序（起因 -> 發展 -> 結果）。",
+            "正確使用時間連接詞與副詞：One morning, Suddenly, Then, At that moment, Finally。",
+            "字數必須達到 35 字以上（建議 45~60 字，既無贅字又能拿滿分）。"
+          ]
+        },
+        "language": {
+          "maxScore": 5,
+          "name": "Language (語言與文法精準度)",
+          "requirements": [
+            "全文時態保持一致（強烈建議使用過去式 Past Simple / Past Continuous）。",
+            "精準使用地方介系詞：in his bedroom, at the clock, out of the house, along the street。",
+            "拼字與標點零失誤（breakfast, clock, caught, uniform）。"
+          ]
+        }
+      },
+      "sampleAnswers": {
+        "guaranteed13Shields": {
+          "level": "保底 13 盾標準範文 (Grade B Merit)",
+          "wordCount": 43,
+          "text": "One morning, Jack sat on his bed and listened to music. Then his father pointed at the clock in the kitchen and said they were late. Jack and his sister ran out of the house. His sister waved to catch the red bus.",
+          "breakdown": "結構精簡，完整囊括三幅圖要素，時態統一使用過去式 (sat, listened, pointed, ran, waved)，無文法錯誤，字數 43 字順利突破 35 字門檻。"
+        },
+        "fullMarks15Shields": {
+          "level": "滿分 15 盾卓越範文 (Grade A Distinction)",
+          "wordCount": 61,
+          "text": "One morning, Jack was sitting on his bed in his bedroom, relaxing with music. Suddenly, his dad pointed at the clock because it was already 8.30! His sister quickly ate her breakfast. They rushed out of the house, and his sister ran along the street, waving her hand to catch the departing red school bus.",
+          "breakdown": "使用過去進行式 (was sitting) 營造背景氛圍；轉折副詞 (Suddenly) 帶出緊張感；搭配多元高頻詞彙 (relaxing, rushed, along the street, waving her hand, departing)；介系詞運用精準無比。"
+        }
+      },
+      "practiceTask": {
+        "title": "Practice 3-Picture Story (Boy in Bookshop)",
+        "image": "assets/images/u1/u1_writing_part7_bookshop.jpg",
+        "description": "Picture 1: A boy bought a book in a shop. Picture 2: He walked away and left his wallet on the counter. Picture 3: The shop assistant ran after him and gave the wallet back.",
+        "sampleStory": "A boy bought a book in a shop. He paid the money and walked out, but he forgot his wallet on the desk. The friendly shop assistant picked it up, ran outside and gave the wallet back to the boy."
+      }
+    },
+    "listeningPart3": {
+      "title": "Listening Part 3 - Simon's Journey to School",
+      "examTip": "Sometimes the answer is a time. Say the times in the answers quietly to yourself before you listen.",
+      "image": "assets/images/u1/u1_simon_island.jpg",
+      "prepTask": {
+        "track": "Track 03",
+        "description": "Listen to the first part of the conversation and choose the correct times.",
+        "questions": [
+          {
+            "id": "l_p3_prep_1",
+            "question": "What time does Simon wake up?",
+            "options": [
+              {
+                "label": "a",
+                "text": "6.15"
+              },
+              {
+                "label": "b",
+                "text": "7.00"
+              }
+            ],
+            "answer": "a",
+            "explanation": "Simon 說媽媽在 6 點 15 分叫醒他 (My mum wakes me up at quarter past six)。7 點是他離家出門的時間。"
+          },
+          {
+            "id": "l_p3_prep_2",
+            "question": "What time does Simon leave home?",
+            "options": [
+              {
+                "label": "a",
+                "text": "7.00"
+              },
+              {
+                "label": "b",
+                "text": "7.30"
+              }
+            ],
+            "answer": "a",
+            "explanation": "Simon 在 7 點整離開家 (I leave home at seven o'clock)；7 點 30 分是開往本島渡輪的出航時間。"
+          }
+        ]
+      },
+      "examTask": {
+        "track": "Track 04",
+        "instructions": "For each question, choose the correct answer. You will hear Simon talking to his friend Amanda about his school day.",
+        "questions": [
+          {
+            "id": "l_p3_exam_1",
+            "number": 1,
+            "question": "Amanda's tired because she",
+            "options": [
+              {
+                "label": "A",
+                "text": "watches TV in bed."
+              },
+              {
+                "label": "B",
+                "text": "goes to sleep very late."
+              },
+              {
+                "label": "C",
+                "text": "wakes up early."
+              }
+            ],
+            "answer": "B",
+            "locationQuote": "Amanda: 'No, I don't have to get up early, but I never go to sleep until after midnight!'",
+            "explanation": "Amanda 澄清她不用早起，但她總是很晚才睡覺 (never go to sleep until after midnight -> goes to sleep very late)。",
+            "trapAnalysis": "陷阱 A：Amanda 說在客廳看電視，不是在床上看 (watches TV in bed)；陷阱 C：早起的是 Simon (6.15)，Amanda 不需要早起。"
+          },
+          {
+            "id": "l_p3_exam_2",
+            "number": 2,
+            "question": "What time does the boat to Simon's school leave?",
+            "options": [
+              {
+                "label": "A",
+                "text": "6.15"
+              },
+              {
+                "label": "B",
+                "text": "7.00"
+              },
+              {
+                "label": "C",
+                "text": "7.30"
+              }
+            ],
+            "answer": "C",
+            "locationQuote": "Simon: 'The ferry leaves the island at half past seven, so I have to be at the harbour before then.'",
+            "explanation": "開往學校的船班在 7 點 30 分 (half past seven = 7.30) 出發。",
+            "trapAnalysis": "數字陷阱：6.15 是起床時間 (wake up)，7.00 是離家時間 (leave home)，三個時間都在對話中出現，需精確辨析動作主詞與動詞。"
+          },
+          {
+            "id": "l_p3_exam_3",
+            "number": 3,
+            "question": "How old is Simon?",
+            "options": [
+              {
+                "label": "A",
+                "text": "11"
+              },
+              {
+                "label": "B",
+                "text": "12"
+              },
+              {
+                "label": "C",
+                "text": "14"
+              }
+            ],
+            "answer": "B",
+            "locationQuote": "Simon: 'I'm twelve now, so this is my first year going across to the secondary school on the mainland.'",
+            "explanation": "Simon 親口說他現在 12 歲 (I'm twelve now)。",
+            "trapAnalysis": "數字陷阱：11 歲是小學畢業年齡 (Children leave the island primary school at eleven)；14 歲是他哥哥的年齡 (My older brother is fourteen)。"
+          },
+          {
+            "id": "l_p3_exam_4",
+            "number": 4,
+            "question": "Simon eats his dinner",
+            "options": [
+              {
+                "label": "A",
+                "text": "at his aunt's house."
+              },
+              {
+                "label": "B",
+                "text": "at home."
+              },
+              {
+                "label": "C",
+                "text": "at school."
+              }
+            ],
+            "answer": "A",
+            "locationQuote": "Simon: 'After school clubs finish, I go to my Aunt Tanya's house on the mainland and have dinner there before taking the evening boat back.'",
+            "explanation": "Simon 放學後會到住在本島的姑姑 Tanya 家吃晚餐 (at his aunt's house)。",
+            "trapAnalysis": "干擾項：他在學校吃的是午餐 (have lunch at school)；他在家吃的是早餐，回到家時已經很晚了。"
+          },
+          {
+            "id": "l_p3_exam_5",
+            "number": 5,
+            "question": "Amanda thinks Simon's day is",
+            "options": [
+              {
+                "label": "A",
+                "text": "exciting."
+              },
+              {
+                "label": "B",
+                "text": "fun."
+              },
+              {
+                "label": "C",
+                "text": "unusual."
+              }
+            ],
+            "answer": "C",
+            "locationQuote": "Amanda: 'Taking a boat across the sea every morning and evening? Your daily routine sounds really unusual!'",
+            "explanation": "Amanda 認為每天搭船上學的生活非常不尋常、特別 (really unusual)。",
+            "trapAnalysis": "詞彙陷阱：Simon 提到搭船有時很刺激 (exciting) 或好玩 (fun)，但題目問的是 Amanda 的看法 ('Amanda thinks Simon's day is...')，Amanda 使用的評價詞為 unusual。"
+          }
+        ]
+      },
+      "tapescript": [
+        {
+          "speaker": "Amanda",
+          "text": "Hi Simon, you look wide awake! I'm completely exhausted today.",
+          "isKey": false,
+          "isDistractor": false
+        },
+        {
+          "speaker": "Simon",
+          "text": "Why Amanda? Do you have to get up really early in the morning like me?",
+          "isKey": false,
+          "isDistractor": true,
+          "targetQuestion": 1,
+          "trapType": "Opposite / Not applicable",
+          "explanation": "Simon 提問 Amanda 是否早起，容易誤導考生選擇 C。"
+        },
+        {
+          "speaker": "Amanda",
+          "text": "No, not at all! I wake up at eight o'clock. But I watched a film on television in the living room, and then I went to sleep very late, past midnight!",
+          "isKey": true,
+          "targetQuestion": 1,
+          "explanation": "正解句：Amanda 明確指出自己很晚才睡 (went to sleep very late, past midnight)。排除 A（在客廳看電視非床上）與 C（起床時間是 8 點不早）。"
+        },
+        {
+          "speaker": "Simon",
+          "text": "Wow, I could never do that. My mum knocks on my bedroom door and wakes me up at quarter past six.",
+          "isKey": false,
+          "isDistractor": true,
+          "targetQuestion": 2,
+          "trapType": "Wrong action time",
+          "explanation": "出現時間 6.15，但這是 mum wakes me up 的時間，不是開船時間。"
+        },
+        {
+          "speaker": "Amanda",
+          "text": "Quarter past six? That's so early! Why do you need to be up then?",
+          "isKey": false,
+          "isDistractor": false
+        },
+        {
+          "speaker": "Simon",
+          "text": "Well, I have breakfast and get dressed, and then I leave home at seven o'clock.",
+          "isKey": false,
+          "isDistractor": true,
+          "targetQuestion": 2,
+          "trapType": "Wrong action time",
+          "explanation": "出現時間 7.00，但這是 leave home（離家出門）的時間。"
+        },
+        {
+          "speaker": "Amanda",
+          "text": "And how do you get across the sea to the mainland?",
+          "isKey": false,
+          "isDistractor": false
+        },
+        {
+          "speaker": "Simon",
+          "text": "I walk down to the port. The boat to school leaves the island at half past seven sharp, so I can't be late.",
+          "isKey": true,
+          "targetQuestion": 2,
+          "explanation": "正解句：船在 7 點半 (half past seven = 7.30) 出航。"
+        },
+        {
+          "speaker": "Amanda",
+          "text": "Do all children on your island take the boat to school?",
+          "isKey": false,
+          "isDistractor": false
+        },
+        {
+          "speaker": "Simon",
+          "text": "Only when we are older. The island primary school is for kids up to eleven. But I'm twelve now, so this year I have to go to the big school across the water.",
+          "isKey": true,
+          "targetQuestion": 3,
+          "explanation": "正解句：Simon 親自說明 'I'm twelve now'。"
+        },
+        {
+          "speaker": "Amanda",
+          "text": "Does your older brother go with you?",
+          "isKey": false,
+          "isDistractor": false
+        },
+        {
+          "speaker": "Simon",
+          "text": "Yes, he's fourteen, so he's been doing this for two years.",
+          "isKey": false,
+          "isDistractor": true,
+          "targetQuestion": 3,
+          "trapType": "Wrong person's age",
+          "explanation": "出現數字 14，但這是哥哥的年齡，並非 Simon 本人。"
+        },
+        {
+          "speaker": "Amanda",
+          "text": "And what happens after school? Do you take the boat straight back home?",
+          "isKey": false,
+          "isDistractor": false
+        },
+        {
+          "speaker": "Simon",
+          "text": "We have football practice until five o'clock. Then I go to my Aunt Tanya's house on the mainland. I eat my dinner with her, and then catch the seven o'clock evening ferry home.",
+          "isKey": true,
+          "targetQuestion": 4,
+          "explanation": "正解句：Simon 在本島姑姑 Tanya 家吃晚餐 (eat dinner with her at Aunt Tanya's house)。"
+        },
+        {
+          "speaker": "Amanda",
+          "text": "That's convenient! Some people might find taking boats every day exciting or fun, but I think your school day is really unusual!",
+          "isKey": true,
+          "targetQuestion": 5,
+          "explanation": "正解句：Amanda 表達自己的真實看法為 'really unusual'。排除 A (exciting) 與 B (fun)。"
+        },
+        {
+          "speaker": "Simon",
+          "text": "Haha, I suppose it is unusual, but for islanders it's just normal life!",
+          "isKey": false,
+          "isDistractor": false
+        }
+      ],
+      "questionWordsDrill": [
+        {
+          "id": "qw_1",
+          "question": "____ is Tanya?",
+          "answer": "Who",
+          "subQuestions": [
+            {
+              "text": "Who is Tanya?",
+              "options": [
+                "Simon's sister",
+                "Simon's aunt"
+              ],
+              "correct": "Simon's aunt"
+            }
+          ]
+        },
+        {
+          "id": "qw_2",
+          "question": "____ does Simon live?",
+          "answer": "Where",
+          "subQuestions": [
+            {
+              "text": "Where does Simon live?",
+              "options": [
+                "on an island",
+                "near his school"
+              ],
+              "correct": "on an island"
+            }
+          ]
+        },
+        {
+          "id": "qw_3",
+          "question": "____ does Simon's mum wake him up?",
+          "answer": "What time",
+          "subQuestions": [
+            {
+              "text": "What time does Simon's mum wake him up?",
+              "options": [
+                "6.15",
+                "7.15"
+              ],
+              "correct": "6.15"
+            }
+          ]
+        },
+        {
+          "id": "qw_4",
+          "question": "____ does Simon go to school each day?",
+          "answer": "How",
+          "subQuestions": [
+            {
+              "text": "How does Simon go to school each day?",
+              "options": [
+                "by bus",
+                "by boat"
+              ],
+              "correct": "by boat"
+            }
+          ]
+        },
+        {
+          "id": "qw_5",
+          "question": "____ do children on the island change school?",
+          "answer": "When",
+          "subQuestions": [
+            {
+              "text": "When do children on the island change school?",
+              "options": [
+                "at six years old",
+                "at 12 years old"
+              ],
+              "correct": "at 12 years old"
+            }
+          ]
+        },
+        {
+          "id": "qw_6",
+          "question": "____ does Simon do at 7 a.m.?",
+          "answer": "What",
+          "subQuestions": [
+            {
+              "text": "What does Simon do at 7 a.m.?",
+              "options": [
+                "leave home",
+                "get on a boat"
+              ],
+              "correct": "leave home"
+            }
+          ]
+        }
+      ]
+    },
+    "speakingPart1": {
+      "title": "Speaking Part 1 - Describing People & Personal Questions",
+      "examTip": "Try to say at least three sentences for each 'Tell me something about...' question. Extend your answers using because, so, and, and but.",
+      "image": "assets/images/u1/u1_speaking_people_af.jpg",
+      "appearanceMatching": {
+        "items": [
+          {
+            "id": "sp_app_1",
+            "description": "Jason's my best friend. He's got short, curly hair and blue eyes. He's very tall.",
+            "match": "F",
+            "features": "男生、金色捲髮、藍眼睛、身材高大、穿綠色襯衫外搭紅色內裡。"
+          },
+          {
+            "id": "sp_app_2",
+            "description": "My sister Lee has got brown eyes. Her hair's short and curly. She's really tall.",
+            "match": "A",
+            "features": "女生、黑色短捲髮、棕色眼睛、高挑身材、穿藍色短袖與深色長褲。"
+          },
+          {
+            "id": "sp_app_3",
+            "description": "Trent's in my class. His eyes are blue. He's got straight hair and he's short.",
+            "match": "D",
+            "features": "小男生、金黃色直立短髮、藍眼睛、個頭嬌小、穿橘色 Polo 衫。"
+          },
+          {
+            "id": "sp_app_4",
+            "description": "Jenny's quite short. She's got long, dark, straight hair and green eyes.",
+            "match": "C",
+            "features": "女生、黑色長直髮、綠色眼睛、穿粉紅色上衣與墨綠色長褲。"
+          },
+          {
+            "id": "sp_app_5",
+            "description": "Lucas has got dark curly hair and wears a bright green T-shirt.",
+            "match": "B",
+            "features": "男生、黑色短捲髮、笑臉、穿亮綠色短袖與紫色短褲。"
+          },
+          {
+            "id": "sp_app_6",
+            "description": "Emma has got long straight blonde hair and a warm purple sweater.",
+            "match": "E",
+            "features": "女生、金色長直髮、金髮碧眼、穿紫色長袖毛衣與白褲。"
+          }
+        ]
+      },
+      "teacherDescription": {
+        "title": "Describing a Teacher (Mrs Reed - p.11 Ex 6)",
+        "gaps": [
+          {
+            "gap": 1,
+            "prompt": "What's her name?",
+            "answer": "Her name's",
+            "full": "Her name's Mrs Reed."
+          },
+          {
+            "gap": 2,
+            "prompt": "What does she look like?",
+            "answer": "She's got",
+            "full": "She's got short dark hair and blue eyes."
+          },
+          {
+            "gap": 3,
+            "prompt": "What does she do every day?",
+            "answer": "She travels / drives",
+            "full": "She travels to school by car."
+          },
+          {
+            "gap": 4,
+            "prompt": "Where does she eat?",
+            "answer": "She has",
+            "full": "She has lunch at school."
+          },
+          {
+            "gap": 5,
+            "prompt": "Your opinion",
+            "answer": "she is very kind and patient",
+            "full": "I like her because she is very kind and patient."
+          }
+        ]
+      },
+      "examTask": [
+        {
+          "id": "sp_et_1",
+          "prompt": "Tell me something about your school day.",
+          "suggestedAnswer": "I wake up at seven o'clock and walk to school with my friends. My school starts at eight o'clock and finishes at four in the afternoon. In the evening, I do my homework and play computer games.",
+          "connectors": "I wake up at seven, AND I walk to school. My favourite subject is science BECAUSE we do fun experiments.",
+          "tips": "至少回答三句話：起床時間 + 上學方式 + 放學後的活動。"
+        },
+        {
+          "id": "sp_et_2",
+          "prompt": "Tell me something about your favourite teacher.",
+          "suggestedAnswer": "My favourite teacher is Mr Davies, who teaches us English. He has got short brown hair and always wears funny glasses. He is very kind and patient, so his classes are always interesting.",
+          "connectors": "I like him BECAUSE he tells great stories, SO everyone enjoys his lessons.",
+          "tips": "描述名字與教授科目 + 外貌特徵 + 喜歡的理由（個性與教學風格）。"
+        },
+        {
+          "id": "sp_et_3",
+          "prompt": "Tell me something about what you do at the weekend.",
+          "suggestedAnswer": "On Saturday mornings, I usually play football in the park with my classmates. Then on Sunday, my family often visits my grandparents and we have lunch together. In the evening, I prepare my school bag for Monday.",
+          "connectors": "I love weekends BECAUSE I can sleep a bit longer, AND I can play sports outside.",
+          "tips": "按照週六與週日的時間順序組織回答，提到運動、家庭與休閒活動。"
+        },
+        {
+          "id": "sp_et_4",
+          "prompt": "Tell me something about your best friend.",
+          "suggestedAnswer": "My best friend is called Leo and we are in the same class at school. He has got dark curly hair and he is very good at basketball. We often do our homework together after school.",
+          "connectors": "He is my best friend BECAUSE he is funny, AND we share the same hobbies.",
+          "tips": "說出名字與關係 + 外貌特徵與專長 + 平常一起從事的活動。"
+        }
+      ]
+    },
+    "grammarVocabDrills": {
+      "p6_have_got_tf": {
+        "title": "p.6 Tim, Mathilde & Emin True/False (Ex 1)",
+        "items": [
+          {
+            "id": "p6_tf_1",
+            "statement": "Emin hasn't got any brothers or sisters.",
+            "answer": "F",
+            "explanation": "錯誤。Emin 有一個雙胞胎兄弟 (twin brother) 與兩個也是雙胞胎的妹妹 (two sisters who are twins)。"
+          },
+          {
+            "id": "p6_tf_2",
+            "statement": "Tim's grandfather is called Tim Alex Brown.",
+            "answer": "T",
+            "explanation": "正確。Tim 說他與爸爸、祖父同名，都叫 Tim Alex Brown。"
+          },
+          {
+            "id": "p6_tf_3",
+            "statement": "Mathilde's aunt's birthday is on 3 March.",
+            "answer": "T",
+            "explanation": "正確。Mathilde 提到她自己、妹妹、媽媽以及阿姨 (her mum's sister = aunt) 生日都是 3 月 3 日。"
+          }
+        ]
+      },
+      "p6_have_got_rules": {
+        "title": "p.6 have got Grammar Rules (Ex 2)",
+        "rules": [
+          {
+            "question": "What word do we use to make the negative?",
+            "answer": "not (haven't / hasn't)",
+            "explanation": "否定句在 have/has 後方加上 not，常縮寫為 haven't got 或 hasn't got。"
+          },
+          {
+            "question": "How do we make questions?",
+            "answer": "Have / Has + subject + got ...?",
+            "explanation": "疑問句將助動詞 Have 或 Has 移至主詞前方，如 Have you got...? / Has she got...?"
+          },
+          {
+            "question": "How do we make short answers?",
+            "answer": "Yes, I have. / No, I haven't. / Yes, he has. / No, he hasn't.",
+            "explanation": "簡答句中不可重複 got，嚴禁說 'Yes, I have got.'。"
+          }
+        ]
+      },
+      "p6_have_got_fill": {
+        "title": "p.6 Complete with correct form of have got (Ex 4)",
+        "items": [
+          {
+            "gap": 1,
+            "dialoguePart": "Q: (1) ____ you ____ an interesting name?",
+            "answer": "Have you got",
+            "hint": "主詞為 you，問句型態。"
+          },
+          {
+            "gap": 2,
+            "dialoguePart": "(2) ____ your friends ____ unusual names?",
+            "answer": "Have your friends got",
+            "hint": "主詞 your friends 為複數 they。"
+          },
+          {
+            "gap": 3,
+            "dialoguePart": "A: No, I (3) ____ (not)",
+            "answer": "haven't",
+            "hint": "否定簡答句，不可加 got。"
+          },
+          {
+            "gap": 4,
+            "dialoguePart": "but I (4) ____ a nickname.",
+            "answer": "have got / 've got",
+            "hint": "主詞 I 搭配 have got。"
+          },
+          {
+            "gap": 5,
+            "dialoguePart": "A: My best friend (5) ____ a special name.",
+            "answer": "has got / 's got",
+            "hint": "主詞 my best friend 為單數 he/she。"
+          },
+          {
+            "gap": 6,
+            "dialoguePart": "He (6) ____ (not) an unusual surname, it's Roberts.",
+            "answer": "hasn't got",
+            "hint": "主詞 he，否定句型態。"
+          },
+          {
+            "gap": 7,
+            "dialoguePart": "A: We (7) ____ an unusual surname. It's Singh.",
+            "answer": "have got / 've got",
+            "hint": "主詞 we 搭配 have got。"
+          },
+          {
+            "gap": 8,
+            "dialoguePart": "A: My cousins (8) ____ beautiful names.",
+            "answer": "have got / 've got",
+            "hint": "主詞 my cousins 為複數 they。"
+          }
+        ]
+      },
+      "p7_sofia_family_tree": {
+        "title": "p.7 Sofia's Family Tree Blog Post (Ex 1)",
+        "image": "assets/images/u1/u1_sofia_family_tree.jpg",
+        "wordBox": [
+          "aunt",
+          "brother",
+          "children",
+          "cousin",
+          "daughter",
+          "father",
+          "grandfather",
+          "grandmother",
+          "husband",
+          "mother",
+          "parents",
+          "sister",
+          "son",
+          "uncle",
+          "wife"
+        ],
+        "blogTextWithGaps": "Let me tell you about my family. I've got one (1) sister, Ariana, but I haven't got any brothers. Mateo and Paula are my (2) parents. My mum's sister Victoria is my favourite (3) aunt. Her husband Lucas is my (4) uncle. They've got two (5) daughters. Daniela and Sara are our (6) cousins. My (7) grandfather is called David and his (8) wife is called Lucia. They haven't got any (9) sons, only daughters.",
+        "gaps": [
+          {
+            "gap": 1,
+            "answer": "sister",
+            "given": true
+          },
+          {
+            "gap": 2,
+            "answer": "parents",
+            "explanation": "Mateo 與 Paula 是 Sofia 的父母雙親。"
+          },
+          {
+            "gap": 3,
+            "answer": "aunt",
+            "explanation": "媽媽的姊妹 Victoria 是阿姨 (aunt)。"
+          },
+          {
+            "gap": 4,
+            "answer": "uncle",
+            "explanation": "阿姨的丈夫 Lucas 是姨丈/叔叔 (uncle)。"
+          },
+          {
+            "gap": 5,
+            "answer": "daughters",
+            "explanation": "Victoria 與 Lucas 育有 Daniela 和 Sara 兩位女兒 (daughters，需用複數)。"
+          },
+          {
+            "gap": 6,
+            "answer": "cousins",
+            "explanation": "Daniela 和 Sara 是 Sofia 的堂表姊妹 (cousins)。"
+          },
+          {
+            "gap": 7,
+            "answer": "grandfather",
+            "explanation": "家族頂端的 David 是祖父/外公 (grandfather)。"
+          },
+          {
+            "gap": 8,
+            "answer": "wife",
+            "explanation": "Lucia 是 David 的妻子 (wife)。"
+          },
+          {
+            "gap": 9,
+            "answer": "sons",
+            "explanation": "David 與 Lucia 只有生女兒 (Paula 與 Victoria)，沒有任何兒子 (sons)。"
+          }
+        ]
+      },
+      "p8_favorite_places": {
+        "title": "p.8 Teenagers' Top Five Favorite Places (Ex 1)",
+        "image": "assets/images/u1/u1_fav_places.jpg",
+        "items": [
+          {
+            "number": 1,
+            "clue": "my b______",
+            "answer": "bedroom",
+            "zh": "臥室"
+          },
+          {
+            "number": 2,
+            "clue": "my local p___",
+            "answer": "park",
+            "zh": "公園"
+          },
+          {
+            "number": 3,
+            "clue": "the b____",
+            "answer": "beach",
+            "zh": "海灘"
+          },
+          {
+            "number": 4,
+            "clue": "the s_____ where I live",
+            "answer": "street",
+            "zh": "街道"
+          },
+          {
+            "number": 5,
+            "clue": "my s_____",
+            "answer": "school",
+            "zh": "學校"
+          }
+        ]
+      },
+      "p8_prepositions": {
+        "title": "p.8 Place Prepositions Practice (Ex 2)",
+        "wordBox": [
+          "above",
+          "along",
+          "between",
+          "in",
+          "on",
+          "out of",
+          "to"
+        ],
+        "items": [
+          {
+            "number": 1,
+            "sentence": "The girl and her sister sat ____ their bedroom.",
+            "answer": "in",
+            "explanation": "在房間內使用介系詞 in。"
+          },
+          {
+            "number": 2,
+            "sentence": "The family decided to go ____ the park.",
+            "answer": "to",
+            "explanation": "前往某目的地使用介系詞 to。"
+          },
+          {
+            "number": 3,
+            "sentence": "The girl and her friends played football ____ the beach.",
+            "answer": "on",
+            "explanation": "在沙灘表面使用介系詞 on。"
+          },
+          {
+            "number": 4,
+            "sentence": "The boy ran ____ the street to his friend's house.",
+            "answer": "along",
+            "explanation": "沿著街道奔跑使用介系詞 along。"
+          },
+          {
+            "number": 5,
+            "sentence": "At the end of the day, the children walked ____ the school.",
+            "answer": "out of",
+            "explanation": "走出校園使用介系詞 out of。"
+          }
+        ]
+      },
+      "p9_clocks": {
+        "title": "p.9 Telling the Time (Ex 1)",
+        "image": "assets/images/u1/u1_clocks.jpg",
+        "clocks": [
+          {
+            "clockNumber": 1,
+            "digital": "7:40",
+            "analogDescription": "twenty to eight",
+            "alternative": "seven forty"
+          },
+          {
+            "clockNumber": 2,
+            "digital": "9:30",
+            "analogDescription": "half past nine",
+            "alternative": "nine thirty"
+          },
+          {
+            "clockNumber": 3,
+            "digital": "12:55",
+            "analogDescription": "five to one",
+            "alternative": "twelve fifty-five"
+          },
+          {
+            "clockNumber": 4,
+            "digital": "3:15",
+            "analogDescription": "a quarter past three",
+            "alternative": "three fifteen"
+          },
+          {
+            "clockNumber": 5,
+            "digital": "10:45",
+            "analogDescription": "a quarter to eleven",
+            "alternative": "ten forty-five"
+          },
+          {
+            "clockNumber": 6,
+            "digital": "11:20",
+            "analogDescription": "twenty past eleven",
+            "alternative": "eleven twenty"
+          }
+        ]
+      },
+      "p9_kyle_routine": {
+        "title": "p.9 Kyle's Daily Routine Photo Album (Ex 2 & 3)",
+        "image": "assets/images/u1/u1_kyle_photo_album.jpg",
+        "track": "Track 02",
+        "routineItems": [
+          {
+            "activity": "wake up",
+            "matchedLetter": "A",
+            "time": "7.30 a.m.",
+            "details": "鬧鐘響起，手按鬧鐘。"
+          },
+          {
+            "activity": "walk to school",
+            "matchedLetter": "B",
+            "time": "8.15 a.m.",
+            "details": "走在人行道上前往學校。"
+          },
+          {
+            "activity": "start school",
+            "matchedLetter": "C",
+            "time": "8.45 a.m.",
+            "details": "在教室將課本放入書包開始上課。"
+          },
+          {
+            "activity": "have lunch",
+            "matchedLetter": "D",
+            "time": "12.30 p.m.",
+            "details": "學校餐廳餐盤與營養午餐。"
+          },
+          {
+            "activity": "get home",
+            "matchedLetter": "E",
+            "time": "4.00 p.m.",
+            "details": "拿鑰匙開門回到家。"
+          },
+          {
+            "activity": "do homework",
+            "matchedLetter": "F",
+            "time": "5.00 p.m.",
+            "details": "在筆記型電腦鍵盤上打字做功課。"
+          },
+          {
+            "activity": "watch TV",
+            "matchedLetter": "G",
+            "time": "7.00 p.m.",
+            "details": "放鬆看客廳電視的動物節目。"
+          },
+          {
+            "activity": "go to bed",
+            "matchedLetter": "H",
+            "time": "10.00 p.m.",
+            "details": "蓋被子躺在床上入睡。"
+          }
+        ]
+      },
+      "p9_present_simple_rules": {
+        "title": "p.9 Present Simple Grammar Rules Matching (Ex 4)",
+        "rules": [
+          {
+            "ruleNumber": 1,
+            "rule": "When we use he / she / it, we add -s or -es to the main verb.",
+            "matchSentence": "c",
+            "exampleSentence": "He wakes up at 7.30 a.m. / She does her homework at 5 p.m."
+          },
+          {
+            "ruleNumber": 2,
+            "rule": "We make the negative with don't and doesn't.",
+            "matchSentence": "a",
+            "exampleSentence": "I don't have lunch at 12 p.m. / She doesn't walk to school."
+          },
+          {
+            "ruleNumber": 3,
+            "rule": "We use do and does to make questions and short answers.",
+            "matchSentence": "b",
+            "exampleSentence": "Do you go to bed at 10 p.m.? Yes, I do. / Does he watch TV at 8 p.m.? No, he doesn't."
+          }
+        ]
+      },
+      "p9_personal_sentences": {
+        "title": "p.9 True Sentences for You (Ex 6)",
+        "items": [
+          {
+            "number": 1,
+            "time": "7.00",
+            "prompt": "I / wake up",
+            "model": "I don't wake up at 7.00. I wake up at 7.30."
+          },
+          {
+            "number": 2,
+            "time": "8.30",
+            "prompt": "I / walk to school with my friends",
+            "model": "I don't walk to school at 8.30. I walk to school at 7.45."
+          },
+          {
+            "number": 3,
+            "time": "9.00",
+            "prompt": "school / start",
+            "model": "School doesn't start at 9.00. School starts at 8.00."
+          },
+          {
+            "number": 4,
+            "time": "12.00",
+            "prompt": "I / have lunch",
+            "model": "I have lunch at 12.00 in the school cafeteria."
+          },
+          {
+            "number": 5,
+            "time": "4.00",
+            "prompt": "my friends / do their homework",
+            "model": "My friends don't do their homework at 4.00. They play sports."
+          },
+          {
+            "number": 6,
+            "time": "6.00",
+            "prompt": "my mum / get home",
+            "model": "My mum gets home at 6.00 from work."
+          },
+          {
+            "number": 7,
+            "time": "7.00",
+            "prompt": "we / watch TV",
+            "model": "We don't watch TV at 7.00. We have dinner together."
+          },
+          {
+            "number": 8,
+            "time": "8.30",
+            "prompt": "my best friend / go to bed",
+            "model": "My best friend doesn't go to bed at 8.30. He goes to bed at 10.00."
+          }
+        ]
+      }
+    },
+    "revisionUnit1": {
+      "title": "Revision Unit 1 (Student's Book p.78)",
+      "totalMarks": 27,
+      "pageImage": "assets/pages/rev_u1_u2_p78_p79.jpg",
+      "exercise1": {
+        "title": "Exercise 1: Complete the dialogues with the correct form of have got",
+        "marks": 5,
+        "items": [
+          {
+            "itemNumber": 1,
+            "dialogue": "A: (1) ____ (you) any brothers or sisters?\nB: Yes, I (2) ____ a sister and two brothers.",
+            "answers": [
+              {
+                "gap": 1,
+                "answer": "Have you got"
+              },
+              {
+                "gap": 2,
+                "answer": "have. I've got / have. I have got"
+              }
+            ],
+            "explanation": "問句用 Have you got...，肯定簡答用 Yes, I have，後接完整句 I've got。"
+          },
+          {
+            "itemNumber": 2,
+            "dialogue": "A: (3) ____ (Manuela) a sandwich for lunch?\nB: No, she (4) ____. She (5) ____ a salad.",
+            "answers": [
+              {
+                "gap": 3,
+                "answer": "Has Manuela got"
+              },
+              {
+                "gap": 4,
+                "answer": "hasn't"
+              },
+              {
+                "gap": 5,
+                "answer": "has got / 's got"
+              }
+            ],
+            "explanation": "Manuela 為第三人稱單數，問句用 Has Manuela got，否定簡答 No, she hasn't，肯定句用 has got。"
+          },
+          {
+            "itemNumber": 3,
+            "dialogue": "A: (6) ____ (your parents) a car?\nB: No, (7) ____, but my mum (8) ____ a motorbike and my dad (9) ____ a bicycle!",
+            "answers": [
+              {
+                "gap": 6,
+                "answer": "Have your parents got"
+              },
+              {
+                "gap": 7,
+                "answer": "they haven't"
+              },
+              {
+                "gap": 8,
+                "answer": "has got / 's got"
+              },
+              {
+                "gap": 9,
+                "answer": "has got / 's got"
+              }
+            ],
+            "explanation": "your parents 為複數 they，問句用 Have your parents got，簡答 No, they haven't；媽媽與爸爸各自為單數，用 has got。"
+          },
+          {
+            "itemNumber": 4,
+            "dialogue": "A: It's raining. (10) ____ (you) an umbrella?\nB: No, I (11) ____.",
+            "answers": [
+              {
+                "gap": 10,
+                "answer": "Have you got"
+              },
+              {
+                "gap": 11,
+                "answer": "haven't"
+              }
+            ],
+            "explanation": "問句 Have you got an umbrella? 否定簡答 No, I haven't。"
+          },
+          {
+            "itemNumber": 5,
+            "dialogue": "A: Daniel can't come swimming today because he (12) ____ any money.\nB: I (13) ____ some money so I can pay for him!",
+            "answers": [
+              {
+                "gap": 12,
+                "answer": "hasn't got"
+              },
+              {
+                "gap": 13,
+                "answer": "have got / 've got"
+              }
+            ],
+            "explanation": "Daniel 沒錢為否定句 hasn't got any money；我有錢為肯定句 I've got some money。"
+          }
+        ]
+      },
+      "exercise2": {
+        "title": "Exercise 2: Write the correct word to finish the sentences",
+        "marks": 8,
+        "items": [
+          {
+            "itemNumber": 1,
+            "sentence": "My mother's mother is my ____.",
+            "answer": "grandmother / grandma",
+            "zh": "外婆/祖母"
+          },
+          {
+            "itemNumber": 2,
+            "sentence": "My mum and dad are my ____.",
+            "answer": "parents",
+            "zh": "父母雙親"
+          },
+          {
+            "itemNumber": 3,
+            "sentence": "My sister is my mother's ____.",
+            "answer": "daughter",
+            "zh": "女兒"
+          },
+          {
+            "itemNumber": 4,
+            "sentence": "My uncle is my aunt's ____.",
+            "answer": "husband",
+            "zh": "丈夫"
+          },
+          {
+            "itemNumber": 5,
+            "sentence": "My aunt's son is my ____.",
+            "answer": "cousin",
+            "zh": "堂（表）兄弟"
+          },
+          {
+            "itemNumber": 6,
+            "sentence": "My mother is my father's ____.",
+            "answer": "wife",
+            "zh": "妻子"
+          },
+          {
+            "itemNumber": 7,
+            "sentence": "My uncle is my mum's ____.",
+            "answer": "brother",
+            "zh": "兄弟（舅舅）"
+          },
+          {
+            "itemNumber": 8,
+            "sentence": "My mum and my uncle are my grandfather's ____.",
+            "answer": "children",
+            "zh": "子女/孩子們"
+          }
+        ]
+      },
+      "exercise3": {
+        "title": "Exercise 3: Choose the correct word to complete the sentences",
+        "marks": 8,
+        "items": [
+          {
+            "itemNumber": 1,
+            "sentence": "What time do / does you go to bed at the weekend?",
+            "options": [
+              "do",
+              "does"
+            ],
+            "answer": "do",
+            "explanation": "主詞為 you，助動詞使用 do。"
+          },
+          {
+            "itemNumber": 2,
+            "sentence": "Mariana don't walk / doesn't walk to school because it's too far.",
+            "options": [
+              "don't walk",
+              "doesn't walk"
+            ],
+            "answer": "doesn't walk",
+            "explanation": "主詞 Mariana 為第三人稱單數 (she)，否定句使用 doesn't walk。"
+          },
+          {
+            "itemNumber": 3,
+            "sentence": "Most students go / goes to the town centre on Saturday afternoons.",
+            "options": [
+              "go",
+              "goes"
+            ],
+            "answer": "go",
+            "explanation": "主詞 Most students 為複數 (they)，動詞使用原形 go。"
+          },
+          {
+            "itemNumber": 4,
+            "sentence": "My brother play / plays football three times a week.",
+            "options": [
+              "play",
+              "plays"
+            ],
+            "answer": "plays",
+            "explanation": "主詞 My brother 為第三人稱單數 (he)，動詞字尾加 -s 變為 plays。"
+          },
+          {
+            "itemNumber": 5,
+            "sentence": "Where do / does your best friend live?",
+            "options": [
+              "do",
+              "does"
+            ],
+            "answer": "does",
+            "explanation": "主詞 your best friend 為單數 (he/she)，助動詞使用 does。"
+          },
+          {
+            "itemNumber": 6,
+            "sentence": "Linda don't do / doesn't do her homework at home - she goes to the library.",
+            "options": [
+              "don't do",
+              "doesn't do"
+            ],
+            "answer": "doesn't do",
+            "explanation": "主詞 Linda 為第三人稱單數 (she)，否定句使用 doesn't do。"
+          },
+          {
+            "itemNumber": 7,
+            "sentence": "We start / starts school at eight am.",
+            "options": [
+              "start",
+              "starts"
+            ],
+            "answer": "start",
+            "explanation": "主詞 We 為第一人稱複數，動詞使用原形 start。"
+          },
+          {
+            "itemNumber": 8,
+            "sentence": "Do your friends watch / watches TV in the evening?",
+            "options": [
+              "watch",
+              "watches"
+            ],
+            "answer": "watch",
+            "explanation": "助動詞 Do 後面接原形動詞 watch。"
+          }
+        ]
+      },
+      "exercise4": {
+        "title": "Exercise 4: Choose the correct adjective to complete the sentences",
+        "marks": 6,
+        "wordBox": [
+          "curly",
+          "dark",
+          "long",
+          "short",
+          "straight",
+          "tall"
+        ],
+        "items": [
+          {
+            "itemNumber": 1,
+            "sentence": "My dad's got black hair and mine is the same - it's very ____.",
+            "answer": "dark",
+            "explanation": "黑色頭髮屬於深色 (dark hair)。"
+          },
+          {
+            "itemNumber": 2,
+            "sentence": "My brother is very ____ - he's almost 1.9 m.",
+            "answer": "tall",
+            "explanation": "身高將近 1.9 公尺，身材非常高大 (tall)。"
+          },
+          {
+            "itemNumber": 3,
+            "sentence": "I want to cut my hair because it's too ____.",
+            "answer": "long",
+            "explanation": "想要剪頭髮是因為頭髮太長 (too long)。"
+          },
+          {
+            "itemNumber": 4,
+            "sentence": "My sister's got very straight hair but mine is different - it's ____.",
+            "answer": "curly",
+            "explanation": "姊妹的頭髮很直，但我的不同，是捲髮 (curly)。"
+          },
+          {
+            "itemNumber": 5,
+            "sentence": "Alison cut her hair last week. Now it's very ____.",
+            "answer": "short",
+            "explanation": "上週剪了頭髮，現在變得非常短 (very short)。"
+          },
+          {
+            "itemNumber": 6,
+            "sentence": "His hair is short, blond and ____. It's not curly.",
+            "answer": "straight",
+            "explanation": "不是捲髮 (not curly)，因此是直髮 (straight)。"
+          }
+        ]
+      }
+    }
+  }
+}

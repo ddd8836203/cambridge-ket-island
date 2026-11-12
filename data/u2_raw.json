@@ -1,0 +1,1662 @@
+{
+  "unit": {
+    "id": "u2",
+    "number": 2,
+    "title": "In my free time",
+    "topic": "Hobbies & Leisure",
+    "grammarFocus": [
+      "Adverbs of frequency (always, usually, often, sometimes, never, twice a week, etc.)",
+      "Do you like ... ? (general habits) vs Would you like ... ? (invitations / offers)",
+      "Pronouns (subject, object, possessive adjectives)"
+    ],
+    "spreadPages": [
+      "assets/pages/u2_p12_p13.jpg",
+      "assets/pages/u2_p14_p15.jpg",
+      "assets/pages/u2_p16_p17.jpg"
+    ],
+    "revisionPage": "assets/pages/rev_u1_u2_p78_p79.jpg",
+    "croppedImages": [
+      {
+        "id": "u2_hobbies_clubs",
+        "path": "assets/images/u2/u2_hobbies_clubs.jpg",
+        "description": "Unit 2 p.12 School clubs messages (Camera, Camping, Music, Art)"
+      },
+      {
+        "id": "u2_invitations_cartoon",
+        "path": "assets/images/u2/u2_invitations_cartoon.jpg",
+        "description": "Unit 2 p.14 Sam & Ruby invitations cartoons (Cooking Club)"
+      },
+      {
+        "id": "u2_hasan_bedroom",
+        "path": "assets/images/u2/u2_hasan_bedroom.jpg",
+        "description": "Unit 2 p.17 Hasan and his bedroom (drums, camera, books)"
+      }
+    ]
+  },
+  "vocabulary": [
+    {
+      "word": "camera club",
+      "pos": "n. phr.",
+      "zh": "攝影社團",
+      "collocation": "join a camera club / in the camera club",
+      "example": "I'm in the Camera Club. It's brilliant. We usually take photos in the school.",
+      "tip": "社團介系詞用 in（在社團中）或搭配動詞 join（加入）。"
+    },
+    {
+      "word": "camping",
+      "pos": "n.",
+      "zh": "露營；野營",
+      "collocation": "go camping / camping trip / Camping Club",
+      "example": "Would you like to go camping with me next week?",
+      "tip": "從事露營活動一律搭配動詞 go camping，不可用 play camping。"
+    },
+    {
+      "word": "instrument",
+      "pos": "n.",
+      "zh": "樂器",
+      "collocation": "play an instrument / musical instrument",
+      "example": "We listen to songs and we sometimes play an instrument.",
+      "tip": "instrument 為母音開頭，單數時務必加上不定冠詞 an。"
+    },
+    {
+      "word": "collect",
+      "pos": "v.",
+      "zh": "收集；收藏",
+      "collocation": "collect things / collect stamps / collect coins",
+      "example": "Do you collect things like badges or key rings in your free time?",
+      "tip": "名詞形式為 collection（收藏品）與 collector（收藏家）。"
+    },
+    {
+      "word": "brilliant at",
+      "pos": "adj. phr.",
+      "zh": "極有才華的；非常擅長的",
+      "collocation": "be brilliant at + V-ing/N",
+      "example": "My brother is brilliant at cooking. He often makes dinner for the family.",
+      "tip": "語氣比 good at 更強烈，表示『頂尖、出神入化』，介系詞固定接 at。"
+    },
+    {
+      "word": "terrible at",
+      "pos": "adj. phr.",
+      "zh": "極差勁的；非常不擅長的",
+      "collocation": "be terrible at + V-ing/N",
+      "example": "Irene hates going to discos because she is terrible at dancing.",
+      "tip": "為 brilliant at / good at 的強烈反義詞，介系詞固定接 at。"
+    },
+    {
+      "word": "good-looking",
+      "pos": "adj.",
+      "zh": "容貌好看的；英俊漂亮的",
+      "collocation": "a really good-looking actor / person",
+      "example": "He's really good-looking, isn't he?",
+      "tip": "由 good + looking 組成的複合形容詞，常用於形容男女面貌，同義詞為 attractive。"
+    },
+    {
+      "word": "attractive",
+      "pos": "adj.",
+      "zh": "有吸引力的；動人的",
+      "collocation": "an attractive place / attractive person",
+      "example": "She is an attractive young woman with a warm smile.",
+      "tip": "在 Reading Part 3 經常與 good-looking 互為同義替換詞。"
+    },
+    {
+      "word": "well-known",
+      "pos": "adj.",
+      "zh": "著名的；眾所皆知的",
+      "collocation": "a well-known writer / painter / artist",
+      "example": "She's not well-known, and her stories aren't easy to understand, but this one is really interesting.",
+      "tip": "在 KET 閱讀中為 famous 的標準同義替換詞，中間有連字號。"
+    },
+    {
+      "word": "invitation",
+      "pos": "n.",
+      "zh": "邀請；邀約",
+      "collocation": "say 'yes' to an invitation / accept an invitation / invitation to sth",
+      "example": "Underline one expression in Exercise 2 that we can use to say 'yes' to an invitation.",
+      "tip": "動詞為 invite，邀約某人去某處用 invite sb to somewhere。"
+    },
+    {
+      "word": "afraid",
+      "pos": "adj.",
+      "zh": "害怕的；（口語委婉）恐怕",
+      "collocation": "be afraid of / I'm afraid not / I'm afraid I can't / I'm afraid I'm busy",
+      "example": "Would you like to come? - I'm afraid not. I have to study.",
+      "tip": "KET 口語中常用 I'm afraid not 或 I'm afraid I'm busy 禮貌拒絕邀約。"
+    },
+    {
+      "word": "nature",
+      "pos": "n.",
+      "zh": "大自然；自然界",
+      "collocation": "painter of nature / love nature / in the countryside",
+      "example": "I love animals and being in the countryside, so I hope to be a painter of nature.",
+      "tip": "不可數名詞，形容詞為 natural。重音在第一音節 /ˈneɪtʃər/。"
+    },
+    {
+      "word": "advice",
+      "pos": "n.",
+      "zh": "建議；忠告",
+      "collocation": "have any advice for sb / give advice / a piece of advice",
+      "example": "Do you have any advice for other young painters?",
+      "tip": "注意 advice 為【不可數名詞】，絕對不能加 -s 或加 an；動詞拼寫為 advise。"
+    },
+    {
+      "word": "opinion",
+      "pos": "n.",
+      "zh": "意見；看法",
+      "collocation": "other people's opinions / in my opinion / ask sb's opinion",
+      "example": "Remember to ask other people what they think of your paintings - even if you don't like what they say.",
+      "tip": "名詞可數，片語 in my opinion（依我看）是口說 Part 1 與寫作高分常用詞。"
+    },
+    {
+      "word": "spend time",
+      "pos": "v. phr.",
+      "zh": "花費時間；度過時光",
+      "collocation": "spend time with friends / spend time outdoors / spend time doing sth",
+      "example": "Who do you spend time with at the weekend? - I spend time with my friends.",
+      "tip": "用法為 spend time + with sb 或 spend time + V-ing，介系詞不可用 at 或 in。"
+    },
+    {
+      "word": "try new food",
+      "pos": "v. phr.",
+      "zh": "嘗試新料理；品嚐不同食物",
+      "collocation": "enjoy trying new food / interested in trying new food",
+      "example": "Do you like trying new food? - Oh yes! I love eating food from all over the world.",
+      "tip": "try + V-ing 表示嘗試做某種體驗；try + to V 則表示努力嘗試克服困難。"
+    },
+    {
+      "word": "bored",
+      "pos": "adj.",
+      "zh": "感到無聊的；感到厭煩的",
+      "collocation": "bored at the weekend / get bored / feel bored with",
+      "example": "I joined the Camping Club as well because I'm often bored at the weekend.",
+      "tip": "情緒形容詞 -ed 修飾人（感到無聊），-ing（boring）修飾令人無聊的人或事物。"
+    },
+    {
+      "word": "competition",
+      "pos": "n.",
+      "zh": "競賽；比賽",
+      "collocation": "enter a painting competition / come first in a competition",
+      "example": "About a year later, I decided to enter a painting competition. I came first!",
+      "tip": "動詞為 compete，得第一名搭配動詞片語 come first in..."
+    }
+  ],
+  "commonMistakes": {
+    "adverbsOfFrequency": {
+      "context": "Exam candidates often make mistakes with adverbs of frequency.",
+      "source": "Student's Book p.12 Exercise 4",
+      "originalText": "My friends and I do often after-school activities. I'm in the Art Club. The classes are normaly on Monday and Wednesday at five o'clock. They often are 60 minutes long. My best friend is in the Cinema Club. They somtimes watch a film and talk about it. I'm not a member of that club because I don't never eat at school. My sister is in a Food Club. They ussually meet two times a month in a restaurant. Always she cooks delicious food at home.",
+      "example": {
+        "wrongSpan": "do often",
+        "correctSpan": "often do",
+        "rule": "頻率副詞（always, usually, often, sometimes 等）在一般動詞之前（often do）。"
+      },
+      "mistakes": [
+        {
+          "id": "u2_cm_freq_1",
+          "wrongSpan": "normaly",
+          "correctSpan": "normally",
+          "errorType": "Spelling",
+          "rule": "拼寫錯誤：副詞 normally 必須是雙 l（normal + ly = normally）。"
+        },
+        {
+          "id": "u2_cm_freq_2",
+          "wrongSpan": "often are",
+          "correctSpan": "are often",
+          "errorType": "Word order with be",
+          "rule": "位置錯誤：頻率副詞遇到 be 動詞時，必須放在 be 動詞【之後】（They are often 60 minutes long）。"
+        },
+        {
+          "id": "u2_cm_freq_3",
+          "wrongSpan": "somtimes",
+          "correctSpan": "sometimes",
+          "errorType": "Spelling",
+          "rule": "拼寫錯誤：sometimes 中間漏掉了字母 e，正確拼法為 s-o-m-e-t-i-m-e-s。"
+        },
+        {
+          "id": "u2_cm_freq_4",
+          "wrongSpan": "don't never",
+          "correctSpan": "never (或 don't ever)",
+          "errorType": "Double negative",
+          "rule": "雙重否定錯誤：英文中 never 本身已具否定含意，不可與助動詞 don't 連用，應改為 I never eat at school 或 I don't ever eat at school。"
+        },
+        {
+          "id": "u2_cm_freq_5",
+          "wrongSpan": "ussually",
+          "correctSpan": "usually",
+          "errorType": "Spelling",
+          "rule": "拼寫錯誤：usually 是一個 s、兩個 l（u-s-u-a-l-l-y），考生常誤拼成雙 s。"
+        },
+        {
+          "id": "u2_cm_freq_6",
+          "wrongSpan": "two times a month",
+          "correctSpan": "twice a month",
+          "errorType": "Collocation / Idiomatic usage",
+          "rule": "習慣搭配錯誤：英文中『一個月兩次』慣用 twice a month，而非直譯的 two times a month。"
+        },
+        {
+          "id": "u2_cm_freq_7",
+          "wrongSpan": "Always she cooks",
+          "correctSpan": "She always cooks",
+          "errorType": "Word order",
+          "rule": "位置錯誤：單詞頻率副詞 always 習慣放在主詞與一般動詞之間（She always cooks），不置於句首。"
+        }
+      ]
+    },
+    "pronouns": {
+      "context": "Exam candidates often make mistakes with pronouns.",
+      "source": "Student's Book p.17 Exercise 1",
+      "instruction": "Write the correct pronoun in each space.",
+      "items": [
+        {
+          "id": "u2_cm_pron_1",
+          "sentence": "I like my bedroom and the dining room because [they] are big.",
+          "gap": 1,
+          "answer": "they",
+          "targetSpan": "they",
+          "grammarRole": "Subject pronoun (plural)",
+          "referent": "my bedroom and the dining room (兩間房間，複數事物)",
+          "explanation": "先行詞為 my bedroom and the dining room 兩者，主格代名詞必須用複數 they。"
+        },
+        {
+          "id": "u2_cm_pron_2",
+          "sentence": "Because [it] is summer here the weather is very nice.",
+          "gap": 2,
+          "answer": "it",
+          "targetSpan": "it",
+          "grammarRole": "Impersonal pronoun 'it'",
+          "referent": "虛主詞 it 指稱季節與天氣",
+          "explanation": "在英文中指稱季節（summer）、天氣、時間或距離時，必須使用無生命虛主詞 it。"
+        },
+        {
+          "id": "u2_cm_pron_3",
+          "sentence": "I want a pen friend from England. I want [him] to be a boy.",
+          "gap": 3,
+          "answer": "him",
+          "targetSpan": "him",
+          "grammarRole": "Object pronoun (singular masculine)",
+          "referent": "a pen friend who is a boy",
+          "explanation": "動詞 want 後接受格代名詞，後文特別限定 to be a boy，因此必須使用陽性單數受格 him。"
+        },
+        {
+          "id": "u2_cm_pron_4",
+          "sentence": "She is very friendly. One day I visited [her] and we went to the cinema.",
+          "gap": 4,
+          "answer": "her",
+          "targetSpan": "her",
+          "grammarRole": "Object pronoun (singular feminine)",
+          "referent": "She (女性朋友)",
+          "explanation": "動詞 visited 後方需接女性單數受格代名詞 her。"
+        },
+        {
+          "id": "u2_cm_pron_5",
+          "sentence": "I want to have a pen friend in another country. I prefer that he or [she] comes from Holland.",
+          "gap": 5,
+          "answer": "she",
+          "targetSpan": "she",
+          "grammarRole": "Subject pronoun (singular feminine)",
+          "referent": "he or she (主格對等連接)",
+          "explanation": "or 連接主詞對等成分，與 he 並列的主格代名詞為 she。"
+        },
+        {
+          "id": "u2_cm_pron_6",
+          "sentence": "I have many books that I don't need any more. I'd like to sell [them].",
+          "gap": 6,
+          "answer": "them",
+          "targetSpan": "them",
+          "grammarRole": "Object pronoun (plural)",
+          "referent": "many books (複數書籍)",
+          "explanation": "動詞 sell 後接受格，先行詞是複數名詞 many books，因此受格代名詞為 them。"
+        },
+        {
+          "id": "u2_cm_pron_7",
+          "sentence": "I'm selling my computer because I've got no space for [it] in my bedroom.",
+          "gap": 7,
+          "answer": "it",
+          "targetSpan": "it",
+          "grammarRole": "Object pronoun (singular neuter)",
+          "referent": "my computer (單數電腦)",
+          "explanation": "介系詞 for 後方接單數中性代名詞 it，指稱前面提到的 my computer。"
+        }
+      ]
+    }
+  },
+  "exercises": {
+    "grammarVocabDrills": {
+      "p12_ex1_collocations": {
+        "title": "Page 12 Ex 1: Activities with Words from the Box",
+        "instruction": "Complete the activities with words from the box.",
+        "wordBox": [
+          "collect",
+          "draw",
+          "listen",
+          "play",
+          "play",
+          "sleep",
+          "take",
+          "watch"
+        ],
+        "items": [
+          {
+            "id": 1,
+            "verb": "play",
+            "phrase": "an instrument",
+            "full": "play an instrument",
+            "zh": "彈奏樂器"
+          },
+          {
+            "id": 2,
+            "verb": "collect",
+            "phrase": "things",
+            "full": "collect things",
+            "zh": "收集物品"
+          },
+          {
+            "id": 3,
+            "verb": "play",
+            "phrase": "sports",
+            "full": "play sports",
+            "zh": "做運動"
+          },
+          {
+            "id": 4,
+            "verb": "draw",
+            "phrase": "pictures",
+            "full": "draw pictures",
+            "zh": "畫畫"
+          },
+          {
+            "id": 5,
+            "verb": "take",
+            "phrase": "photos",
+            "full": "take photos",
+            "zh": "拍照"
+          },
+          {
+            "id": 6,
+            "verb": "watch",
+            "phrase": "films",
+            "full": "watch films",
+            "zh": "看電影"
+          },
+          {
+            "id": 7,
+            "verb": "listen",
+            "phrase": "to songs",
+            "full": "listen to songs",
+            "zh": "聽歌"
+          },
+          {
+            "id": 8,
+            "verb": "sleep",
+            "phrase": "in a tent",
+            "full": "sleep in a tent",
+            "zh": "睡在帳篷裡"
+          }
+        ]
+      },
+      "p12_ex2_club_messages": {
+        "title": "Page 12 Ex 2: School Clubs Messages",
+        "instruction": "Complete the messages with words from Exercise 1.",
+        "image": "assets/images/u2/u2_hobbies_clubs.jpg",
+        "messages": [
+          {
+            "club": "Camera Club & Camping Club",
+            "text": "We've got some great clubs in my school. I'm in the Camera Club. It's brilliant. We usually take (1) [photos] in the school but we also go to the town centre once a month. We sometimes watch (2) [films], too. I joined the Camping Club as well because I'm often bored at the weekend. About four times a year, we sleep (3) [in a tent]."
+          },
+          {
+            "club": "Music Club & Art Club",
+            "text": "I'm in the Music Club. We always meet twice a week. We listen (4) [to songs] and we sometimes play an (5) [instrument]. My friends are in the Art Club and they draw (6) [pictures] every Monday."
+          }
+        ],
+        "answers": [
+          {
+            "gap": 1,
+            "answer": "photos",
+            "clue": "take photos"
+          },
+          {
+            "gap": 2,
+            "answer": "films",
+            "clue": "watch films"
+          },
+          {
+            "gap": 3,
+            "answer": "in a tent",
+            "clue": "sleep in a tent"
+          },
+          {
+            "gap": 4,
+            "answer": "to songs",
+            "clue": "listen to songs"
+          },
+          {
+            "gap": 5,
+            "answer": "instrument",
+            "clue": "play an instrument"
+          },
+          {
+            "gap": 6,
+            "answer": "pictures",
+            "clue": "draw pictures"
+          }
+        ]
+      },
+      "p12_ex3_adverbs_of_frequency_rules": {
+        "title": "Page 12 Ex 3: Rules of Adverbs of Frequency",
+        "instruction": "Look at the words in bold in the messages in Exercise 2, then complete the rules with the correct words.",
+        "referencePage": 92,
+        "rules": [
+          {
+            "id": 1,
+            "text": "Adverbs of frequency (e.g. always, often, etc.) go before / after the verb be.",
+            "correctChoice": "after",
+            "explanation": "遇到 be 動詞時，頻率副詞放在 be 動詞後面（e.g. I am often bored at the weekend）。"
+          },
+          {
+            "id": 2,
+            "text": "Adverbs of frequency (e.g. always, often, etc.) go before / after all other verbs.",
+            "correctChoice": "before",
+            "explanation": "遇到一般動詞時，頻率副詞放在一般動詞前面（e.g. We usually take photos; We sometimes watch films）。"
+          },
+          {
+            "id": 3,
+            "text": "Adverbial phrases (e.g. once a month, twice a year, every day, etc.) can go at the beginning and end / end of the sentence.",
+            "correctChoice": "beginning and end",
+            "explanation": "片語型時間/頻率副詞（once a month, twice a week, every Monday 等）可放在句尾或句首（e.g. About four times a year, we sleep in a tent / We go once a month）。"
+          }
+        ]
+      },
+      "p12_ex5_frequency_practice": {
+        "title": "Page 12 Ex 5: Complete Sentences with Frequency Expressions",
+        "instruction": "Complete the sentences with the words and phrases from the box.",
+        "wordBox": [
+          "always",
+          "every day",
+          "sometimes",
+          "three times a week"
+        ],
+        "items": [
+          {
+            "id": 1,
+            "sentence": "When we go on holiday, my mum [sometimes] takes photos of the hotel, but not always.",
+            "answer": "sometimes",
+            "isExample": true,
+            "clue": "but not always（並非總是，表示偶爾）"
+          },
+          {
+            "id": 2,
+            "sentence": "My sister goes to a Music Club on Tuesday, Thursday and Friday. She has a piano lesson [three times a week].",
+            "answer": "three times a week",
+            "isExample": false,
+            "clue": "Tuesday, Thursday and Friday 代表每週三次"
+          },
+          {
+            "id": 3,
+            "sentence": "We always watch TV after dinner. We watch TV [every day].",
+            "answer": "every day",
+            "isExample": false,
+            "clue": "always after dinner（每天晚餐後總是看電視）相當於 every day"
+          },
+          {
+            "id": 4,
+            "sentence": "My best friend wakes up at 7.55 but school starts at eight o'clock so he's [always] late.",
+            "answer": "always",
+            "isExample": false,
+            "clue": "7點55分才起床而學校8點上課，中間只有5分鐘，因此『總是』遲到"
+          }
+        ]
+      },
+      "p14_ex1_cartoons": {
+        "title": "Page 14 Ex 1: Do you like ... ? / Would you like ... ? Cartoons",
+        "instruction": "Look at the pictures. What does Sam say about trying new food? Does he want to join Ruby's club? Why? / Why not?",
+        "image": "assets/images/u2/u2_invitations_cartoon.jpg",
+        "referencePage": 92,
+        "dialogues": [
+          {
+            "panel": 1,
+            "speakerA": "Ruby",
+            "utteranceA": "Do you like trying new food?",
+            "speakerB": "Sam",
+            "utteranceB": "Oh yes! I love eating food from all over the world."
+          },
+          {
+            "panel": 2,
+            "speakerA": "Ruby",
+            "utteranceA": "Would you like to join our Cooking Club?",
+            "speakerB": "Sam",
+            "utteranceB": "No thanks! I'm not interested in cooking."
+          }
+        ],
+        "qa": [
+          {
+            "question": "What does Sam say about trying new food?",
+            "answer": "He loves eating food from all over the world."
+          },
+          {
+            "question": "Does he want to join Ruby's club?",
+            "answer": "No, he doesn't."
+          },
+          {
+            "question": "Why? / Why not?",
+            "answer": "Because he is not interested in cooking (he loves eating food, but he doesn't like cooking it)."
+          }
+        ]
+      },
+      "p14_ex2_dialogues": {
+        "title": "Page 14 Ex 2: Do you like vs Would you like Dialogues",
+        "instruction": "Complete the conversations with Do you like or Would you like and the correct form of the verb in brackets.",
+        "grammarTip": "Do you like + V-ing...? 用於詢問平時的廣泛喜好或生活習慣；Would you like + to V...? 用於發出具體邀請或主動提供。",
+        "conversations": [
+          {
+            "id": 1,
+            "speakerA": "A",
+            "speakerB": "B",
+            "speakerA_line": "Would you like to join our music group?",
+            "speakerB_line": "I'm afraid not. I can't sing very well.",
+            "promptVerb": "join",
+            "answer": "Would you like to join",
+            "isExample": true,
+            "explanation": "發出加入音樂社團的邀請，使用 Would you like to join。"
+          },
+          {
+            "id": 2,
+            "speakerA": "A",
+            "speakerB": "B",
+            "speakerA_line": "Do you like reading books?",
+            "speakerB_line": "Not really. I prefer reading blogs.",
+            "promptVerb": "read",
+            "answer": "Do you like reading",
+            "isExample": false,
+            "explanation": "詢問平常一般的閱讀喜好習慣，使用 Do you like reading。"
+          },
+          {
+            "id": 3,
+            "speakerA": "A",
+            "speakerB": "B",
+            "speakerA_line": "I'm going to the cinema. Would you like to come?",
+            "speakerB_line": "I'd love to.",
+            "promptVerb": "come",
+            "answer": "Would you like to come",
+            "isExample": false,
+            "explanation": "發出一起去看電影的特定邀約，使用 Would you like to come。"
+          },
+          {
+            "id": 4,
+            "speakerA": "A",
+            "speakerB": "B",
+            "speakerA_line": "I really enjoy sleeping under the stars. Would you like to go camping with me next week?",
+            "speakerB_line": "Sure!",
+            "promptVerb": "go",
+            "answer": "Would you like to go",
+            "isExample": false,
+            "explanation": "下週具體行程邀約，使用 Would you like to go。"
+          },
+          {
+            "id": 5,
+            "speakerA": "A",
+            "speakerB": "B",
+            "speakerA_line": "What do you do in your free time? Do you like playing sports?",
+            "speakerB_line": "No, I don't. I like watching them.",
+            "promptVerb": "play",
+            "answer": "Do you like playing",
+            "isExample": false,
+            "explanation": "詢問空閒時的常態愛好，使用 Do you like playing。"
+          },
+          {
+            "id": 6,
+            "speakerA": "A",
+            "speakerB": "B",
+            "speakerA_line": "I'm often bored on Sunday afternoon. I never know what to do.",
+            "speakerB_line": "Would you like to watch a film at my house this Sunday?",
+            "promptVerb": "watch",
+            "answer": "Would you like to watch",
+            "isExample": false,
+            "explanation": "向對方提出這個星期天來家裡看電影的邀請，使用 Would you like to watch。"
+          }
+        ]
+      },
+      "p14_ex3_ex4_invitations": {
+        "title": "Page 14 Ex 3 & Ex 4: Responding to Invitations (Saying Yes or No)",
+        "instruction": "Complete the table with more expressions we use to say 'yes' or 'no' to invitations.",
+        "expressionsBox": [
+          "Good idea.",
+          "I'd like to, but I can't.",
+          "I'd love to.",
+          "I'm afraid I'm busy.",
+          "I'm afraid not.",
+          "I'm sorry, I can't.",
+          "No, thanks.",
+          "That's great - thanks!",
+          "Sure!",
+          "Yes, please!"
+        ],
+        "table": {
+          "yes": [
+            "Yes, please!",
+            "Good idea.",
+            "I'd love to.",
+            "That's great - thanks!",
+            "Sure!"
+          ],
+          "no": [
+            "I'd like to, but I can't.",
+            "I'm afraid I'm busy.",
+            "I'm afraid not.",
+            "I'm sorry, I can't.",
+            "No, thanks."
+          ]
+        }
+      },
+      "p14_ex5_pair_invitations": {
+        "title": "Page 14 Ex 5: Practice Inviting Each Other",
+        "instruction": "Take turns to invite each other to these events. Use Would you like ... ? and the expressions in Exercise 4.",
+        "events": [
+          {
+            "event": "School disco, Saturday 7.00 p.m.",
+            "exampleInvite": "Would you like to go to the school disco on Saturday at 7.00 p.m.?",
+            "exampleDecline": "No, thanks. I hate dancing.",
+            "exampleAccept": "That's great - thanks! I love music."
+          },
+          {
+            "event": "5 km-run this summer",
+            "exampleInvite": "Would you like to do a 5 km-run with me this summer?",
+            "exampleDecline": "I'd like to, but I can't. I'm terrible at running.",
+            "exampleAccept": "Good idea. I'm really good at sports."
+          },
+          {
+            "event": "Camping trip this weekend",
+            "exampleInvite": "Would you like to come on a camping trip with me this weekend?",
+            "exampleDecline": "I'm afraid I'm busy this weekend.",
+            "exampleAccept": "Sure! I really enjoy sleeping under the stars."
+          },
+          {
+            "event": "Visit to Science Museum tomorrow",
+            "exampleInvite": "Would you like to visit the Science Museum tomorrow?",
+            "exampleDecline": "I'm sorry, I can't. I've got piano lessons.",
+            "exampleAccept": "I'd love to. I'm very interested in science."
+          }
+        ]
+      }
+    },
+    "readingPart3": {
+      "ex1_synonyms": {
+        "title": "Page 15 Ex 1: Synonym Matching",
+        "instruction": "Match the words (1-6) with the words that mean the same (a-f).",
+        "pairs": [
+          {
+            "id": 1,
+            "word": "famous",
+            "match": "e",
+            "synonym": "well-known",
+            "zh": "著名的"
+          },
+          {
+            "id": 2,
+            "word": "difficult",
+            "match": "d",
+            "synonym": "hard",
+            "zh": "困難的"
+          },
+          {
+            "id": 3,
+            "word": "afraid",
+            "match": "b",
+            "synonym": "scared",
+            "zh": "害怕的"
+          },
+          {
+            "id": 4,
+            "word": "attractive",
+            "match": "a",
+            "synonym": "good-looking",
+            "zh": "好看的；有吸引力的"
+          },
+          {
+            "id": 5,
+            "word": "correct",
+            "match": "f",
+            "synonym": "right",
+            "zh": "正確的"
+          },
+          {
+            "id": 6,
+            "word": "glad",
+            "match": "c",
+            "synonym": "happy",
+            "zh": "高興的；開心的"
+          }
+        ]
+      },
+      "ex2_reading_warmup": {
+        "title": "Page 15 Ex 2: Reading Warm-up & Question Analysis",
+        "instruction": "Read this text and the question below. Answer B is wrong (see underlined text). Underline the parts of the text where you can find answers A and C. Which is the correct answer for the question?",
+        "text": "I'm reading a new book by my favourite writer. She's not well-known, and her stories aren't easy to understand, but this one is really interesting. I hope no one tells me how it ends before I finish reading it!",
+        "question": "The boy is worried that",
+        "options": {
+          "A": "the writer's stories will change now she's famous.",
+          "B": "this book is too difficult for him to finish.",
+          "C": "someone will let him know what happens in the story."
+        },
+        "answer": "C",
+        "optionAnalysis": {
+          "A": {
+            "textProof": "She's not well-known",
+            "isCorrect": false,
+            "reason": "文中明確提到作家『not well-known』（不出名），因此 A 選項說『now she's famous』與原文完全相反。"
+          },
+          "B": {
+            "textProof": "aren't easy to understand, but this one is really interesting.",
+            "isCorrect": false,
+            "reason": "雖然她的故事不易理解，但這本書『really interesting』，男孩很享受閱讀，並非擔心太難而讀不完。"
+          },
+          "C": {
+            "textProof": "I hope no one tells me how it ends before I finish reading it!",
+            "isCorrect": true,
+            "reason": "男孩希望在讀完前沒有人劇透結局，完全對應 C 選項『someone will let him know what happens in the story』。"
+          }
+        }
+      },
+      "exam_task": {
+        "id": "u2_reading_part3_exam",
+        "title": "Reading Part 3 Exam Task: Kris Davies - Teenage Painter",
+        "intro": "Kris Davies started painting when he was 12. He's now 15, and has a website of his own paintings. Our journalist Tamara Yafai went to meet him.",
+        "interview": [
+          {
+            "speaker": "Tamara",
+            "question": "How did you become interested in painting, Kris?"
+          },
+          {
+            "speaker": "Kris",
+            "answer": "It's strange. My mother's a painter - you can see her best paintings on her website - but I've never been interested in the type of paintings she does. Then, a few years ago, my sister asked me to paint a card for a friend's birthday. Her friend loved it, and I haven't stopped painting ever since."
+          },
+          {
+            "speaker": "Tamara",
+            "question": "How did you get your first brushes?"
+          },
+          {
+            "speaker": "Kris",
+            "answer": "About a year later, I decided to enter a painting competition. I wanted to use my mum's brushes, but she was using them all the time. So my uncle bought me some, which were fantastic. I came first in that competition!"
+          },
+          {
+            "speaker": "Tamara",
+            "question": "Where do your ideas come from?"
+          },
+          {
+            "speaker": "Kris",
+            "answer": "Seeing different places is really interesting. They help me think of new things to paint. Often I use my phone to film places I see, to help me remember them. People have given me beautiful books of paintings, but they don't help me get new ideas."
+          },
+          {
+            "speaker": "Tamara",
+            "question": "What type of painting are you interested in?"
+          },
+          {
+            "speaker": "Kris",
+            "answer": "Well, all my favourite artists paint people. But I love animals and being in the countryside, so I hope to be a painter of nature. I've tried painting buildings. That was too hard for me."
+          },
+          {
+            "speaker": "Tamara",
+            "question": "Do you have any advice for other young painters?"
+          },
+          {
+            "speaker": "Kris",
+            "answer": "The best painters never stop painting. That's how they become so good, and it's how you will get better. Also, remember to ask other people what they think of your paintings - even if you don't like what they say."
+          }
+        ],
+        "questions": [
+          {
+            "number": 1,
+            "question": "How did Kris first become interested in painting?",
+            "options": {
+              "A": "He saw some interesting paintings online.",
+              "B": "A member of his family is a painter.",
+              "C": "He painted something for a friend."
+            },
+            "answer": "C",
+            "quote": "Then, a few years ago, my sister asked me to paint a card for a friend's birthday. Her friend loved it, and I haven't stopped painting ever since.",
+            "rationale": "Kris 的姊姊請他為朋友的生日畫一張卡片，朋友非常喜歡，自此他便停不下來。因此是『為朋友畫了東西』激發了他的興趣。",
+            "distractorAnalysis": {
+              "A": "干擾陷阱：媽媽的畫確實在網站上（see her best paintings on her website），但他對媽媽畫的類型毫無興趣（never been interested），並非他在線上看到畫作引起興趣。",
+              "B": "干擾陷阱：媽媽確實是畫家（My mother's a painter），但他明確說他從不喜歡媽媽畫的畫，因此不是家人啟發他。"
+            }
+          },
+          {
+            "number": 2,
+            "question": "How did Kris get his first brushes?",
+            "options": {
+              "A": "He won them.",
+              "B": "They were a present.",
+              "C": "They belonged to his mother."
+            },
+            "answer": "B",
+            "quote": "So my uncle bought me some, which were fantastic. I came first in that competition!",
+            "rationale": "叔叔買給他一套很棒的畫筆（bought me some），買給他即為『禮物（present）』。",
+            "distractorAnalysis": {
+              "A": "干擾陷阱：他在比賽中得了第一名（came first in that competition），但贏得的是比賽，畫筆是叔叔買的禮物，不是獎品。",
+              "C": "干擾陷阱：他原本想用媽媽的畫筆（wanted to use my mum's brushes），但媽媽一直自己在用，所以他並沒有得到媽媽的畫筆。"
+            }
+          },
+          {
+            "number": 3,
+            "question": "Kris gets his ideas from",
+            "options": {
+              "A": "films.",
+              "B": "places he visits.",
+              "C": "books about paintings."
+            },
+            "answer": "B",
+            "quote": "Seeing different places is really interesting. They help me think of new things to paint. Often I use my phone to film places I see...",
+            "rationale": "看見不同地方（places he visits）激發他想到新畫作題材（think of new things to paint）。",
+            "distractorAnalysis": {
+              "A": "干擾陷阱：文中出現 film，但在此是【動詞】（用手機錄影用以記憶地點），而非名詞『電影（movies）』。",
+              "C": "干擾陷阱：有人送他精美的畫冊（books of paintings），但他特別說『they don't help me get new ideas』，完全排除 C。"
+            }
+          },
+          {
+            "number": 4,
+            "question": "Kris wants to paint",
+            "options": {
+              "A": "people.",
+              "B": "buildings.",
+              "C": "nature."
+            },
+            "answer": "C",
+            "quote": "But I love animals and being in the countryside, so I hope to be a painter of nature.",
+            "rationale": "Kris 熱愛動物與鄉村，因此希望成為大自然的畫家（a painter of nature）。",
+            "distractorAnalysis": {
+              "A": "干擾陷阱：他最喜歡的藝術家們畫的是人（all my favourite artists paint people），但這不是他自己想畫的主題。",
+              "B": "干擾陷阱：他曾嘗試畫建築物，但他發現那對他來說太難了（That was too hard for me），並非他想畫的。"
+            }
+          },
+          {
+            "number": 5,
+            "question": "Kris says that other young painters should",
+            "options": {
+              "A": "do lots of painting.",
+              "B": "look at the paintings that the best artists paint.",
+              "C": "not worry about other people's opinions of their paintings."
+            },
+            "answer": "A",
+            "quote": "The best painters never stop painting. That's how they become so good, and it's how you will get better.",
+            "rationale": "頂尖畫家從不停筆（never stop painting），這也是進步之道，同義替換為『do lots of painting』（大量練習繪畫）。",
+            "distractorAnalysis": {
+              "B": "干擾陷阱：雖然提到了 the best painters，但他並未建議去看他們的畫，而是強調他們『never stop painting』的不斷創作精神。",
+              "C": "干擾陷阱：Kris 反而建議一定要詢問他人意見（remember to ask other people what they think），即使不喜歡批評也要聽，因此與『不理會他人意見』相反。"
+            }
+          }
+        ]
+      }
+    },
+    "readingWritingPart5": {
+      "exam_task": {
+        "id": "u2_rw_part5_exam",
+        "title": "Reading & Writing Part 5: Hasan's Email",
+        "instructions": "For each question, write the correct answer. Write one word for each gap.",
+        "image": "assets/images/u2/u2_hasan_bedroom.jpg",
+        "email": {
+          "from": "Hasan",
+          "subject": "Pen friend introduction",
+          "text": "My name (0) [is] Hasan Sadik but my friends call me Zan. I'm 13 and I live in Adana, Turkey. I (1) [have] got two older sisters. (2) [Their] names are Ayla and Zeynep.\nIn my free time, I love listening (3) [to] music. I also play the drums in the school band. I go to the cinema with my friends once (4) [a] week. After the film, (5) [we] sometimes have dinner in a pizza restaurant together. I usually have mushroom pizza - my favourite.\nPlease write soon and tell me (6) [about] your family, friends and hobbies.\nBest wishes\nHasan"
+        },
+        "gaps": [
+          {
+            "gap": 0,
+            "answer": "is",
+            "acceptedVariants": [
+              "is"
+            ],
+            "wordType": "Verb (be)",
+            "grammarRole": "Third-person singular present of be",
+            "isExample": true,
+            "clue": "My name ... Hasan"
+          },
+          {
+            "gap": 1,
+            "answer": "have",
+            "acceptedVariants": [
+              "have",
+              "'ve"
+            ],
+            "wordType": "Auxiliary verb",
+            "grammarRole": "Present tense form in 'have got'",
+            "clue": "I ... got two older sisters",
+            "explanation": "英式英語表達『擁有』常用 have got，主詞為第一人稱 I，必須填入 have（或縮寫 've）。",
+            "commonTrap": "切勿填入 do 或 had；在此搭配過去分詞 got，只能填 have。"
+          },
+          {
+            "gap": 2,
+            "answer": "Their",
+            "acceptedVariants": [
+              "Their",
+              "their"
+            ],
+            "wordType": "Possessive adjective",
+            "grammarRole": "Plural possessive modifying 'names'",
+            "clue": "... names are Ayla and Zeynep",
+            "explanation": "修飾複數名詞 names，先行詞為 two older sisters（兩位姊姊），必須用第三人稱複數所有格代名詞 Their。注意句首大寫！",
+            "commonTrap": "考生常誤填 They（主格）或 Her（單數女性所有格）。兩位姊姊必須用複數 Their。"
+          },
+          {
+            "gap": 3,
+            "answer": "to",
+            "acceptedVariants": [
+              "to"
+            ],
+            "wordType": "Preposition",
+            "grammarRole": "Dependent preposition after 'listen'",
+            "clue": "listening ... music",
+            "explanation": "動詞 listen 為不及物動詞，接受詞音樂（music）時，必須固定搭配介系詞 to（listen to music）。",
+            "commonTrap": "中文說『聽音樂』容易受母語干擾而漏掉 to，或誤填 for / of。"
+          },
+          {
+            "gap": 4,
+            "answer": "a",
+            "acceptedVariants": [
+              "a"
+            ],
+            "wordType": "Indefinite article",
+            "grammarRole": "Article in frequency phrase 'once a week'",
+            "clue": "once ... week",
+            "explanation": "頻率表達片語『每週一次』固定結構為 once a week，冠詞必須填 a。",
+            "commonTrap": "不可填 in / one / the，固定搭配必為 once a week。"
+          },
+          {
+            "gap": 5,
+            "answer": "we",
+            "acceptedVariants": [
+              "we"
+            ],
+            "wordType": "Subject pronoun",
+            "grammarRole": "Subject of the clause 'sometimes have dinner'",
+            "clue": "After the film, ... sometimes have dinner in a pizza restaurant together",
+            "explanation": "前面提到『I go to the cinema with my friends』，看完電影後『我和我朋友們（我們）』一起吃披薩，主格代名詞填 we。",
+            "commonTrap": "容易誤填 they 或 I；後方有 together 且包含作者自己，故必須用第一人稱複數 we。"
+          },
+          {
+            "gap": 6,
+            "answer": "about",
+            "acceptedVariants": [
+              "about"
+            ],
+            "wordType": "Preposition",
+            "grammarRole": "Preposition of topic / theme after 'tell me'",
+            "clue": "tell me ... your family, friends and hobbies",
+            "explanation": "片語 tell sb about sth 表示『告訴某人關於…的事情』，介系詞填 about。",
+            "commonTrap": "不可填 of 或 for；tell me about... 是書信結尾常見固定句型。"
+          }
+        ]
+      }
+    },
+    "listeningPart4": {
+      "ex1_exam_format": {
+        "title": "Page 13 Ex 1: Listening Part 4 Format Overview",
+        "instruction": "Work in pairs. Look at the exam task and answer the questions.",
+        "questions": [
+          {
+            "id": 1,
+            "question": "How many questions are there in Listening Part 4?",
+            "answer": "5 questions",
+            "explanation": "Listening Part 4 固定有 5 道題目（每題 1 分）。"
+          },
+          {
+            "id": 2,
+            "question": "For each question, how many possible answers do you choose from?",
+            "answer": "3 possible answers (A, B, C)",
+            "explanation": "每題提供 3 個三選一選項（A, B, C）。"
+          },
+          {
+            "id": 3,
+            "question": "Read the questions again. How many people do you think you will hear in each one (one person or two)?",
+            "breakdown": [
+              {
+                "item": 1,
+                "text": "two friends talking about a film",
+                "people": "two people (dialogue)"
+              },
+              {
+                "item": 2,
+                "text": "a boy talking about a camping trip",
+                "people": "one person (monologue)"
+              },
+              {
+                "item": 3,
+                "text": "a boy, James, talking to his mother",
+                "people": "two people (dialogue)"
+              },
+              {
+                "item": 4,
+                "text": "two friends discussing a practice for their dance group",
+                "people": "two people (dialogue)"
+              },
+              {
+                "item": 5,
+                "text": "a girl talking about horse riding",
+                "people": "one person (monologue)"
+              }
+            ]
+          }
+        ]
+      },
+      "ex2_track06_prep": {
+        "title": "Page 13 Ex 2: Track 06 Introductory Listening",
+        "instruction": "Abbey and Jasmine are talking about Abbey's favourite film star. Listen and complete these sentences from their conversation.",
+        "audioTrack": "Track 06",
+        "tapescript": [
+          {
+            "speaker": "Jasmine",
+            "text": "He's really good-looking, isn't he?"
+          },
+          {
+            "speaker": "Abbey",
+            "text": "Yes, he is. He's also a really good actor. That's the reason I prefer him to any other actor."
+          },
+          {
+            "speaker": "Abbey",
+            "text": "In the last few years his films haven't been very good."
+          }
+        ],
+        "gaps": [
+          {
+            "gap": 1,
+            "answer": "also",
+            "sentence": "He's (1) [also] a really good actor."
+          },
+          {
+            "gap": 2,
+            "answer": "reason",
+            "sentence": "That's the (2) [reason] I prefer him to any other actor."
+          },
+          {
+            "gap": 3,
+            "answer": "haven't",
+            "sentence": "In the last few years his films (3) [haven't] been very good."
+          }
+        ]
+      },
+      "ex3_ex4_track06_analysis": {
+        "title": "Page 13 Ex 3 & Ex 4: Distractor Analysis of Track 06",
+        "question": "Why does Abbey like her favourite actor?",
+        "options": {
+          "A": "He makes good films.",
+          "B": "He is good-looking.",
+          "C": "He is a good actor."
+        },
+        "answer": "C",
+        "analysis": {
+          "A": {
+            "isCorrect": false,
+            "evidence": "Abbey says: 'In the last few years his films haven't been very good.'",
+            "trapReason": "直接否定！他近年的電影並不好看，完全排除 A。"
+          },
+          "B": {
+            "isCorrect": false,
+            "evidence": "Jasmine says: 'He's really good-looking, isn't he?' and Abbey replies: 'Yes, he is.'",
+            "trapReason": "干擾陷阱！雖然 Abbey 同意他長相好看，但這並非她最喜愛他（prefer him to any other actor）的真正核心原因。"
+          },
+          "C": {
+            "isCorrect": true,
+            "evidence": "Abbey explicitly says: 'He's also a really good actor. That's the reason I prefer him to any other actor.'",
+            "trapReason": "正解核心！Abbey 用『That's the reason...』明確點出她偏愛他的真正原因是因為他是位好演員。"
+          }
+        }
+      },
+      "exam_task": {
+        "id": "u2_listening_part4_exam",
+        "title": "Listening Part 4 Exam Task: Five Short Conversations / Monologues",
+        "instructions": "For each question, choose the correct answer. You will hear each item twice.",
+        "audioTrack": "Track 07",
+        "examTip": "You will often hear words which are the same as the words in the question, or all three of the possible options, A, B, C. However, only one is the correct answer to the question.",
+        "items": [
+          {
+            "number": 1,
+            "prompt": "You will hear two friends talking about a film they've just seen. What type of film was it?",
+            "options": {
+              "A": "a comedy",
+              "B": "a horror film",
+              "C": "an adventure film"
+            },
+            "answer": "C",
+            "tapescript": [
+              {
+                "speaker": "Girl",
+                "text": "Well, that was certainly thrilling! I thought it was going to be a comedy when we booked tickets, because that famous funny actor was starring in it.",
+                "isDistractor": true,
+                "distractorTarget": "A",
+                "explanation": "提到原本以為是喜劇（comedy），因為有搞笑明星，但這只是進場前的預期，不是這部電影實際的類型。"
+              },
+              {
+                "speaker": "Boy",
+                "text": "Me too! And right at the beginning, when they were trapped in that dark spooky old castle, I was honestly terrified it was going to be a horror film! I can't stand scary movies.",
+                "isDistractor": true,
+                "distractorTarget": "B",
+                "explanation": "提到一開始在古堡很害怕會變成恐怖片（horror film），但這只是男孩的擔憂，電影並非恐怖片。"
+              },
+              {
+                "speaker": "Girl",
+                "text": "Yeah, but once they escaped on that speedboat and travelled across the wild jungle looking for the lost golden crown, it was non-stop action! A fantastic adventure film!",
+                "isKey": true,
+                "distractorTarget": "C",
+                "explanation": "明確證實電影是搭快艇、穿越叢林尋找寶藏的精彩冒險片（A fantastic adventure film）。"
+              },
+              {
+                "speaker": "Boy",
+                "text": "Totally! All those narrow escapes and exciting journeys kept me on the edge of my seat.",
+                "isKey": false,
+                "distractorTarget": null,
+                "explanation": "附和冒險旅程的刺激。"
+              }
+            ],
+            "distractorXray": {
+              "A": "【陷阱：原先預期】女孩提到看見搞笑演員以為是喜劇片（thought it was going to be a comedy），但正片完全不是喜劇。",
+              "B": "【陷阱：個人恐懼】男孩提到開頭陰森古堡讓他害怕是恐怖片（terrified it was going to be a horror film），但隨後劇情轉折，並非恐怖片。",
+              "C": "【正解：真正類型】女孩明確總結『A fantastic adventure film!』，且全片充斥荒野探險與尋寶動作場面。"
+            }
+          },
+          {
+            "number": 2,
+            "prompt": "You will hear a boy talking about a camping trip. Who did he go camping with?",
+            "options": {
+              "A": "his brother",
+              "B": "his mother",
+              "C": "his uncle"
+            },
+            "answer": "C",
+            "tapescript": [
+              {
+                "speaker": "Boy",
+                "text": "Last weekend I had the best time camping out in the pine forest by the river.",
+                "isKey": false,
+                "distractorTarget": null,
+                "explanation": "引入露營情境。"
+              },
+              {
+                "speaker": "Boy",
+                "text": "Usually my older brother comes with me, but he had an important science exam on Monday, so he stayed at home studying all weekend.",
+                "isDistractor": true,
+                "distractorTarget": "A",
+                "explanation": "哥哥平時常一起去，但這次要準備週一考試，整週末留在家讀書，沒有去露營。"
+              },
+              {
+                "speaker": "Boy",
+                "text": "My mother drove us to the store and packed all our warm sleeping bags into the boots, but she can't stand insects and hates sleeping in tents, so she never goes camping.",
+                "isDistractor": true,
+                "distractorTarget": "B",
+                "explanation": "媽媽幫忙買東西打包行李，但媽媽討厭昆蟲且討厭睡帳篷，完全不露營。"
+              },
+              {
+                "speaker": "Boy",
+                "text": "Fortunately, my uncle had some time off work. He loves wildlife, so he took me in his jeep and we pitched the tent together right beside the water.",
+                "isKey": true,
+                "distractorTarget": "C",
+                "explanation": "叔叔有休假且熱愛大自然，開吉普車帶他去並一起在水邊搭帳篷，正解為叔叔。"
+              }
+            ],
+            "distractorXray": {
+              "A": "【陷阱：缺席家人】哥哥平時雖然會去，但這次留在家準備考試，未同行。",
+              "B": "【陷阱：協助打包】媽媽幫忙整理睡袋，但因討厭帳篷與蟲子根本不露營。",
+              "C": "【正解：同行夥伴】叔叔開車載他去，並一起搭帳篷度過週末。"
+            }
+          },
+          {
+            "number": 3,
+            "prompt": "You will hear a boy, James, talking to his mother about basketball lessons. What does James ask his mother to do?",
+            "options": {
+              "A": "find out when his basketball lessons start",
+              "B": "book some basketball lessons for him",
+              "C": "buy him some basketball clothes"
+            },
+            "answer": "B",
+            "tapescript": [
+              {
+                "speaker": "James",
+                "text": "Mum, have you got five minutes? You know the new youth basketball coaching sessions starting at the leisure centre?",
+                "isKey": false,
+                "distractorTarget": null,
+                "explanation": "開門見山提出籃球課話題。"
+              },
+              {
+                "speaker": "Mother",
+                "text": "Yes, James. I checked their website this morning, and the coach is running classes every Thursday at half past five.",
+                "isDistractor": true,
+                "distractorTarget": "A",
+                "explanation": "媽媽早上已經上網查好了上課時間（週四五點半），因此 James 不需要媽媽去查時間。"
+              },
+              {
+                "speaker": "Mother",
+                "text": "And didn't Grandma buy you that smart new basketball vest and shorts for your birthday last week?",
+                "isDistractor": true,
+                "distractorTarget": "C",
+                "explanation": "外婆上週生日已經買給 James 全新的籃球球衣與球褲，不需要買衣服。"
+              },
+              {
+                "speaker": "James",
+                "text": "Yes, the kit is awesome! But the club website says places are strictly limited and an adult has to register and pay online. Could you log on and book the lessons for me before it fills up?",
+                "isKey": true,
+                "distractorTarget": "B",
+                "explanation": "James 明確請求：因為必須家長線上付款報名，請媽媽登入幫他預約課程（Could you log on and book the lessons for me?）。"
+              },
+              {
+                "speaker": "Mother",
+                "text": "Of course! Let's get my debit card and register right now.",
+                "isKey": false,
+                "distractorTarget": null,
+                "explanation": "媽媽同意幫忙報名。"
+              }
+            ],
+            "distractorXray": {
+              "A": "【陷阱：已完成動作】媽媽早已查好上課時間（checked website this morning），James 無須提出此要求。",
+              "B": "【正解：請求核心】James 拜託媽媽登入網站替他報名課程（book the lessons for me）。",
+              "C": "【陷阱：已有物品】外婆上週生日剛送了球衣球褲，James 身上裝備齊全，不需買衣服。"
+            }
+          },
+          {
+            "number": 4,
+            "prompt": "You will hear two friends discussing a practice for their dance group. What do they still need to do?",
+            "options": {
+              "A": "tell people when the practice will start",
+              "B": "find a place to practise",
+              "C": "decide on a dance"
+            },
+            "answer": "B",
+            "tapescript": [
+              {
+                "speaker": "Girl",
+                "text": "Hi Lucas! We need to make sure everything is ready for the dance group rehearsal this weekend.",
+                "isKey": false,
+                "distractorTarget": null,
+                "explanation": "討論街舞團排練準備事項。"
+              },
+              {
+                "speaker": "Boy",
+                "text": "Don't worry, we're making good progress. We all agreed on that dynamic hip-hop routine on Tuesday, so choosing the dance style is completely done.",
+                "isDistractor": true,
+                "distractorTarget": "C",
+                "explanation": "週二已經全員一致決定好跳 hip-hop 舞步，因此選舞步已經完成，不需要再決定。"
+              },
+              {
+                "speaker": "Boy",
+                "text": "And I've already sent a group chat message to all eight dancers telling everyone that we kick off at ten sharp on Saturday morning.",
+                "isDistractor": true,
+                "distractorTarget": "A",
+                "explanation": "男孩已經群發訊息通知所有人週六早上十點開始，時間已經通知完畢。"
+              },
+              {
+                "speaker": "Girl",
+                "text": "That's great, but there's a problem with the venue! The school hall is being painted, and the community centre studio is booked all day.",
+                "isKey": true,
+                "distractorTarget": "B",
+                "explanation": "學校大廳在油漆，社區中心被訂滿，排練場地出現大問題。"
+              },
+              {
+                "speaker": "Boy",
+                "text": "Oh no! So we haven't got anywhere to rehearse yet. We definitely need to find a suitable room today.",
+                "isKey": true,
+                "distractorTarget": "B",
+                "explanation": "男孩確認：目前還沒有排練地點，今天必須盡快找到場地（find a place to practise）。"
+              }
+            ],
+            "distractorXray": {
+              "A": "【陷阱：已通知完畢】男孩已經傳訊通知所有團員週六早上十點排練，無須再做。",
+              "B": "【正解：唯一待辦】學校與社區中心都無法借用，目前毫無排練場地，急需尋找地點。",
+              "C": "【陷阱：已選定舞步】週二早已選定 hip-hop 曲目，此事項早已搞定。"
+            }
+          },
+          {
+            "number": 5,
+            "prompt": "You will hear a girl talking about horse riding. Why does she like horse riding?",
+            "options": {
+              "A": "She is learning something new.",
+              "B": "She can spend time outdoors.",
+              "C": "She has made new friends."
+            },
+            "answer": "B",
+            "tapescript": [
+              {
+                "speaker": "Girl",
+                "text": "I've been going to the riding school for nearly two years now.",
+                "isKey": false,
+                "distractorTarget": null,
+                "explanation": "說明學騎馬的背景。"
+              },
+              {
+                "speaker": "Girl",
+                "text": "When I first joined, my parents thought it would be a lovely chance to make lots of new friends. But honestly, most riders there are adults who leave immediately after their lesson, so I haven't really met anyone my age.",
+                "isDistractor": true,
+                "distractorTarget": "C",
+                "explanation": "父母原本以為能交新朋友，但那裡都是下課就走的大人，根本沒交到同齡朋友。"
+              },
+              {
+                "speaker": "Girl",
+                "text": "And having ridden for so long, I can already trot, canter and jump fences easily, so it's not like I'm picking up fresh skills every week anymore.",
+                "isDistractor": true,
+                "distractorTarget": "A",
+                "explanation": "騎了兩年基本技能全學會了，因此並非為了每週學習新事物而喜歡騎馬。"
+              },
+              {
+                "speaker": "Girl",
+                "text": "For me, the real joy is leaving behind the noisy classrooms and traffic, feeling the breeze on my face, and riding across the wide green meadows under the open sky. Being out in nature is simply unbeatable.",
+                "isKey": true,
+                "distractorTarget": "B",
+                "explanation": "她真正熱愛的是遠離喧囂、在大藍天與綠草地間感受微風，也就是『置身於戶外大自然（spend time outdoors）』。"
+              }
+            ],
+            "distractorXray": {
+              "A": "【陷阱：早已學會】學了兩年已能輕鬆跳障礙，並不是因為學習新技能而熱愛。",
+              "B": "【正解：核心原因】享受吹風、奔馳在綠草地與開闊天空下，完全呼應 spend time outdoors。",
+              "C": "【陷阱：未結交到朋友】馬場大多是成人且課後就離開，她根本沒有在馬場結交到新朋友。"
+            }
+          }
+        ]
+      }
+    },
+    "speakingPart1": {
+      "ex1_classification": {
+        "title": "Page 16 Ex 1: Likes & Dislikes Expressions Classification",
+        "instruction": "Complete the table with expressions we use to talk about the free-time activities we like and don't like.",
+        "expressions": [
+          "be bad at",
+          "be brilliant at",
+          "be good at",
+          "be interested in",
+          "be terrible at",
+          "don't like",
+          "enjoy",
+          "hate",
+          "like",
+          "love",
+          "prefer"
+        ],
+        "table": {
+          "positive": [
+            "be good at",
+            "be brilliant at",
+            "be interested in",
+            "enjoy",
+            "like",
+            "love",
+            "prefer"
+          ],
+          "negative": [
+            "hate",
+            "be bad at",
+            "be terrible at",
+            "don't like"
+          ]
+        }
+      },
+      "ex2_personal_opinions": {
+        "title": "Page 16 Ex 2: Sentences about Free-time Activities",
+        "instruction": "Complete the sentences about your free-time activities. Use the words from the box or your own ideas.",
+        "wordBox": [
+          "cooking",
+          "dancing",
+          "going to concerts",
+          "messaging friends",
+          "playing computer games",
+          "reading books",
+          "trying new food"
+        ],
+        "templates": [
+          {
+            "id": 1,
+            "pattern": "I love [trying new food], but I don't like [cooking].",
+            "isExample": true
+          },
+          {
+            "id": 2,
+            "pattern": "I'm good at [playing computer games] but I'm terrible at [dancing]."
+          },
+          {
+            "id": 3,
+            "pattern": "I'm interested in [going to concerts] but I'm not interested in [reading books]."
+          },
+          {
+            "id": 4,
+            "pattern": "I enjoy [messaging friends], but I hate [cooking]."
+          },
+          {
+            "id": 5,
+            "pattern": "I prefer [playing computer games] to [reading books]."
+          }
+        ]
+      },
+      "ex4_ex5_track08_examiner": {
+        "title": "Page 16 Ex 4 & Ex 5: Speaking Part 1 Examiner Questions (Track 08)",
+        "instruction": "In the second part of Speaking Part 1, the examiner may ask you about your free time. Complete the examiner's questions in this conversation.",
+        "audioTrack": "Track 08",
+        "conversation": [
+          {
+            "speaker": "Examiner",
+            "text": "Now, let's talk about weekends. What sports do you play at the weekend?",
+            "isExample": true
+          },
+          {
+            "speaker": "Candidate",
+            "text": "I'm sorry, I don't understand."
+          },
+          {
+            "speaker": "Examiner",
+            "gap": 1,
+            "text": "(1) [Do you play] football at the weekend?",
+            "answer": "Do you play",
+            "explanation": "當考生表示聽不懂廣泛問題時，考官會改用 Yes/No 具體問法協助引導：Do you play football...?"
+          },
+          {
+            "speaker": "Candidate",
+            "text": "No. I play volleyball."
+          },
+          {
+            "speaker": "Examiner",
+            "gap": 2,
+            "text": "Who (2) [do you spend] time with at the weekend?",
+            "answer": "do you spend",
+            "explanation": "考官詢問週末通常和誰在一起度過時間，使用 Who do you spend time with...?"
+          },
+          {
+            "speaker": "Candidate",
+            "text": "I spend time with my friends."
+          }
+        ]
+      },
+      "ex6_speaking_expansion": {
+        "title": "Page 16 Ex 6 & Exam Task: Say As Much As You Can",
+        "tip": "在 KET 口說測驗中，切忌只回答單字或單句。要達到 13~15 盾牌，必須擴展細節（Say as much as you can），補充『做什麼、去哪裡、感受如何』。",
+        "basicAnswer": "I spend time with my friends.",
+        "improvedAnswer": "I spend a lot of time with my friends at the weekend. We go shopping or play computer games together, and sometimes we ride our bikes in the park.",
+        "modelInterviews": [
+          {
+            "question": "What sports do you play at the weekend?",
+            "standardBand": "I play basketball with my brother at the park on Saturday morning. It's really exciting and helps me stay fit.",
+            "advancedBand": "Actually, I'm brilliant at badminton, so I usually have a training session on Saturday morning. Then on Sunday, if the weather is fine, my friends and I love playing football in the local park."
+          },
+          {
+            "question": "Who do you spend time with at the weekend?",
+            "standardBand": "I spend time with my family and my best friend, Leo. We often watch films together after dinner.",
+            "advancedBand": "I usually spend Saturday with my classmates going cycling or eating pizza, and on Sunday I spend quality time with my parents and grandparents at home."
+          }
+        ]
+      }
+    },
+    "revisionUnit2": {
+      "meta": {
+        "title": "Revision Unit 2 (Page 79)",
+        "source": "assets/pages/rev_u1_u2_p78_p79.jpg",
+        "totalMarks": 20
+      },
+      "ex1_adverbs_rewrite": {
+        "title": "Revision Ex 1: Rewrite Sentences with the Word in Brackets",
+        "marks": 6,
+        "instruction": "Rewrite these sentences with the word in brackets.",
+        "items": [
+          {
+            "id": 1,
+            "original": "My mum takes photos of us.",
+            "bracketWord": "often",
+            "rewritten": "My mum often takes photos of us.",
+            "rule": "頻率副詞 often 放在一般動詞 takes 之前。"
+          },
+          {
+            "id": 2,
+            "original": "My best friend draws pictures of animals at art club.",
+            "bracketWord": "usually",
+            "rewritten": "My best friend usually draws pictures of animals at art club.",
+            "rule": "頻率副詞 usually 放在一般動詞 draws 之前。"
+          },
+          {
+            "id": 3,
+            "original": "I'm late for my music classes.",
+            "bracketWord": "sometimes",
+            "rewritten": "I'm sometimes late for my music classes.",
+            "rule": "頻率副詞 sometimes 遇到 be 動詞（'m / am）必須置於 be 動詞之後。"
+          },
+          {
+            "id": 4,
+            "original": "I go to the cinema with my cousins.",
+            "bracketWord": "twice a month",
+            "rewritten": "I go to the cinema with my cousins twice a month.",
+            "acceptedAlternative": "Twice a month, I go to the cinema with my cousins.",
+            "rule": "副詞片語 twice a month 通常置於句尾，亦可置於句首加逗號。"
+          },
+          {
+            "id": 5,
+            "original": "My friends do after-school activities.",
+            "bracketWord": "every day",
+            "rewritten": "My friends do after-school activities every day.",
+            "acceptedAlternative": "Every day, my friends do after-school activities.",
+            "rule": "副詞片語 every day 置於句尾（或句首）。"
+          },
+          {
+            "id": 6,
+            "original": "We sleep in a tent in winter.",
+            "bracketWord": "never",
+            "rewritten": "We never sleep in a tent in winter.",
+            "rule": "否定頻率副詞 never 放在一般動詞 sleep 之前。"
+          }
+        ]
+      },
+      "ex2_like_would_like": {
+        "title": "Revision Ex 2: Complete Gaps with like or would like",
+        "marks": 6,
+        "instruction": "Complete the gaps with like or would like and the correct form of the verb in brackets.",
+        "items": [
+          {
+            "id": 1,
+            "speakerA": "Where [would you like to go] (you / go) for your next holiday?",
+            "speakerB": "I [would like to go] (go) to the sea because I [like swimming] (swim).",
+            "gapA": "would you like to go",
+            "gapB1": "would like to go",
+            "gapB1_alt": "'d like to go",
+            "gapB2": "like swimming",
+            "explanation": "詢問特定下個假期的期望用 would you like to go；回答用 would like to go / 'd like to go；後面說明平時一般的喜好用 like swimming。"
+          },
+          {
+            "id": 2,
+            "speakerA": "What type of music [do you like listening] (you / listen) to in your free time?",
+            "speakerB": "I [like listening] (listen) to rock and rap.",
+            "gapA": "do you like listening",
+            "gapB": "like listening",
+            "explanation": "詢問與陳述平時空閒時間的音樂常態喜好，皆使用 like + V-ing（do you like listening / like listening）。"
+          },
+          {
+            "id": 3,
+            "speakerA": "[Would you like to come] (you / come) to my birthday party next Saturday evening?",
+            "speakerB": "Yes, thank you! I [like going] (go) to parties. What time does it start?",
+            "gapA": "Would you like to come",
+            "gapB": "like going",
+            "gapB_alt": "would like to go / 'd like to go",
+            "explanation": "邀約下週六生日派對用 Would you like to come；B 表達平時就喜歡參加派對用 like going（或表達這次很想去用 would like to go）。"
+          },
+          {
+            "id": 4,
+            "speakerA": "Which film [would you like to watch] (you / watch) at the cinema tonight?",
+            "speakerB": "I [would like to watch] (watch) the adventure film.",
+            "gapA": "would you like to watch",
+            "gapB": "would like to watch",
+            "gapB_alt": "'d like to watch",
+            "explanation": "詢問與決定今晚（tonight）特定場合想看的電影，用 would you like to watch 與 would like to watch。"
+          },
+          {
+            "id": 5,
+            "speakerA": "What [do you like doing] (you / do) in your free time?",
+            "speakerB": "I [like playing] (play) the piano.",
+            "gapA": "do you like doing",
+            "gapB": "like playing",
+            "explanation": "詢問平常空閒生活做什麼用 What do you like doing；回答用 I like playing the piano。"
+          },
+          {
+            "id": 6,
+            "speakerA": "[Do you like eating] (you / eat) in restaurants or at home?",
+            "speakerB": "I usually eat at home but I [would like to go] (go) to a restaurant sometimes.",
+            "gapA": "Do you like eating",
+            "gapB": "would like to go",
+            "gapB_alt": "'d like to go",
+            "explanation": "A 詢問兩者之間的常態偏好用 Do you like eating；B 回答平時在家吃，但有時希望／想要去餐廳用 would like to go。"
+          }
+        ]
+      },
+      "ex3_vocab_fill": {
+        "title": "Revision Ex 3: Complete Sentences with a Word or Phrase from the Box",
+        "marks": 8,
+        "instruction": "Complete the sentences with a word or phrase from the box.",
+        "wordBox": [
+          "cooking",
+          "dancing",
+          "going to concerts",
+          "messaging friends",
+          "playing computer games",
+          "reading books",
+          "spending time with friends",
+          "trying new food"
+        ],
+        "items": [
+          {
+            "id": 1,
+            "sentence": "My brother is brilliant at [cooking]. He often makes dinner for the family.",
+            "answer": "cooking",
+            "clue": "makes dinner for the family（為全家做晚餐）"
+          },
+          {
+            "id": 2,
+            "sentence": "I enjoy [going to concerts] because I love seeing my favourite bands.",
+            "answer": "going to concerts",
+            "clue": "seeing my favourite bands（看最喜歡的樂團表演）"
+          },
+          {
+            "id": 3,
+            "sentence": "Irene hates going to discos because she is terrible at [dancing].",
+            "answer": "dancing",
+            "clue": "discos（迪斯可舞廳）"
+          },
+          {
+            "id": 4,
+            "sentence": "My mum likes calling people on the phone but I prefer [messaging friends].",
+            "answer": "messaging friends",
+            "clue": "calling on the phone vs messaging（打電話對照傳簡訊訊息）"
+          },
+          {
+            "id": 5,
+            "sentence": "I don't like [reading books] in my free time because I have to read a lot for school.",
+            "answer": "reading books",
+            "clue": "read a lot for school（學校課業讀很多書）"
+          },
+          {
+            "id": 6,
+            "sentence": "When I go to a restaurant I'm always interested in [trying new food].",
+            "answer": "trying new food",
+            "clue": "go to a restaurant（去餐廳品嚐新料理）"
+          },
+          {
+            "id": 7,
+            "sentence": "Jenny loves [playing computer games]. She always wins.",
+            "answer": "playing computer games",
+            "clue": "always wins（總是獲勝贏得遊戲）"
+          },
+          {
+            "id": 8,
+            "sentence": "My sister doesn't like being alone. She prefers [spending time with friends].",
+            "answer": "spending time with friends",
+            "clue": "doesn't like being alone（不喜歡獨處）"
+          }
+        ]
+      }
+    }
+  }
+}
