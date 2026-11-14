@@ -3,14 +3,14 @@
 ⚡ 0. 當下狀態快照 (TL;DR Current Snapshot)
 --------------------------------------------------------------------------------
 - 建立日期：2026-11-12
-- 最後更新：2026-11-13
-- 當前狀態：Phase 6 完工（iPhone 15 Pro 模式、Firebase 跨設備雙向雲端同步、全系統 35 幅資產與 206 項測試全檢通過，已部署上線 GitHub Pages！）
+- 最後更新：2026-11-14
+- 當前狀態：Phase A ~ G 全數完工並正式上線 GitHub Pages（`data/ket_exam_bank.js` 完成 **154 題 / 550.6 KB**，U1/U2/U3 各自 100% 覆蓋官方 14 Part；`Rex` 與 `Hugo` 帳號已透過 Firebase 覆寫與 `LAUNCH_RESET_EPOCH = '20261114_official_v1'` 完成全新歸零，保留 `test1`/`test2`）
 - 線上網址 (GitHub Pages)：https://ddd8836203.github.io/cambridge-ket-island/
 - GitHub 倉庫：https://github.com/ddd8836203/cambridge-ket-island
 - 適用對象：AI Agent 跨視窗無縫交接、專案進度追蹤
 - 下一步待辦 (Next Actions)：
-  1. Rex 與 Hugo 開始使用兩台 iPad 進行每日 20 分鐘單元闖關與 5 色錯題消滅特訓。
-  2. 後續依排程擴充 Unit 4 ~ Unit 12 題庫。
+  1. 線上版已同步更新，供 Rex 與 Hugo 正式使用。
+  2. 後續如有 Unit 4~12 擴充需求再依 `build_exam_bank.js` 推進。
 --------------------------------------------------------------------------------
 
 🧭 一、錨點索引大綱 (Indexed Outline — 標題 + 一句話結論)
@@ -22,6 +22,13 @@
 - [#MEM-5] 2026-11-13 Phase 4 閱讀寫作雙欄考場、聽力雙人劇場與口說模擬室完工：完成 renderReadingWritingPod, renderListeningPod, renderSpeakingPod 並通過 verify_phase_4.js 13 項斷言。
 - [#MEM-6] 2026-11-13 Phase 5 5色淨錯熱力本、Revision 71分總複習闖關與 @media print A4 列印引擎完工：實作 renderErrorBookView, renderRevisionContentHtml, renderPrintPod 並通過 verify_phase_5.js 8 項全檢。
 - [#MEM-7] 2026-11-13 Phase 6 iPhone 15 Pro 模式、Firebase 跨設備雲端同步與 E2E 總體檢完工：通過 verify_phase_6_e2e.js 17 項斷言與全系統 206 項測試。
+- [#MEM-8] 2026-11-13 Phase A KET 全真題庫方格考場與 Flyers-to-KET 四維度詳解/延伸重點引擎完工：完成 index.html, style.css, app.js 擴充，通過 verify_phase_a.js 17 PASS 與 verify_phase_6_e2e.js 17 PASS 100% 全檢。
+- [#MEM-9] 2026-11-13 Phase B Unit 1 純淨真考題庫 (34 題) 完工：完成 data/ket_exam_bank_u1.js，涵蓋 RWP1~5, RWP7, LSP1, LSP3, SPP1，通過 verify_phase_b.js 100% 驗收。
+- [#MEM-10] 2026-11-13 Phase C Unit 2 純淨真考題庫 (32 題) 完工：完成 data/ket_exam_bank_u2.js，涵蓋 RWP1/3/4/5/6, LSP4/5, SPP1，通過 verify_phase_c.js 100% 驗收。
+- [#MEM-11] 2026-11-13 Phase D 100 題合併題庫、錯題本回流方格考場整合與全系統冒煙驗證完工：完成 ket_exam_bank_u3.js (34 題含 6 題總複習)、組裝 ket_exam_bank.js (100 題 / 14 官方 Part) 與 jumpToArenaByCode 互通，待本機實測確認後推上 GitHub。
+- [#MEM-12] 2026-11-14 Phase E 考場 UX、全鍵入「看答案＋紙筆自評」、全部恢復未答與聯動膠囊數字完工：新增底部上下題導覽與鍵盤快捷鍵、移除 Revision 佔位劇透、完成 `resetAllArenaProgress` 與 `matchesArenaUnitFilter` 交叉計算，通過 `verify_phase_e.js` 20 項全檢。
+- [#MEM-13] 2026-11-14 Phase F Unit 1~3 全 14 大 Part 零缺口擴充至 154 題完工：平行擴充 U1(+15=49), U2(+17=49), U3(+22=50) 並編譯為 154 題 (`550.6 KB`) `ket_exam_bank.js`，消除 `./temp/` 並通過 `verify_phase_f.js` 9 項全檢。
+- [#MEM-14] 2026-11-14 Phase G Cambridge 官方 A4 考卷列印引擎重構與全系統總驗收完工：重寫 `#view-print` 接入 154 題自足題庫與個人化 KET 錯題卷，實作共享短文去重與教師四維詳解/聽力稿雙模態，通過 `verify_phase_g.js` 及全套回歸閘門 100% PASS。
 
 ================================================================================
 📖 二、單一真實來源細節 (Single-Source Detailed Specifications)
@@ -147,3 +154,81 @@
      - 全系統 35 幅高解析插圖（12 幅跨頁原圖 + 23 張裁切題目圖）完整存在於 `assets/` 且體積均大於 1KB。
      - 詞彙總數 58、常犯錯總數 35 題 100% 吻合課本。
 - **驗收結果**：執行 `node verify_phase_6_e2e.js` 17 項斷言 100% PASS；全系統 6 階段累計 206 項測試全檢通過。
+
+---
+
+### [#MEM-8] 2026-11-13 Phase A KET 全真題庫方格考場與 Flyers-to-KET 四維度詳解/延伸重點引擎完工
+- **執行重點與技術細節**：
+  1. `index.html` 導覽擴充：
+     - 在 `.ac-nav-tabs` 加入 `#tab-arena`（🎯 KET 全真題庫）緊跟在戰情室後。
+     - 在主視圖容器加入 `<section class="ac-view" id="view-arena"></section>`。
+     - 引入 `<script src="data/ket_exam_bank.js"></script>`。
+  2. `style.css` 動森奶油暖色考場樣式：
+     - 雙層篩選膠囊列 (`.arena-filter-wrap`, `.arena-filter-row`, `.arena-pill`)。
+     - 測驗頂部導覽列 (`.quiz-head`, `.count-badge-btn`, `.progress`)。
+     - 自然學習網頁同款 48x44px 題號速跳盤 (`#quiz-grid-drawer`, `.drawer-q-grid`, `.drawer-q-btn`)。
+     - 6 階淨錯熱度階梯底色（`heat-bad-heavy`, `heat-bad-mid`, `heat-bad-light`, `heat-tie`, `heat-ok-light`, `heat-ok-heavy`）。
+     - 左上綠字答對次數 (`.q-badge-ok`)、右上紅字答錯次數 (`.q-badge-bad`)。
+     - 真考題卡 (`.ket-exam-card`, `.ket-sms-box`, `.ket-email-box`, `.ket-notice-box`)。
+     - 詳解面板 (`.ket-explanation-panel`, `.exp-block-purpose`, `.exp-block-correct`, `.exp-block-traps`) 與 `[💡 延伸學習重點 ▾]` 折疊盒 (`.ket-extension-box`)。
+     - 大括號完全平衡 (376/376)，零 `backdrop-filter: blur()`。
+  3. `app.js` 業務邏輯擴充：
+     - 在 `AccountManager` 初始帳號資料中加入 `questionStats: {}`，在 `mergeAccountData` 中加入 `questionStats` 雙向雲端合併邏輯。
+     - 隱藏 `#view-rw` 作答前劇透提示（Part 5 字庫膠囊改為批改後才顯示）。
+     - 實作 `renderArenaPod()`：單元/14 大 Part/星等難度三維篩選、instant vs mock 模式切換、零提示純淨真考（聽力題目作答前完全隱藏逐字稿）、交卷四維度詳解與延伸學習重點折疊卡。
+     - 戰情室加入動森橫幅一鍵進入考場。
+- **驗收結果**：執行 `node verify_phase_a.js` 17 項斷言 100% PASS，執行 `node verify_phase_6_e2e.js` 17 項斷言 100% PASS。
+
+---
+
+### [#MEM-9] 2026-11-13 Phase B Unit 1 純淨真考題庫 (34 題) 完工
+- **執行重點**：建置 `data/ket_exam_bank_u1.js`，總計 34 題獨立自足純淨真考題目（`RWP1~5, LSP1, LSP3, RWP7, SPP1`），配置 Flyers 銜接白話四維度詳解與 `extensionStudy`。
+- **驗收結果**：`node verify_phase_b.js` 100% PASS。
+
+---
+
+### [#MEM-10] 2026-11-13 Phase C Unit 2 純淨真考題庫 (32 題) 完工
+- **執行重點**：建置 `data/ket_exam_bank_u2.js`，總計 32 題自足式純淨真考題目，涵蓋 `RWP1, RWP3, RWP4, RWP5, LSP4, LSP5, RWP6, SPP1`。
+- **驗收結果**：`node verify_phase_c.js` 100% PASS。
+
+---
+
+### [#MEM-11] 2026-11-13 Phase D 100 題合併題庫、錯題本回流方格考場整合與全系統冒煙驗證完工
+- **執行重點與技術細節**：
+  1. **Phase D 題庫建置與統一編譯**：
+     - 建置 `data/ket_exam_bank_u3.js`（34 題，含 Unit 3 28 題 + Revision `rev` 6 題，覆蓋 `RWP1, RWP4, RWP5, LSP2, LSP3, RWP7, SPP2`）。
+     - 執行 `build_exam_bank.js` 合併輸出 `data/ket_exam_bank.js`（`100` 題 / `309.0 KB`），100% 覆蓋劍橋 KET 官方全部 14 個 Part。
+  2. **錯題本 (`#view-errorbook`) 與方格考場 (`#view-arena`) 互通**：
+     - `recordArenaQuestionResult` 與 `toggleArenaBookmark` 寫入 `unit`、`type`、`itemType: 'ket_exam'` 與 `timestamp`。
+     - `renderErrorBookView` 新增 `rev` 單元與 `🎯 KET 全真考題` 篩選與標籤。
+     - 新增 `window.jumpToArenaByCode(code)` 並整合至 `startErrorQuiz()`，點擊 `ket_exam` 錯題直接切回 `#view-arena` 原題卡片重新作答消錯。
+  3. **100 題全自動執行期冒煙壓測 + 沙盒清理**：
+     - 透過 Node `vm.runInThisContext` 載入全前端執行環境，走訪全部 100 題作答前零劇透、選擇/填空/寫作/口說交卷、方格紅綠計數與 6 階熱度底色、錯題本回流跳轉、音訊播放停止、模考批次批改、4 種設備切換與 4 帳號沙盒隔離，全部零錯誤通過並清除 `./temp/`。
+- **Git 狀態備註**：依使用者要求「先照這樣修不用推上 GitHub 我先本機測試」，本次成果完整保留於本機尚未推送遠端。
+- **驗收結果**：`verify_phase_d.js`、`verify_phase_b.js`、`verify_phase_c.js` 與全部前置 Phase 1–6 / Phase A 驗證腳本 100% PASS。
+
+---
+
+### [#MEM-12] 2026-11-14 Phase E 考場 UX、全鍵入「看答案＋紙筆自評」、全部恢復未答與聯動膠囊數字完工
+- **執行重點與細節**：
+  1. **底部上下題導覽 + 鍵盤快捷鍵**：於 `renderArenaQuestionCard` 最下方新增 `.arena-bottom-nav`（上一題、速跳題數、重練本題、下一題／交卷），切換題目自動平滑捲動至題卡上方，並於非輸入狀態支援 `ArrowLeft` / `ArrowRight`。
+  2. **全鍵入／開放題「👀 看答案 ➔ ⭕ 我答對 / ❌ 我答錯」**：涵蓋 `#view-arena` (`gap`/`writing`/`speaking`)、`#view-rw` Part 5、`#view-listening` Part 2 與 `Revision` 練習（同步清掉 `Revision` 洩題佔位符並建立 `REV_ANSWER_SHEET`）。看答案不立即扣分，按對/錯才更新 `questionStats` 與 5 色 `netErrors`。
+  3. **一鍵恢復未答與膠囊聯動計算**：新增 `resetAllArenaProgress()` 清除當輪暫存（保留歷史紅綠次數與錯題記錄）；改由當前選中單元即時交叉重算 14 大 Part 與難度膠囊數字，0 題淡化顯示。
+- **驗收結果**：`node verify_phase_e.js` 20 項執行期斷言 100% PASS。
+
+---
+
+### [#MEM-13] 2026-11-14 Phase F Unit 1~3 全 14 大 Part 零缺口擴充至 154 題完工
+- **執行重點與細節**：
+  1. 派發平行 Flash 子代理補齊三大單元原本缺口之官方考科：`U1 (+15 -> 49 題)`、`U2 (+17 -> 49 題)`、`U3 (+22 -> 50 題，採 RW 11 題 / LSSP 11 題雙分片寫作合併)`，加上 `Revision (6 題)`。
+  2. 透過 `build_exam_bank.js` 合併編譯為 `data/ket_exam_bank.js`（**154 題 / 550.6 KB**），徹底清除 `./temp/` 暫存目錄。
+- **驗收結果**：`node verify_phase_f.js` 9 項斷言 100% PASS（Unit 1, Unit 2, Unit 3 各自覆蓋全部 14/14 官方 KET Part）。
+
+---
+
+### [#MEM-14] 2026-11-14 Phase G Cambridge 官方 A4 考卷列印引擎重構與全系統總驗收完工
+- **執行重點與細節**：
+  1. 重構 `style.css` `@media print` 與 `.ket-paper-*` 版面樣式，並在 `app.js` 重寫 `#view-print`：支援 `u1/u2/u3` 全真單元卷、`revision` 總複習全真卷（含 `rev` 別名，且將課本情境全面重寫為獨立完整句子以徹底消滅 `"dinner -> ____"` 等半截殘題）、`rw_full`、`ls_full`、`sp_cards`、`writing` (25+/35+ 字紅虛線安全線 + 3 大評分表)、`vocab_core`（例句挖空）與 `errorbook`（從 `KET_EXAM_BANK` 還原完整題組與插圖）。
+  2. 實作 `groupPrintQuestionsByPart()` 自動合併同單元、同 Part、同標題之共享文章與圖片，並強制區分學生空白卷（零答案與逐字稿劇透）與教師詳解卷（標準答案、四維詳解、13/15 盾範文與含關鍵線索／陷阱標記之聽力逐字稿）。
+- **Git 狀態備註**：依使用者先前回饋保留於本機測試，未推送 GitHub。
+- **驗收結果**：Phase A–G 全部自動化驗證腳本與 `154` 題執行期全掃描全數 100% PASS（`verify_phase_e.js` 20 PASS、`verify_phase_f.js` 9 PASS、`verify_phase_g.js` 44 PASS）。

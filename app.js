@@ -284,28 +284,32 @@ const TTSEngine = (() => {
   window.addEventListener('click', unlockOnFirstGesture, { once: true });
   window.addEventListener('touchstart', unlockOnFirstGesture, { once: true });
 
-  // 尋找最佳英式 (en-GB) 語音
-  function getBestVoice() {
+  // 尋找最佳英式 (en-GB) 語音（支援男女雙角色切換）
+  function getBestVoice(gender) {
     if (!('speechSynthesis' in window)) return null;
     const voices = window.speechSynthesis.getVoices();
+    const enGbVoices = voices.filter(v => v.lang.startsWith('en-GB') || v.lang === 'en_GB');
+    const pool = enGbVoices.length > 0 ? enGbVoices : voices.filter(v => v.lang.startsWith('en'));
+
+    if (gender === 'male') {
+      const m = pool.find(v => /Ryan|Daniel|Arthur|George|Oliver|Thomas|Male/i.test(v.name) && (v.name.includes('Natural') || v.name.includes('Online')))
+        || pool.find(v => /Ryan|Daniel|Arthur|George|Oliver|Thomas|Male/i.test(v.name));
+      if (m) return m;
+    } else if (gender === 'female') {
+      const f = pool.find(v => /Sonia|Libby|Maisie|Martha|Kate|Serena|Female/i.test(v.name) && (v.name.includes('Natural') || v.name.includes('Online')))
+        || pool.find(v => /Sonia|Libby|Maisie|Martha|Kate|Serena|Female/i.test(v.name));
+      if (f) return f;
+    }
 
     // 第一優先：微軟神經自然英音或 Google UK
-    const preferred = voices.find(v => 
-      v.lang.startsWith('en-GB') && 
-      (v.name.includes('Natural') || v.name.includes('Online') || v.name.includes('Google UK'))
-    );
+    const preferred = pool.find(v => v.name.includes('Natural') || v.name.includes('Online') || v.name.includes('Google UK'));
     if (preferred) return preferred;
 
-    // 第二優先：iPad 內建英式角色 (Daniel, Martha, Arthur)
-    const british = voices.find(v => v.lang.startsWith('en-GB') || v.lang === 'en_GB');
-    if (british) return british;
-
-    // 保底：任何英語語系
-    return voices.find(v => v.lang.startsWith('en')) || null;
+    return pool[0] || null;
   }
 
   // 發音保護與朗讀
-  function speak(text, { rate = 1.0, pitch = 1.0, onEnd = null } = {}) {
+  function speak(text, { rate = 1.0, pitch = 1.0, gender = null, onEnd = null } = {}) {
     if (!('speechSynthesis' in window)) {
       console.warn('此瀏覽器不支援 Web Speech API');
       return;
@@ -313,15 +317,16 @@ const TTSEngine = (() => {
 
     window.speechSynthesis.cancel(); // 中斷前一次發音
 
-    // 單獨字母 'a' 轉念 'A.' 避免弱化為 /ə/
-    let processedText = text.replace(/\b[aA]\b/g, 'A.');
+    // 僅針對單獨唸出字母 'a' 時轉念 'A.'，避免整句對話把冠詞 a 誤念成大字母 A
+    const trimmed = String(text || '').trim();
+    const processedText = trimmed.toLowerCase() === 'a' ? 'A.' : trimmed;
 
     const utterance = new SpeechSynthesisUtterance(processedText);
     utterance.lang = 'en-GB';
     utterance.rate = rate;
     utterance.pitch = pitch;
 
-    const voice = getBestVoice();
+    const voice = getBestVoice(gender);
     if (voice) {
       utterance.voice = voice;
     }
@@ -409,10 +414,19 @@ function updateSyncStatus(status, text) {
   }
 }
 
+// 正式上線重置版本戳記：確保 Rex 與 Hugo 帳號於所有設備首次開啟新版本時自動洗白舊測試紀錄（不影響 test1 / test2）
+const LAUNCH_RESET_EPOCH = '20261114_official_v1';
+
 // 防回滾智能合併演算法 (Anti-Rollback Merge)
 function mergeAccountData(local, remote) {
   if (!remote || typeof remote !== 'object') return local;
   if (!local || typeof local !== 'object') return remote;
+
+  // 若為正式學生帳號 (rex / hugo)，且雲端資料尚未帶上最新上線重置戳記，忽略舊雲端髒資料並以本機全新狀態覆寫
+  const accId = local.accountId || remote.accountId;
+  if ((accId === 'rex' || accId === 'hugo') && remote.resetEpoch !== LAUNCH_RESET_EPOCH) {
+    return { ...local, resetEpoch: LAUNCH_RESET_EPOCH, lastSync: Date.now() };
+  }
 
   const merged = { ...local };
 
@@ -452,6 +466,25 @@ function mergeAccountData(local, remote) {
 
   // 6. 總複習分數取最高
   merged.revScore = Math.max(local.revScore || 0, remote.revScore || 0);
+
+  // 7. 題庫做題紀錄雙向雲端合併 (questionStats: { [code]: { ok, err, net, lastAt } })
+  merged.questionStats = { ...(local.questionStats || {}) };
+  if (remote.questionStats) {
+    Object.keys(remote.questionStats).forEach(code => {
+      const loc = merged.questionStats[code] || { ok: 0, err: 0, net: 0, lastAt: 0 };
+      const rem = remote.questionStats[code] || { ok: 0, err: 0, net: 0, lastAt: 0 };
+      const ok = Math.max(loc.ok || 0, rem.ok || 0);
+      const err = Math.max(loc.err || 0, rem.err || 0);
+      const lastAt = Math.max(loc.lastAt || 0, rem.lastAt || 0);
+      merged.questionStats[code] = {
+        ok,
+        err,
+        net: err - ok,
+        lastAt
+      };
+    });
+  }
+
   merged.lastSync = Date.now();
 
   return merged;
@@ -526,17 +559,19 @@ window.pushToCloud = function(accountId) {
 };
 
 // =============================================================================
-// Phase 6：📱 多設備視圖切換器 (雙 iPad + iPhone 15 Pro, layout-iphone-15pro)
+// Phase 6：📱 多設備視圖切換器 (電腦全寬 + 雙 iPad + iPhone 15 Pro)
 // =============================================================================
 window.switchDeviceLayout = function(layoutClass) {
+  const btnDesktop = document.getElementById('btn-layout-desktop');
   const btn102 = document.getElementById('btn-layout-102');
   const btn129 = document.getElementById('btn-layout-129');
   const btn15pro = document.getElementById('btn-layout-15pro');
 
-  document.body.classList.remove('layout-ipad-102', 'layout-ipad-129', 'layout-iphone-15pro');
+  document.body.classList.remove('layout-desktop', 'layout-ipad-102', 'layout-ipad-129', 'layout-iphone-15pro');
   document.body.classList.add(layoutClass);
   AppState.currentLayout = layoutClass;
 
+  if (btnDesktop) btnDesktop.classList.toggle('active', layoutClass === 'layout-desktop');
   if (btn102) btn102.classList.toggle('active', layoutClass === 'layout-ipad-102');
   if (btn129) btn129.classList.toggle('active', layoutClass === 'layout-ipad-129');
   if (btn15pro) btn15pro.classList.toggle('active', layoutClass === 'layout-iphone-15pro');
@@ -547,8 +582,10 @@ window.switchDeviceLayout = function(layoutClass) {
       footerMode.textContent = '模式：iPhone 15 Pro 直向 (393×852 @3x)';
     } else if (layoutClass === 'layout-ipad-129') {
       footerMode.textContent = '模式：iPad Pro 12.9" (1366×1024)';
-    } else {
+    } else if (layoutClass === 'layout-ipad-102') {
       footerMode.textContent = '模式：iPad 10.2" (1080×810)';
+    } else {
+      footerMode.textContent = '模式：電腦寬螢幕 (自適應)';
     }
   }
 };
@@ -575,34 +612,60 @@ const AccountManager = (() => {
   }
 
   function createInitialAccountData(accountId) {
-    const isRex = accountId === 'rex';
-    const isHugo = accountId === 'hugo';
+    const isStudentAccount = accountId === 'rex' || accountId === 'hugo';
 
     return {
       accountId,
-      nookMiles: isRex ? 450 : (isHugo ? 380 : 100),
+      resetEpoch: isStudentAccount ? LAUNCH_RESET_EPOCH : 'test_sandbox',
+      nookMiles: isStudentAccount ? 0 : 100,
       masteredVocab: [], // 已熟記單字清單 (例如 ["u1_unusual", "u1_surname"])
       reviewVocab: [],   // 待複習單字清單
       clearedMistakes: [], // 已抓出蟲的題目清單 (例如 ["u1_cm_hg_1"])
       netErrors: {},     // 5色錯題熱力表記錄 { [itemId]: { id, count, itemType, unitId, title, wrongAnswer, correctAnswer, rule, lastUpdated } }
+      questionStats: {}, // KET 全真題庫做題紀錄 { [code]: { ok: 0, err: 0, net: 0, lastAt: 0 } }
+      revScore: 0,
       shieldProgress: {
-        readingWriting: isRex ? 4.1 : 3.6,
-        listening: isRex ? 4.2 : 3.4,
-        speaking: isRex ? 4.0 : 3.5
+        readingWriting: isStudentAccount ? 0 : 3.6,
+        listening: isStudentAccount ? 0 : 3.4,
+        speaking: isStudentAccount ? 0 : 3.5
       }
     };
   }
 
   function loadAccount(accountId) {
+    const isStudentAccount = accountId === 'rex' || accountId === 'hugo';
+    const resetFlagKey = `${STORAGE_PREFIX}launch_reset_${accountId}`;
+
     try {
+      // 若為 Rex / Hugo 且本機尚未執行過正式上線歸零，強制清除舊本機快取並重建全新空白狀態
+      if (isStudentAccount && localStorage.getItem(resetFlagKey) !== LAUNCH_RESET_EPOCH) {
+        const fresh = createInitialAccountData(accountId);
+        localStorage.setItem(resetFlagKey, LAUNCH_RESET_EPOCH);
+        localStorage.setItem(getStorageKey(accountId), JSON.stringify(fresh));
+        pushToCloud(accountId);
+        return fresh;
+      }
+
       const raw = localStorage.getItem(getStorageKey(accountId));
       if (raw) {
-        return JSON.parse(raw);
+        const data = JSON.parse(raw);
+        if (isStudentAccount && data.resetEpoch !== LAUNCH_RESET_EPOCH) {
+          const fresh = createInitialAccountData(accountId);
+          localStorage.setItem(resetFlagKey, LAUNCH_RESET_EPOCH);
+          localStorage.setItem(getStorageKey(accountId), JSON.stringify(fresh));
+          pushToCloud(accountId);
+          return fresh;
+        }
+        data.questionStats = data.questionStats || {};
+        return data;
       }
     } catch (e) {
       console.error('讀取帳號存檔失敗：', e);
     }
     const initial = createInitialAccountData(accountId);
+    if (isStudentAccount) {
+      try { localStorage.setItem(resetFlagKey, LAUNCH_RESET_EPOCH); } catch (e) {}
+    }
     saveAccount(accountId, initial);
     return initial;
   }
@@ -676,6 +739,19 @@ const AppState = {
   speakingMode: 'speakingPart1', // 'speakingPart1', 'speakingPart2'
   speakingRevealed: {},
 
+  // Phase A：KET 全真題庫方格考場狀態
+  arenaUnitFilter: 'all',    // 'all', 'u1', 'u2', 'u3', 'rev', 'onlyErrors'
+  arenaPartFilter: 'all',    // 'all' 或 14 個 part: 'RWP1'..'RWP7', 'LSP1'..'LSP5', 'SPP1'..'SPP2'
+  arenaDiffFilter: 'all',    // 'all', '1-2', '3', '4-5'
+  arenaExamMode: 'instant',  // 'instant' (⚡ 單題即時批改) 或 'mock' (⏱️ 純淨模擬考)
+  arenaCurrentIndex: 0,
+  arenaDrawerOpen: false,
+  arenaUserAnswers: {},      // { [code]: answer }
+  arenaSubmitted: {},        // { [code]: boolean }
+  arenaRevealed: {},         // { [code]: boolean } - 紙筆自評已點「看答案」
+  arenaSelfGraded: {},       // { [code]: 'ok' | 'bad' } - 當輪自評紀錄
+  arenaExtensionOpen: {},    // { [code]: boolean }
+
   // 當前帳號資料
   accountData: null
 };
@@ -695,11 +771,13 @@ function initApp() {
   // 綁定主分頁切換事件
   setupNavTabEvents();
 
-  // 設備佈局初始化（小於等於 767px 自動切換至 iPhone 15 Pro 模式）
+  // 設備佈局初始化（手機 <=767 進 15 Pro，寬桌機 >=1380 進電腦寬螢幕）
   if (typeof window !== 'undefined') {
     if (window.innerWidth <= 767) {
       switchDeviceLayout('layout-iphone-15pro');
-    } else if (window.innerWidth >= 1200) {
+    } else if (window.innerWidth >= 1380) {
+      switchDeviceLayout('layout-desktop');
+    } else if (window.innerWidth >= 1120) {
       switchDeviceLayout('layout-ipad-129');
     } else {
       switchDeviceLayout('layout-ipad-102');
@@ -717,6 +795,22 @@ function initApp() {
 
   // 啟動時自動拉取 Firebase 雲端最新進度
   syncFromCloud(AppState.currentAccount);
+
+  // KET 全真考場鍵盤左右鍵切換上一題/下一題（輸入框聚焦時略過）
+  if (typeof document !== 'undefined' && typeof document.addEventListener === 'function') {
+    document.addEventListener('keydown', (e) => {
+      if (AppState.currentTab !== 'arena') return;
+      const activeTag = (document.activeElement && document.activeElement.tagName) ? document.activeElement.tagName.toUpperCase() : '';
+      if (['INPUT', 'TEXTAREA', 'SELECT'].includes(activeTag)) return;
+      const total = getArenaFilteredQuestions().length;
+      if (total <= 1) return;
+      if (e.key === 'ArrowLeft' && AppState.arenaCurrentIndex > 0) {
+        jumpArenaQuestion(AppState.arenaCurrentIndex - 1, true);
+      } else if (e.key === 'ArrowRight' && AppState.arenaCurrentIndex < total - 1) {
+        jumpArenaQuestion(AppState.arenaCurrentIndex + 1, true);
+      }
+    });
+  }
 }
 
 // 更新頂部哩數與帳號標籤
@@ -748,11 +842,13 @@ function updateHeaderDisplay() {
   const footerMode = document.getElementById('footer-mode-name');
   if (footerMode) {
     if (AppState.currentLayout === 'layout-iphone-15pro') {
-      footerMode.textContent = '模式：iPhone 15 Pro 直向 (393×852)';
+      footerMode.textContent = '模式：iPhone 15 Pro 直向 (393×852 @3x)';
     } else if (AppState.currentLayout === 'layout-ipad-129') {
       footerMode.textContent = '模式：iPad Pro 12.9" (1366×1024)';
-    } else {
+    } else if (AppState.currentLayout === 'layout-ipad-102') {
       footerMode.textContent = '模式：iPad 10.2" (1080×810)';
+    } else {
+      footerMode.textContent = '模式：電腦寬螢幕 (自適應)';
     }
   }
 }
@@ -788,10 +884,18 @@ function setupTopbarEvents() {
     });
   });
 
-  // 3. 雙 iPad 與 iPhone 15 Pro 模式切換
+  // 3. 電腦全寬 / 雙 iPad / iPhone 15 Pro 模式切換
+  const btnDesktop = document.getElementById('btn-layout-desktop');
   const btn102 = document.getElementById('btn-layout-102');
   const btn129 = document.getElementById('btn-layout-129');
   const btn15pro = document.getElementById('btn-layout-15pro');
+
+  if (btnDesktop) {
+    btnDesktop.addEventListener('click', () => {
+      SoundFX.playClick();
+      switchDeviceLayout('layout-desktop');
+    });
+  }
 
   if (btn102) {
     btn102.addEventListener('click', () => {
@@ -867,14 +971,45 @@ function setupTopbarEvents() {
   }
 }
 
-// 綁定主分頁標籤切換
+// 綁定主分頁標籤切換（含電腦滑鼠滾輪橫移與左右箭頭按鈕）
 function setupNavTabEvents() {
+  const navTabsEl = document.getElementById('ac-nav-tabs');
+  const btnLeft = document.getElementById('btn-nav-scroll-left');
+  const btnRight = document.getElementById('btn-nav-scroll-right');
+
+  if (navTabsEl) {
+    // 電腦滑鼠滾輪直接轉為橫向捲動
+    navTabsEl.addEventListener('wheel', (e) => {
+      if (navTabsEl.scrollWidth > navTabsEl.clientWidth && e.deltaY !== 0) {
+        e.preventDefault();
+        navTabsEl.scrollLeft += e.deltaY;
+      }
+    }, { passive: false });
+  }
+
+  if (btnLeft && navTabsEl) {
+    btnLeft.addEventListener('click', () => {
+      SoundFX.playClick();
+      navTabsEl.scrollBy({ left: -180, behavior: 'smooth' });
+    });
+  }
+
+  if (btnRight && navTabsEl) {
+    btnRight.addEventListener('click', () => {
+      SoundFX.playClick();
+      navTabsEl.scrollBy({ left: 180, behavior: 'smooth' });
+    });
+  }
+
   const tabs = document.querySelectorAll('.nav-tab');
   tabs.forEach(tab => {
     tab.addEventListener('click', () => {
       SoundFX.playClick();
       tabs.forEach(t => t.classList.remove('active'));
       tab.classList.add('active');
+      if (typeof tab.scrollIntoView === 'function') {
+        tab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
 
       AppState.currentTab = tab.dataset.tab;
       renderCurrentView();
@@ -895,6 +1030,9 @@ function renderCurrentView() {
   switch (AppState.currentTab) {
     case 'dashboard':
       renderDashboard();
+      break;
+    case 'arena':
+      renderArenaPod();
       break;
     case 'vocab':
       renderVocabPod();
@@ -1024,6 +1162,18 @@ function renderDashboard() {
         </div>
         <span class="progress-text">距離 13 盾卓越認證還差 ${(Math.max(0, targetShields - totalShields)).toFixed(1)} 盾</span>
       </div>
+    </div>
+
+    <!-- 🎯 進入 KET 全真題庫考場（100% 無提示真考 + 紅綠小字追蹤方格盤） -->
+    <div class="dash-arena-banner" onclick="jumpToPod('arena', 'all')" style="background: linear-gradient(135deg, #FFFDF0, #FEF3C7); border: 2.5px solid var(--ac-yellow-border); border-radius: var(--radius-md); padding: 14px 18px; margin-bottom: 16px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 12px; box-shadow: 0 3px 0 var(--ac-yellow-border); transition: transform 0.15s ease;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="font-size: 2rem;">🎯</span>
+        <div>
+          <div style="font-weight: 900; font-size: 1.05rem; color: #B45309;">🎯 進入 KET 全真題庫考場（100% 無提示真考 + 紅綠小字追蹤方格盤）</div>
+          <div style="font-size: 0.82rem; color: #92400E; margin-top: 2px;">零干擾全真考場 · 14 大 Part 官方考科覆蓋 · 紅綠答題熱度方格盤 · 四維度詳解與延伸學習重點</div>
+        </div>
+      </div>
+      <button class="ac-btn ac-btn-green" style="flex-shrink: 0; pointer-events: none;">立即開考 ➔</button>
     </div>
 
     <!-- 15 盾牌戰情雷達矩陣 -->
@@ -1704,7 +1854,12 @@ function renderErrorBookView() {
     errorKeys = errorKeys.filter(k => (netErrors[k].unit || '').toLowerCase() === AppState.errorFilterUnit.toLowerCase());
   }
   if (AppState.errorFilterType !== 'all') {
-    errorKeys = errorKeys.filter(k => (netErrors[k].type || '').toLowerCase() === AppState.errorFilterType.toLowerCase());
+    const fType = AppState.errorFilterType.toLowerCase();
+    if (fType === 'ket_exam') {
+      errorKeys = errorKeys.filter(k => (netErrors[k].itemType || '') === 'ket_exam');
+    } else {
+      errorKeys = errorKeys.filter(k => (netErrors[k].type || '').toLowerCase() === fType);
+    }
   }
 
   // 依條件排序
@@ -1757,11 +1912,13 @@ function renderErrorBookView() {
           <option value="u1" ${AppState.errorFilterUnit === 'u1' ? 'selected' : ''}>Unit 1 家庭朋友</option>
           <option value="u2" ${AppState.errorFilterUnit === 'u2' ? 'selected' : ''}>Unit 2 休閒愛好</option>
           <option value="u3" ${AppState.errorFilterUnit === 'u3' ? 'selected' : ''}>Unit 3 美食料理</option>
+          <option value="rev" ${AppState.errorFilterUnit === 'rev' ? 'selected' : ''}>總複習 Revision</option>
         </select>
 
         <span style="font-weight:bold; color:var(--ac-wood); margin-left:8px;">🏷️ 題型：</span>
         <select class="ac-input-clean" style="padding:4px 8px;" onchange="changeErrorFilter('type', this.value)">
           <option value="all" ${AppState.errorFilterType === 'all' ? 'selected' : ''}>全部題型</option>
+          <option value="ket_exam" ${AppState.errorFilterType === 'ket_exam' ? 'selected' : ''}>🎯 KET 全真考題</option>
           <option value="vocab" ${AppState.errorFilterType === 'vocab' ? 'selected' : ''}>🃏 單字搭配詞</option>
           <option value="mistake" ${AppState.errorFilterType === 'mistake' ? 'selected' : ''}>🪲 常犯錯抓蟲</option>
           <option value="reading" ${AppState.errorFilterType === 'reading' ? 'selected' : ''}>📖 閱讀與寫作</option>
@@ -1801,7 +1958,9 @@ function renderErrorBookView() {
           const item = netErrors[key];
           const heat = getHeatLevel(item.count);
           const unitTag = item.unit ? item.unit.toUpperCase() : 'U1';
-          const typeTag = item.type === 'vocab' ? '單字搭配詞' : (item.type === 'mistake' ? '常犯錯改錯' : (item.type === 'reading' ? '閱讀理解' : '聽力理解'));
+          const typeTag = item.itemType === 'ket_exam'
+            ? '🎯 KET 全真考題'
+            : (item.type === 'vocab' ? '單字搭配詞' : (item.type === 'mistake' ? '常犯錯改錯' : (item.type === 'reading' ? '閱讀理解' : '聽力理解')));
           return `
             <div class="card-ac error-item-card ${heat.cls}" style="padding:14px 18px; border-width:3px; transition:all 0.2s ease;">
               <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px;">
@@ -1954,6 +2113,13 @@ window.startErrorQuiz = function(targetKey) {
 
   let currentKey = targetKey && netErrors[targetKey] ? targetKey : keys[0];
   const item = netErrors[currentKey];
+
+  // KET 全真題庫錯題直接導回「全真模擬考場」原題卡片完整重練（含完整文章/圖片/音檔/四維詳解）
+  if (item && item.itemType === 'ket_exam' && typeof window.jumpToArenaByCode === 'function') {
+    window.jumpToArenaByCode(currentKey);
+    return;
+  }
+
   const heat = getHeatLevel(item.count);
 
   const modalContainer = document.getElementById('error-quiz-modal-container');
@@ -2435,15 +2601,17 @@ function renderReadingWritingPod() {
 
     const rightPaneHtml = `
       <div class="pane-right">
-        <!-- 💡 iPad 輔助字庫膠囊列 -->
-        <div class="word-bank-container">
-          <strong style="color:#B25E00; font-size:0.85rem;">💡 iPad 輔助字庫膠囊列 (點擊字膠囊可自動帶入填空)：</strong>
-          <div class="word-bank-pills">
-            ${wordBank.map(w => `
-              <button class="word-pill" onclick="insertWordIntoActiveGap('${w}')">${w}</button>
-            `).join('')}
+        <!-- 💡 iPad 輔助字庫膠囊列 (作答前隱藏劇透，點擊批改後才解鎖顯示) -->
+        ${AppState.rwAnswers['rw5_submitted'] ? `
+          <div class="word-bank-container">
+            <strong style="color:#B25E00; font-size:0.85rem;">💡 iPad 輔助字庫膠囊列 (批改後答案字庫核對)：</strong>
+            <div class="word-bank-pills">
+              ${wordBank.map(w => `
+                <button class="word-pill" onclick="insertWordIntoActiveGap('${w}')">${w}</button>
+              `).join('')}
+            </div>
           </div>
-        </div>
+        ` : ''}
 
         <h4 style="font-size:1.05rem; font-weight:900; margin-bottom:10px;">請填寫 6 個開放空格 (Gap 1 ~ 6)：</h4>
         ${rw5.gaps.filter(g => !g.isExample).map(g => {
@@ -2455,13 +2623,18 @@ function renderReadingWritingPod() {
               <div class="cloze-input-row">
                 <span style="font-weight:900; width:65px;">Gap (${g.gap}):</span>
                 <input type="text" id="input-${ansKey}" class="cloze-input-box" value="${currentVal}" placeholder="輸入單字..." onfocus="AppState.activeGapInputId = 'input-${ansKey}'">
-                <small style="color:var(--ac-wood-light);">提示線索: "${g.clue}"</small>
+                <button type="button" class="btn-see-answer" onclick="revealLegacyGapAnswer('rw5', '${ansKey}', '${escapeJsStr(g.acceptedVariants.join(' / '))}', '${escapeJsStr(g.explanation || '')}', '${escapeJsStr(g.commonTrap || '')}', 'u2', 'Part 5 開放填空 Gap (${g.gap})')">👀 看答案</button>
+                ${AppState.rwAnswers['rw5_submitted'] ? `<small style="color:var(--ac-wood-light);">提示線索: "${g.clue}"</small>` : ''}
               </div>
 
               <div id="result-${ansKey}" style="display:none;" class="rw-explanation-box">
                 <div>✅ 正確答案：<strong>${g.acceptedVariants.join(' / ')}</strong> (${g.wordType})</div>
                 <div>💡 <strong>文法定位：</strong>${g.explanation}</div>
                 <div style="color:#A01A40; margin-top:2px;">⚠️ <strong>常見陷阱：</strong>${g.commonTrap}</div>
+                <div id="selfgrade-${ansKey}" class="selfgrade-actions" style="margin-top:8px;">
+                  <button type="button" class="btn-self-ok" onclick="selfGradeLegacyGap('rw5', '${ansKey}', true, '${escapeJsStr(g.acceptedVariants.join(' / '))}', '${escapeJsStr(g.explanation || '')}', 'u2', 'Part 5 開放填空 Gap (${g.gap})')">⭕ 我答對</button>
+                  <button type="button" class="btn-self-bad" onclick="selfGradeLegacyGap('rw5', '${ansKey}', false, '${escapeJsStr(g.acceptedVariants.join(' / '))}', '${escapeJsStr(g.explanation || '')}', 'u2', 'Part 5 開放填空 Gap (${g.gap})')">❌ 我答錯</button>
+                </div>
               </div>
             </div>
           `;
@@ -2864,8 +3037,10 @@ window.checkRwPart5Answers = function() {
     SoundFX.playWrong();
   }
 
+  AppState.rwAnswers['rw5_submitted'] = true;
   AccountManager.saveAccount(AppState.currentAccount, acc);
   updateHeaderDisplay();
+  renderReadingWritingPod();
 };
 
 window.switchWritingUnit = function(unitId) {
@@ -3077,16 +3252,19 @@ function renderRevisionContentHtml(data) {
             <strong>Exercise 1: Complete the dialogues with have got (8 分)</strong>
           </div>
           <div style="font-size:0.88rem; line-height:1.6; margin:8px 0;">
-            1. A: (1) <input type="text" class="ac-input-clean" id="rev_u1_ex1_1" placeholder="Have you got" style="width:120px;"> (you) any brothers?<br>
-            &nbsp;&nbsp;&nbsp;B: Yes, I (2) <input type="text" class="ac-input-clean" id="rev_u1_ex1_2" placeholder="have. I've got" style="width:140px;"> a sister and two brothers.<br>
-            2. A: (3) <input type="text" class="ac-input-clean" id="rev_u1_ex1_3" placeholder="Has she got" style="width:120px;"> (she) dark hair?<br>
-            &nbsp;&nbsp;&nbsp;B: No, she (4) <input type="text" class="ac-input-clean" id="rev_u1_ex1_4" placeholder="hasn't. She's got" style="width:140px;"> blonde hair.<br>
-            3. A: (5) <input type="text" class="ac-input-clean" id="rev_u1_ex1_5" placeholder="Have they got" style="width:120px;"> (they) a pet?<br>
-            &nbsp;&nbsp;&nbsp;B: Yes, they (6) <input type="text" class="ac-input-clean" id="rev_u1_ex1_6" placeholder="have. They've got" style="width:140px;"> a cute cat.<br>
-            4. A: (7) <input type="text" class="ac-input-clean" id="rev_u1_ex1_7" placeholder="Have you got" style="width:120px;"> (you) a big bedroom?<br>
-            &nbsp;&nbsp;&nbsp;B: No, I (8) <input type="text" class="ac-input-clean" id="rev_u1_ex1_8" placeholder="haven't" style="width:110px;">. It's quite small.
+            1. A: (1) <input type="text" class="ac-input-clean" id="rev_u1_ex1_1" placeholder="填寫答案..." style="width:120px;"> (you) any brothers?<br>
+            &nbsp;&nbsp;&nbsp;B: Yes, I (2) <input type="text" class="ac-input-clean" id="rev_u1_ex1_2" placeholder="填寫答案..." style="width:140px;"> a sister and two brothers.<br>
+            2. A: (3) <input type="text" class="ac-input-clean" id="rev_u1_ex1_3" placeholder="填寫答案..." style="width:120px;"> (she) dark hair?<br>
+            &nbsp;&nbsp;&nbsp;B: No, she (4) <input type="text" class="ac-input-clean" id="rev_u1_ex1_4" placeholder="填寫答案..." style="width:140px;"> blonde hair.<br>
+            3. A: (5) <input type="text" class="ac-input-clean" id="rev_u1_ex1_5" placeholder="填寫答案..." style="width:120px;"> (they) a pet?<br>
+            &nbsp;&nbsp;&nbsp;B: Yes, they (6) <input type="text" class="ac-input-clean" id="rev_u1_ex1_6" placeholder="填寫答案..." style="width:140px;"> a cute cat.<br>
+            4. A: (7) <input type="text" class="ac-input-clean" id="rev_u1_ex1_7" placeholder="填寫答案..." style="width:120px;"> (you) a big bedroom?<br>
+            &nbsp;&nbsp;&nbsp;B: No, I (8) <input type="text" class="ac-input-clean" id="rev_u1_ex1_8" placeholder="填寫答案..." style="width:110px;">. It's quite small.
           </div>
-          <button class="ac-btn ac-btn-sm ac-btn-green" onclick="checkRevU1Ex1()">✅ 批改 Ex 1 (8分)</button>
+          <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+            <button class="ac-btn ac-btn-sm ac-btn-green" onclick="checkRevU1Ex1()">✅ 批改 Ex 1 (8分)</button>
+            <button type="button" class="btn-see-answer" onclick="revealRevisionExAnswers('u1_ex1', 'u1', 8)">👀 看本大題答案 (紙筆自評)</button>
+          </div>
           <div id="fb-rev_u1_ex1" style="display:none; margin-top:8px;"></div>
         </div>
 
@@ -3096,13 +3274,16 @@ function renderRevisionContentHtml(data) {
             <strong>Exercise 2: Write the correct family word (5 分)</strong>
           </div>
           <div style="font-size:0.88rem; line-height:1.6; margin:8px 0;">
-            1. My mother's mother is my <input type="text" class="ac-input-clean" id="rev_u1_ex2_1" placeholder="grandmother" style="width:130px;">.<br>
-            2. My father's brother is my <input type="text" class="ac-input-clean" id="rev_u1_ex2_2" placeholder="uncle" style="width:110px;">.<br>
-            3. My aunt's children are my <input type="text" class="ac-input-clean" id="rev_u1_ex2_3" placeholder="cousins" style="width:110px;">.<br>
-            4. My sister is my father's <input type="text" class="ac-input-clean" id="rev_u1_ex2_4" placeholder="daughter" style="width:110px;">.<br>
-            5. My mother and father are my <input type="text" class="ac-input-clean" id="rev_u1_ex2_5" placeholder="parents" style="width:110px;">.
+            1. My mother's mother is my <input type="text" class="ac-input-clean" id="rev_u1_ex2_1" placeholder="填寫單字..." style="width:130px;">.<br>
+            2. My father's brother is my <input type="text" class="ac-input-clean" id="rev_u1_ex2_2" placeholder="填寫單字..." style="width:110px;">.<br>
+            3. My aunt's children are my <input type="text" class="ac-input-clean" id="rev_u1_ex2_3" placeholder="填寫單字..." style="width:110px;">.<br>
+            4. My sister is my father's <input type="text" class="ac-input-clean" id="rev_u1_ex2_4" placeholder="填寫單字..." style="width:110px;">.<br>
+            5. My mother and father are my <input type="text" class="ac-input-clean" id="rev_u1_ex2_5" placeholder="填寫單字..." style="width:110px;">.
           </div>
-          <button class="ac-btn ac-btn-sm ac-btn-green" onclick="checkRevU1Ex2()">✅ 批改 Ex 2 (5分)</button>
+          <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+            <button class="ac-btn ac-btn-sm ac-btn-green" onclick="checkRevU1Ex2()">✅ 批改 Ex 2 (5分)</button>
+            <button type="button" class="btn-see-answer" onclick="revealRevisionExAnswers('u1_ex2', 'u1', 5)">👀 看本大題答案 (紙筆自評)</button>
+          </div>
           <div id="fb-rev_u1_ex2" style="display:none; margin-top:8px;"></div>
         </div>
 
@@ -3131,14 +3312,17 @@ function renderRevisionContentHtml(data) {
             <strong>Exercise 4: Choose the correct adjective (6 分)</strong>
           </div>
           <div style="font-size:0.88rem; line-height:1.6; margin:8px 0;">
-            1. My dad's got black hair and mine is the same - it's very <input type="text" class="ac-input-clean" id="rev_u1_ex4_1" placeholder="dark" style="width:110px;">.<br>
-            2. She isn't tall or short, she is of <input type="text" class="ac-input-clean" id="rev_u1_ex4_2" placeholder="medium height" style="width:130px;">.<br>
-            3. He has got very bright <input type="text" class="ac-input-clean" id="rev_u1_ex4_3" placeholder="blue" style="width:110px;"> eyes.<br>
-            4. My brother's hair isn't straight, it's very <input type="text" class="ac-input-clean" id="rev_u1_ex4_4" placeholder="curly" style="width:110px;">.<br>
-            5. He is quite <input type="text" class="ac-input-clean" id="rev_u1_ex4_5" placeholder="slim" style="width:110px;"> because he runs every day.<br>
-            6. Grandad has got a long white <input type="text" class="ac-input-clean" id="rev_u1_ex4_6" placeholder="beard" style="width:110px;"> on his face.
+            1. My dad's got black hair and mine is the same - it's very <input type="text" class="ac-input-clean" id="rev_u1_ex4_1" placeholder="填寫形容詞..." style="width:110px;">.<br>
+            2. She isn't tall or short, she is of <input type="text" class="ac-input-clean" id="rev_u1_ex4_2" placeholder="填寫形容詞..." style="width:130px;"> height.<br>
+            3. He has got very bright <input type="text" class="ac-input-clean" id="rev_u1_ex4_3" placeholder="填寫顏色..." style="width:110px;"> eyes.<br>
+            4. My brother's hair isn't straight, it's very <input type="text" class="ac-input-clean" id="rev_u1_ex4_4" placeholder="填寫形容詞..." style="width:110px;">.<br>
+            5. He is quite <input type="text" class="ac-input-clean" id="rev_u1_ex4_5" placeholder="填寫形容詞..." style="width:110px;"> because he runs every day.<br>
+            6. Grandad has got a long white <input type="text" class="ac-input-clean" id="rev_u1_ex4_6" placeholder="填寫名詞..." style="width:110px;"> on his face.
           </div>
-          <button class="ac-btn ac-btn-sm ac-btn-green" onclick="checkRevU1Ex4()">✅ 批改 Ex 4 (6分)</button>
+          <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+            <button class="ac-btn ac-btn-sm ac-btn-green" onclick="checkRevU1Ex4()">✅ 批改 Ex 4 (6分)</button>
+            <button type="button" class="btn-see-answer" onclick="revealRevisionExAnswers('u1_ex4', 'u1', 6)">👀 看本大題答案 (紙筆自評)</button>
+          </div>
           <div id="fb-rev_u1_ex4" style="display:none; margin-top:8px;"></div>
         </div>
       </div>
@@ -3165,17 +3349,20 @@ function renderRevisionContentHtml(data) {
           </div>
           <div style="font-size:0.88rem; line-height:1.6; margin:8px 0;">
             1. My mum takes photos of us. (often)<br>
-            ➔ <input type="text" class="ac-input-clean" id="rev_u2_ex1_1" placeholder="My mum often takes photos of us." style="width:80%;"><br>
+            ➔ <input type="text" class="ac-input-clean" id="rev_u2_ex1_1" placeholder="請重寫完整句子..." style="width:80%;"><br>
             2. I play tennis on Wednesdays. (usually)<br>
-            ➔ <input type="text" class="ac-input-clean" id="rev_u2_ex1_2" placeholder="I usually play tennis on Wednesdays." style="width:80%;"><br>
+            ➔ <input type="text" class="ac-input-clean" id="rev_u2_ex1_2" placeholder="請重寫完整句子..." style="width:80%;"><br>
             3. They are late for school. (never)<br>
-            ➔ <input type="text" class="ac-input-clean" id="rev_u2_ex1_3" placeholder="They are never late for school." style="width:80%;"><br>
+            ➔ <input type="text" class="ac-input-clean" id="rev_u2_ex1_3" placeholder="請重寫完整句子..." style="width:80%;"><br>
             4. We go to the cinema on Fridays. (sometimes)<br>
-            ➔ <input type="text" class="ac-input-clean" id="rev_u2_ex1_4" placeholder="We sometimes go to the cinema on Fridays." style="width:80%;"><br>
+            ➔ <input type="text" class="ac-input-clean" id="rev_u2_ex1_4" placeholder="請重寫完整句子..." style="width:80%;"><br>
             5. He listens to music in the evening. (always)<br>
-            ➔ <input type="text" class="ac-input-clean" id="rev_u2_ex1_5" placeholder="He always listens to music in the evening." style="width:80%;">
+            ➔ <input type="text" class="ac-input-clean" id="rev_u2_ex1_5" placeholder="請重寫完整句子..." style="width:80%;">
           </div>
-          <button class="ac-btn ac-btn-sm ac-btn-green" onclick="checkRevU2Ex1()">✅ 批改 Ex 1 (5分)</button>
+          <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+            <button class="ac-btn ac-btn-sm ac-btn-green" onclick="checkRevU2Ex1()">✅ 批改 Ex 1 (5分)</button>
+            <button type="button" class="btn-see-answer" onclick="revealRevisionExAnswers('u2_ex1', 'u2', 5)">👀 看本大題答案 (紙筆自評)</button>
+          </div>
           <div id="fb-rev_u2_ex1" style="display:none; margin-top:8px;"></div>
         </div>
 
@@ -3185,13 +3372,16 @@ function renderRevisionContentHtml(data) {
             <strong>Exercise 2: Complete with like or would like (7 分)</strong>
           </div>
           <div style="font-size:0.88rem; line-height:1.6; margin:8px 0;">
-            1. Where <input type="text" class="ac-input-clean" id="rev_u2_ex2_1" placeholder="would you like to go" style="width:160px;"> (you / go) for your next holiday?<br>
-            &nbsp;&nbsp;&nbsp;I <input type="text" class="ac-input-clean" id="rev_u2_ex2_2" placeholder="would like to go" style="width:140px;"> to the sea because I <input type="text" class="ac-input-clean" id="rev_u2_ex2_3" placeholder="like swimming" style="width:130px;"> (swim).<br>
-            2. <input type="text" class="ac-input-clean" id="rev_u2_ex2_4" placeholder="Would you like to come" style="width:170px;"> (you / come) to my party tomorrow?<br>
-            &nbsp;&nbsp;&nbsp;Yes, I <input type="text" class="ac-input-clean" id="rev_u2_ex2_5" placeholder="would love to" style="width:120px;">! I <input type="text" class="ac-input-clean" id="rev_u2_ex2_6" placeholder="like going" style="width:110px;"> (go) to parties.<br>
-            3. Do you <input type="text" class="ac-input-clean" id="rev_u2_ex2_7" placeholder="like playing" style="width:120px;"> (play) video games on weekends?
+            1. Where <input type="text" class="ac-input-clean" id="rev_u2_ex2_1" placeholder="填寫動詞片語..." style="width:160px;"> (you / go) for your next holiday?<br>
+            &nbsp;&nbsp;&nbsp;I <input type="text" class="ac-input-clean" id="rev_u2_ex2_2" placeholder="填寫動詞片語..." style="width:140px;"> to the sea because I <input type="text" class="ac-input-clean" id="rev_u2_ex2_3" placeholder="填寫動詞..." style="width:130px;"> (swim).<br>
+            2. <input type="text" class="ac-input-clean" id="rev_u2_ex2_4" placeholder="填寫疑問句型..." style="width:170px;"> (you / come) to my party tomorrow?<br>
+            &nbsp;&nbsp;&nbsp;Yes, I <input type="text" class="ac-input-clean" id="rev_u2_ex2_5" placeholder="填寫簡答..." style="width:120px;">! I <input type="text" class="ac-input-clean" id="rev_u2_ex2_6" placeholder="填寫片語..." style="width:110px;"> (go) to parties.<br>
+            3. Do you <input type="text" class="ac-input-clean" id="rev_u2_ex2_7" placeholder="填寫片語..." style="width:120px;"> (play) video games on weekends?
           </div>
-          <button class="ac-btn ac-btn-sm ac-btn-green" onclick="checkRevU2Ex2()">✅ 批改 Ex 2 (7分)</button>
+          <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+            <button class="ac-btn ac-btn-sm ac-btn-green" onclick="checkRevU2Ex2()">✅ 批改 Ex 2 (7分)</button>
+            <button type="button" class="btn-see-answer" onclick="revealRevisionExAnswers('u2_ex2', 'u2', 7)">👀 看本大題答案 (紙筆自評)</button>
+          </div>
           <div id="fb-rev_u2_ex2" style="display:none; margin-top:8px;"></div>
         </div>
 
@@ -3204,16 +3394,19 @@ function renderRevisionContentHtml(data) {
             [ cooking, photography, camping, sailing, painting, chess, acting, drawing ]
           </div>
           <div style="font-size:0.88rem; line-height:1.6; margin:8px 0;">
-            1. My brother is brilliant at <input type="text" class="ac-input-clean" id="rev_u2_ex3_1" placeholder="cooking" style="width:110px;">. He makes dinner for the family.<br>
-            2. She enjoys <input type="text" class="ac-input-clean" id="rev_u2_ex3_2" placeholder="camping" style="width:110px;"> in a tent in the forest.<br>
-            3. In our drama club, we practice <input type="text" class="ac-input-clean" id="rev_u2_ex3_3" placeholder="acting" style="width:110px;"> on stage.<br>
-            4. He takes great photos with his new camera; he loves <input type="text" class="ac-input-clean" id="rev_u2_ex3_4" placeholder="photography" style="width:120px;">.<br>
-            5. It is windy today, perfect for <input type="text" class="ac-input-clean" id="rev_u2_ex3_5" placeholder="sailing" style="width:110px;"> a boat on the lake.<br>
-            6. You need a board and 32 pieces to play <input type="text" class="ac-input-clean" id="rev_u2_ex3_6" placeholder="chess" style="width:110px;">.<br>
-            7. She uses watercolours for <input type="text" class="ac-input-clean" id="rev_u2_ex3_7" placeholder="painting" style="width:110px;"> pictures.<br>
-            8. I like <input type="text" class="ac-input-clean" id="rev_u2_ex3_8" placeholder="drawing" style="width:110px;"> cartoons with a pencil in my notebook.
+            1. My brother is brilliant at <input type="text" class="ac-input-clean" id="rev_u2_ex3_1" placeholder="選填字庫單字..." style="width:110px;">. He makes dinner for the family.<br>
+            2. She enjoys <input type="text" class="ac-input-clean" id="rev_u2_ex3_2" placeholder="選填字庫單字..." style="width:110px;"> in a tent in the forest.<br>
+            3. In our drama club, we practice <input type="text" class="ac-input-clean" id="rev_u2_ex3_3" placeholder="選填字庫單字..." style="width:110px;"> on stage.<br>
+            4. He takes great photos with his new camera; he loves <input type="text" class="ac-input-clean" id="rev_u2_ex3_4" placeholder="選填字庫單字..." style="width:120px;">.<br>
+            5. It is windy today, perfect for <input type="text" class="ac-input-clean" id="rev_u2_ex3_5" placeholder="選填字庫單字..." style="width:110px;"> a boat on the lake.<br>
+            6. You need a board and 32 pieces to play <input type="text" class="ac-input-clean" id="rev_u2_ex3_6" placeholder="選填字庫單字..." style="width:110px;">.<br>
+            7. She uses watercolours for <input type="text" class="ac-input-clean" id="rev_u2_ex3_7" placeholder="選填字庫單字..." style="width:110px;"> pictures.<br>
+            8. I like <input type="text" class="ac-input-clean" id="rev_u2_ex3_8" placeholder="選填字庫單字..." style="width:110px;"> cartoons with a pencil in my notebook.
           </div>
-          <button class="ac-btn ac-btn-sm ac-btn-green" onclick="checkRevU2Ex3()">✅ 批改 Ex 3 (8分)</button>
+          <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+            <button class="ac-btn ac-btn-sm ac-btn-green" onclick="checkRevU2Ex3()">✅ 批改 Ex 3 (8分)</button>
+            <button type="button" class="btn-see-answer" onclick="revealRevisionExAnswers('u2_ex3', 'u2', 8)">👀 看本大題答案 (紙筆自評)</button>
+          </div>
           <div id="fb-rev_u2_ex3" style="display:none; margin-top:8px;"></div>
         </div>
       </div>
@@ -3239,16 +3432,19 @@ function renderRevisionContentHtml(data) {
             <strong>Exercise 1: Read the sentences and write the word (8 分)</strong>
           </div>
           <div style="font-size:0.88rem; line-height:1.6; margin:8px 0;">
-            1. We put all the plates, cups and glasses in this: <input type="text" class="ac-input-clean" id="rev_u3_ex1_1" placeholder="cupboard" style="width:110px;"><br>
-            2. I look at this when I brush my hair: <input type="text" class="ac-input-clean" id="rev_u3_ex1_2" placeholder="mirror" style="width:110px;"><br>
-            3. If it's too dark, turn this on: <input type="text" class="ac-input-clean" id="rev_u3_ex1_3" placeholder="lamp" style="width:110px;"><br>
-            4. All my family sit on this and watch TV: <input type="text" class="ac-input-clean" id="rev_u3_ex1_4" placeholder="sofa" style="width:110px;"><br>
-            5. This is in the kitchen. We cook food on it: <input type="text" class="ac-input-clean" id="rev_u3_ex1_5" placeholder="cooker" style="width:110px;"><br>
-            6. I sleep in this at night: <input type="text" class="ac-input-clean" id="rev_u3_ex1_6" placeholder="bed" style="width:110px;"><br>
-            7. We sit around this to have dinner: <input type="text" class="ac-input-clean" id="rev_u3_ex1_7" placeholder="table" style="width:110px;"><br>
-            8. In summer, we open this to let fresh air into the room: <input type="text" class="ac-input-clean" id="rev_u3_ex1_8" placeholder="window" style="width:110px;">
+            1. We put all the plates, cups and glasses in this: <input type="text" class="ac-input-clean" id="rev_u3_ex1_1" placeholder="填寫家具單字..." style="width:110px;"><br>
+            2. I look at this when I brush my hair: <input type="text" class="ac-input-clean" id="rev_u3_ex1_2" placeholder="填寫物品單字..." style="width:110px;"><br>
+            3. If it's too dark, turn this on: <input type="text" class="ac-input-clean" id="rev_u3_ex1_3" placeholder="填寫物品單字..." style="width:110px;"><br>
+            4. All my family sit on this and watch TV: <input type="text" class="ac-input-clean" id="rev_u3_ex1_4" placeholder="填寫家具單字..." style="width:110px;"><br>
+            5. This is in the kitchen. We cook food on it: <input type="text" class="ac-input-clean" id="rev_u3_ex1_5" placeholder="填寫電器單字..." style="width:110px;"><br>
+            6. I sleep in this at night: <input type="text" class="ac-input-clean" id="rev_u3_ex1_6" placeholder="填寫家具單字..." style="width:110px;"><br>
+            7. We sit around this to have dinner: <input type="text" class="ac-input-clean" id="rev_u3_ex1_7" placeholder="填寫家具單字..." style="width:110px;"><br>
+            8. In summer, we open this to let fresh air into the room: <input type="text" class="ac-input-clean" id="rev_u3_ex1_8" placeholder="填寫名詞..." style="width:110px;">
           </div>
-          <button class="ac-btn ac-btn-sm ac-btn-green" onclick="checkRevU3Ex1()">✅ 批改 Ex 1 (8分)</button>
+          <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+            <button class="ac-btn ac-btn-sm ac-btn-green" onclick="checkRevU3Ex1()">✅ 批改 Ex 1 (8分)</button>
+            <button type="button" class="btn-see-answer" onclick="revealRevisionExAnswers('u3_ex1', 'u3', 8)">👀 看本大題答案 (紙筆自評)</button>
+          </div>
           <div id="fb-rev_u3_ex1" style="display:none; margin-top:8px;"></div>
         </div>
 
@@ -3349,6 +3545,110 @@ window.addRevError = function(id, unit, prompt, wrongAns, correctAns, rule) {
   AccountManager.saveAccount(AppState.currentAccount, acc);
   updateHeaderDisplay();
   VisualFX.burstParticles(window.innerWidth / 2, window.innerHeight / 2, '📥 已收入 5 色錯題本！');
+};
+
+// 共用：舊版閱寫 Part 5 / 聽力 Part 2「👀 看答案 ➔ ⭕ 我答對 / ❌ 我答錯」紙筆自評機制
+window.revealLegacyGapAnswer = function(section, ansKey, answerStr, ruleStr, trapStr, unitId, titleLabel) {
+  SoundFX.playClick();
+  const resEl = document.getElementById(`result-${ansKey}`);
+  if (!resEl) return;
+  if (section === 'ls2') {
+    resEl.innerHTML = `
+      <div>✅ 標準答案：<strong>${answerStr}</strong> ${ruleStr ? `(${ruleStr})` : ''}</div>
+      <div id="selfgrade-${ansKey}" class="selfgrade-actions" style="margin-top:8px;">
+        <button type="button" class="btn-self-ok" onclick="selfGradeLegacyGap('ls2', '${ansKey}', true, '${escapeJsStr(answerStr)}', '${escapeJsStr(ruleStr || '聽力表格填空')}', '${unitId || 'u3'}', '${escapeJsStr(titleLabel || ruleStr || ansKey)}')">⭕ 我答對</button>
+        <button type="button" class="btn-self-bad" onclick="selfGradeLegacyGap('ls2', '${ansKey}', false, '${escapeJsStr(answerStr)}', '${escapeJsStr(ruleStr || '聽力表格填空')}', '${unitId || 'u3'}', '${escapeJsStr(titleLabel || ruleStr || ansKey)}')">❌ 我答錯</button>
+      </div>
+    `;
+  }
+  resEl.style.display = 'block';
+};
+
+window.selfGradeLegacyGap = function(section, ansKey, isCorrect, answerStr, ruleStr, unitId, titleLabel) {
+  const acc = AppState.accountData;
+  const inputEl = document.getElementById(`input-${ansKey}`);
+  const gradeEl = document.getElementById(`selfgrade-${ansKey}`);
+  if (isCorrect) {
+    SoundFX.playCorrect();
+    VisualFX.burstParticles(window.innerWidth / 2, window.innerHeight / 2, '⭕ 紙筆自評答對！+50 哩');
+    if (inputEl) {
+      inputEl.style.borderColor = 'var(--ac-green-dark)';
+      inputEl.style.backgroundColor = '#E8F5E9';
+    }
+    if (acc.netErrors && acc.netErrors[ansKey] && acc.netErrors[ansKey].count > 0) {
+      acc.netErrors[ansKey].count = Math.max(0, acc.netErrors[ansKey].count - 1);
+    }
+    acc.nookMiles += 50;
+    if (section === 'ls2') {
+      acc.shieldProgress.listening = Math.min(5.0, acc.shieldProgress.listening + 0.08);
+    } else {
+      acc.shieldProgress.readingWriting = Math.min(5.0, acc.shieldProgress.readingWriting + 0.05);
+    }
+    if (gradeEl) gradeEl.innerHTML = '<span style="color:#15803D; font-weight:900;">✅ 已紀錄：紙筆自評答對！</span>';
+  } else {
+    SoundFX.playWrong();
+    if (inputEl) {
+      inputEl.style.borderColor = 'var(--ac-red-dark)';
+      inputEl.style.backgroundColor = '#FCE4EC';
+    }
+    if (!acc.netErrors) acc.netErrors = {};
+    acc.netErrors[ansKey] = {
+      id: ansKey,
+      count: (acc.netErrors[ansKey] ? (acc.netErrors[ansKey].count || 0) : 0) + 1,
+      itemType: section === 'ls2' ? 'listening' : 'rw_part5',
+      unit: unitId || 'u2',
+      type: section === 'ls2' ? 'listening' : 'reading',
+      title: titleLabel || ansKey,
+      wrongAnswer: (inputEl && inputEl.value.trim()) ? inputEl.value.trim() : '紙筆自評：答錯',
+      correctAnswer: answerStr,
+      rule: ruleStr || '請加強文法與聽力關鍵資訊定位',
+      timestamp: Date.now(),
+      lastUpdated: new Date().toISOString()
+    };
+    if (gradeEl) gradeEl.innerHTML = '<span style="color:#BE123C; font-weight:900;">❌ 已紀錄錯題並存入 5 色錯題本！</span>';
+  }
+  AccountManager.saveAccount(AppState.currentAccount, acc);
+  updateHeaderDisplay();
+};
+
+const REV_ANSWER_SHEET = {
+  u1_ex1: { title: 'Unit 1 Ex 1 (have got)', items: ['(1) Have you got', "(2) have. I've got", '(3) Has she got', "(4) hasn't. She's got", '(5) Have they got', "(6) have. They've got", '(7) Have you got', "(8) haven't"] },
+  u1_ex2: { title: 'Unit 1 Ex 2 (Family Words)', items: ['1. grandmother', '2. uncle', '3. cousins', '4. daughter / sister', '5. parents'] },
+  u1_ex4: { title: 'Unit 1 Ex 4 (Appearance Adjectives)', items: ['1. dark', '2. medium', '3. blue', '4. curly', '5. slim', '6. beard'] },
+  u2_ex1: { title: 'Unit 2 Ex 1 (Frequency Adverbs)', items: ['1. My mum often takes photos of us.', '2. I usually play tennis on Wednesdays.', '3. They are never late for school.', '4. We sometimes go to the cinema on Fridays.', '5. He always listens to music in the evening.'] },
+  u2_ex2: { title: 'Unit 2 Ex 2 (like vs would like)', items: ['1a. would you like to go', '1b. would like to go', '1c. like swimming', '2a. Would you like to come', '2b. would love to', '2c. like going', '3. like playing'] },
+  u2_ex3: { title: 'Unit 2 Ex 3 (Free time vocab)', items: ['1. cooking', '2. camping', '3. acting', '4. photography', '5. sailing', '6. chess', '7. painting', '8. drawing'] },
+  u3_ex1: { title: 'Unit 3 Ex 1 (Furniture & House)', items: ['1. cupboard', '2. mirror', '3. lamp', '4. sofa', '5. cooker', '6. bed', '7. table', '8. window'] }
+};
+
+window.revealRevisionExAnswers = function(exKey, unitId, maxPts) {
+  SoundFX.playClick();
+  const box = document.getElementById(`fb-rev_${exKey}`);
+  const sheet = REV_ANSWER_SHEET[exKey];
+  if (!box || !sheet) return;
+  box.style.display = 'block';
+  box.innerHTML = `
+    <div class="ket-selfgrade-banner" style="margin:6px 0;">
+      <strong>✅ ${sheet.title} 參考答案（紙筆對答案用）：</strong>
+      <div style="margin:6px 0; font-size:0.86rem; line-height:1.6;">
+        ${sheet.items.map(it => `<span style="display:inline-block; background:#FFFFFF; border:1px solid #CBD5E1; border-radius:6px; padding:2px 8px; margin:2px 4px 2px 0;">${it}</span>`).join('')}
+      </div>
+      <div class="selfgrade-actions">
+        <button type="button" class="btn-self-ok" onclick="selfGradeRevisionEx('${exKey}', '${unitId}', ${maxPts}, true)">⭕ 本大題我全對 (滿分 +${maxPts} 分)</button>
+        <button type="button" class="btn-self-bad" onclick="selfGradeRevisionEx('${exKey}', '${unitId}', ${maxPts}, false)">❌ 我有答錯 (記入錯題本待複習)</button>
+      </div>
+    </div>
+  `;
+};
+
+window.selfGradeRevisionEx = function(exKey, unitId, maxPts, isCorrect) {
+  const sheet = REV_ANSWER_SHEET[exKey];
+  if (isCorrect) {
+    updateRevisionScoreAndFanfare(exKey, maxPts);
+  } else {
+    SoundFX.playWrong();
+    addRevError(`rev_${exKey}`, unitId, sheet ? sheet.title : exKey, '紙筆自評：待訂正', sheet ? sheet.items.join(' / ') : '', '總複習文法與拼字重點');
+  }
 };
 
 // --- Unit 1 Revision 批改 ---
@@ -3614,13 +3914,16 @@ function renderListeningPod() {
           `;
         } else {
           // 若為填表題 (Unit 3 Part 2)
+          const ansDisplay = [q.key].concat(q.acceptedAnswers || []).filter(Boolean).join(' / ');
           return `
             <div class="rw-question-card" id="card-${ansKey}">
               <div class="cloze-input-row">
                 <span style="font-weight:900; width:120px;">${q.label}</span>
                 <input type="text" id="input-${ansKey}" class="cloze-input-box" value="${currentAns || ''}" placeholder="聽寫答案..." onchange="AppState.listeningAnswers['${ansKey}'] = this.value">
                 <button class="ac-btn ac-btn-sm ac-btn-green" onclick="checkListeningGapAnswer('${ansKey}', '${escapeJsStr(q.key)}', '${(q.acceptedAnswers || []).join(',')}')">核對</button>
+                <button type="button" class="btn-see-answer" onclick="revealLegacyGapAnswer('ls2', '${ansKey}', '${escapeJsStr(ansDisplay)}', '${escapeJsStr(q.label || '聽力表格填空')}', '', 'u3', 'Listening Part 2: ${escapeJsStr(q.label || '')}')">👀 看答案</button>
               </div>
+              <div id="result-${ansKey}" style="display:none; margin-top:8px;" class="rw-explanation-box"></div>
             </div>
           `;
         }
@@ -3973,8 +4276,328 @@ function renderSpeakingPlaceholder() {
 }
 
 // =============================================================================
-// 視圖 9：🖨️ A4 實體考卷與寫作格線單列印引擎 (@media print) (Phase 5 完整實作)
+// 視圖 9：🖨️ Cambridge A2 Key (KET) 官方全真 A4 考卷列印引擎 (@media print, Phase G)
 // =============================================================================
+const PRINT_PART_ORDER = ['RWP1', 'RWP2', 'RWP3', 'RWP4', 'RWP5', 'RWP6', 'RWP7', 'LSP1', 'LSP2', 'LSP3', 'LSP4', 'LSP5', 'SPP1', 'SPP2'];
+
+const PRINT_SECTION_BARS = {
+  reading_writing: { barTitle: 'PAPER 1 · READING AND WRITING', barSub: 'Part 1–7 劍橋讀寫全真測驗', parts: ['RWP1', 'RWP2', 'RWP3', 'RWP4', 'RWP5', 'RWP6', 'RWP7'] },
+  listening: { barTitle: 'PAPER 2 · LISTENING', barSub: 'Part 1–5 聽力理解測驗（錄音播放兩遍）', parts: ['LSP1', 'LSP2', 'LSP3', 'LSP4', 'LSP5'] },
+  speaking: { barTitle: 'PAPER 3 · SPEAKING', barSub: 'Part 1–2 考官問答與五圖互動口說', parts: ['SPP1', 'SPP2'] }
+};
+
+const PRINT_PART_META = {
+  RWP1: { name: 'Part 1 · 簡短告示、標誌與訊息三選一', inst: 'For each question, choose the correct answer (A, B or C).' },
+  RWP2: { name: 'Part 2 · 三篇短文人物與地點配對閱讀', inst: 'Read the three texts carefully. For each question, choose A, B or C.' },
+  RWP3: { name: 'Part 3 · 長篇文章細節與主旨三選一', inst: 'Read the article and answer the questions below (A, B or C).' },
+  RWP4: { name: 'Part 4 · 詞彙語意克漏字三選一', inst: 'Choose the correct word (A, B or C) for each space in the text.' },
+  RWP5: { name: 'Part 5 · 開放式文法填空（每格限填一字）', inst: 'Write ONE word for each gap. Spelling must be exact.' },
+  RWP6: { name: 'Part 6 · 引導式短文與電子郵件寫作 (25+ Words)', inst: 'Read the email/note carefully and cover all 3 bullet points. Write 25 words or more.' },
+  RWP7: { name: 'Part 7 · 三格連環看圖寫故事 (35+ Words)', inst: 'Look at the three pictures. Write the story shown in the pictures. Write 35 words or more.' },
+  LSP1: { name: 'Part 1 · 短對話情境與圖片三選一', inst: 'Listen twice to each short conversation and choose A, B or C.' },
+  LSP2: { name: 'Part 2 · 聽力筆記與表格資訊填空', inst: 'Listen twice and write one word, a number, a date or a time in each gap.' },
+  LSP3: { name: 'Part 3 · 長對話細節與態度三選一', inst: 'Listen twice to the longer conversation and choose A, B or C.' },
+  LSP4: { name: 'Part 4 · 短對話與獨白主旨三選一', inst: 'Listen twice to each short extract and choose A, B or C.' },
+  LSP5: { name: 'Part 5 · 長對話人物/項目資訊配對', inst: 'Listen twice and choose the correct answer for each item.' },
+  SPP1: { name: 'Part 1 · 考官一對一個人生活問答卡', inst: 'Answer the examiner clearly in full sentences with extra details.' },
+  SPP2: { name: 'Part 2 · 雙考生五圖討論與延伸對答卡', inst: 'Discuss all five options, give reasons (because/so), and compare preferences.' }
+};
+
+function normalizePrintHtml(html) {
+  return String(html || '').replace(/\s+/g, ' ').trim();
+}
+
+function getPrintPaperCover(title, subTitle, badgeText, candidate, dateStr, extraCols) {
+  return `
+    <div class="ket-paper-cover">
+      <div class="ket-paper-cover-top">
+        <div>
+          <div style="font-size:0.78rem; font-weight:900; letter-spacing:1.2px; color:#333333;">CAMBRIDGE ASSESSMENT ENGLISH | A2 KEY FOR SCHOOLS</div>
+          <h2 class="ket-paper-exam-title">${title}</h2>
+          <h3 class="ket-paper-exam-sub">${subTitle}</h3>
+        </div>
+        <div class="ket-paper-badge-box">${badgeText}</div>
+      </div>
+      <div class="ket-paper-meta-grid">
+        <div>Candidate: <u>${candidate}</u></div>
+        <div>Date: <u>${dateStr}</u></div>
+        <div>Target: <strong>13 Shields (Merit 82%+)</strong></div>
+        ${extraCols || '<div>Score: <strong>[ &nbsp;&nbsp;&nbsp;&nbsp; / &nbsp;&nbsp;&nbsp;&nbsp; ]</strong></div>'}
+      </div>
+    </div>
+  `;
+}
+
+function groupPrintQuestionsByPart(questions) {
+  const groups = [];
+  const groupMap = {};
+
+  questions.forEach(q => {
+    const part = q.ketPart || 'RWP1';
+    const rawTitle = (q.passageTitle || '').trim();
+    // 唯有當題目具備共同非空 passageTitle 時才在同一 Part 內合併呈現共享文本，避免不同短告示誤合併
+    const groupKey = rawTitle ? `${q.unitId || ''}::${part}::${rawTitle}` : `__single::${q.code}`;
+    if (!groupMap[groupKey]) {
+      const grp = {
+        key: groupKey,
+        part,
+        passageTitle: rawTitle,
+        passageHtml: q.passageHtml || '',
+        sharedImage: null,
+        items: []
+      };
+      groupMap[groupKey] = grp;
+      groups.push(grp);
+    }
+    if (!groupMap[groupKey].passageHtml && q.passageHtml) {
+      groupMap[groupKey].passageHtml = q.passageHtml;
+    }
+    groupMap[groupKey].items.push(q);
+  });
+
+  // 檢查同組多題是否完全共用同一張圖（如 RWP2 人物圖、RWP3/LSP2 共享圖），若相同則群組頁首只印一次
+  groups.forEach(grp => {
+    if (grp.items.length > 1) {
+      const imgs = grp.items.map(x => x.image || '').filter(Boolean);
+      if (imgs.length > 0 && imgs.every(src => src === imgs[0]) && imgs.length === grp.items.length) {
+        grp.sharedImage = imgs[0];
+      }
+    }
+  });
+
+  return groups;
+}
+
+function renderPrintTeacherKeyBox(q) {
+  const exp = q.explanation || {};
+  let ansLabel = q.answer || '';
+  if (q.questionType === 'choice' && Array.isArray(q.options)) {
+    const optObj = q.options.find(o => o.key === q.answer);
+    if (optObj) ansLabel = `(${optObj.key}) ${optObj.text}`;
+  } else if (q.questionType === 'gap' && Array.isArray(q.acceptedAnswers) && q.acceptedAnswers.length > 1) {
+    ansLabel = q.acceptedAnswers.join(' / ');
+  } else if (q.questionType === 'writing' || q.questionType === 'speaking') {
+    ansLabel = ansLabel || '依劍橋 Rubric / 13~15 盾標準示範對照批改';
+  }
+
+  let trapsHtml = '';
+  if (exp.distractorAnalysis && typeof exp.distractorAnalysis === 'object') {
+    trapsHtml = Object.keys(exp.distractorAnalysis).map(k => `<li>${exp.distractorAnalysis[k]}</li>`).join('');
+  } else if (Array.isArray(exp.commonTraps)) {
+    trapsHtml = exp.commonTraps.map(t => `<li><strong>${t.wrong}：</strong>${t.whyWrong}</li>`).join('');
+  }
+
+  let modelHtml = '';
+  if (q.modelAnswers) {
+    const m = q.modelAnswers;
+    modelHtml = `
+      <div style="margin-top:6px; border-top:1px dashed #2D6A4F; padding-top:6px;">
+        ${Array.isArray(m.checklist) && m.checklist.length > 0 ? `<div><strong>📋 得分要點：</strong>${m.checklist.join(' ／ ')}</div>` : ''}
+        ${m.band13 ? `<div style="margin-top:3px;"><strong>🛡️ 13 盾 Merit 範文：</strong><em>"${m.band13}"</em></div>` : ''}
+        ${m.band15 ? `<div style="margin-top:3px;"><strong>👑 15 盾 Distinction 範文：</strong><em>"${m.band15}"</em></div>` : ''}
+      </div>
+    `;
+  }
+
+  let tapescriptHtml = '';
+  if (Array.isArray(q.audioLines) && q.audioLines.length > 0) {
+    tapescriptHtml = `
+      <div class="ket-paper-tapescript">
+        <strong>📜 聽力完整逐字稿 (Tapescript — 教師卷專用)：</strong>
+        ${q.audioLines.map(line => {
+          const sp = (typeof line === 'object' && line.speaker) ? `<strong>${line.speaker}:</strong> ` : '';
+          const txt = (typeof line === 'object' && line.text) ? line.text : String(line);
+          const tag = (typeof line === 'object' && line.isClue) ? ' <span style="font-weight:900;">[★關鍵線索]</span>'
+            : ((typeof line === 'object' && line.isTrap) ? ' <span style="text-decoration:underline;">[⚠干擾陷阱]</span>' : '');
+          return `<div>${sp}${txt}${tag}</div>`;
+        }).join('')}
+      </div>
+    `;
+  }
+
+  return `
+    <div class="ket-paper-answer-box">
+      <div><strong>✅ 標準答案：</strong><u>${ansLabel}</u></div>
+      ${exp.examPurpose ? `<div><strong>🎯 出題目的：</strong>${exp.examPurpose}</div>` : ''}
+      ${exp.correctReason ? `<div><strong>✅ 正解證據：</strong>${exp.correctReason}</div>` : ''}
+      ${trapsHtml ? `<div><strong>❌ 選項陷阱拆解：</strong><ul>${trapsHtml}</ul></div>` : ''}
+      ${modelHtml}
+      ${tapescriptHtml}
+    </div>
+  `;
+}
+
+function renderPrintWritingLinedArea(ketPart) {
+  const isPart7 = ketPart === 'RWP7';
+  const totalLines = isPart7 ? 9 : 6;
+  const thresholdIdx = isPart7 ? 5 : 4;
+  const thresholdLabel = isPart7 ? '🚩 35+ 字 KET 滿分安全警戒線 (35-Word Safe Threshold)' : '🚩 25+ 字 KET 基本及格門檻 (25-Word Safe Threshold)';
+
+  let linesHtml = '';
+  for (let i = 0; i < totalLines; i++) {
+    if (i === thresholdIdx) {
+      linesHtml += `<div class="print-line-row print-line-dashed"><span class="print-milestone-marker">${thresholdLabel}</span></div>`;
+    } else {
+      linesHtml += `<div class="print-line-row"></div>`;
+    }
+  }
+
+  return `
+    <div class="ket-paper-writing-box">
+      <strong style="font-size:0.86rem;">Your Answer (Write clearly in English on the lines below):</strong>
+      ${linesHtml}
+      <table class="ket-paper-rubric">
+        <thead>
+          <tr>
+            <th>劍橋寫作評分向度</th>
+            <th>閱卷檢查基準 (Cambridge Assessment Criteria)</th>
+            <th style="width:72px; text-align:center;">得分 (0~5)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Content (內容)</strong></td>
+            <td>${isPart7 ? '完整涵蓋三格圖片情節與角色動作，無遺漏關鍵事件。' : '完整回應題目指定之全部三個要點 (3 Bullet Points)。'}</td>
+            <td style="text-align:center; font-weight:bold;">[ &nbsp; / 5 ]</td>
+          </tr>
+          <tr>
+            <td><strong>Organisation (組織)</strong></td>
+            <td>敘事具時間/邏輯順序，善用連接詞 (and, but, because, so, then)。</td>
+            <td style="text-align:center; font-weight:bold;">[ &nbsp; / 5 ]</td>
+          </tr>
+          <tr>
+            <td><strong>Language (語言)</strong></td>
+            <td>時態正確（如過去式/未來規劃）、單字拼字與基礎標點準確。</td>
+            <td style="text-align:center; font-weight:bold;">[ &nbsp; / 5 ]</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+function renderPrintQuestionRow(q, qNum, showAnswers, skipPassageHtml, skipImage) {
+  const isListening = q.section === 'listening' || (q.ketPart && q.ketPart.startsWith('LS'));
+  const stars = '★'.repeat(q.difficulty || 3) + '☆'.repeat(5 - (q.difficulty || 3));
+
+  let interactionHtml = '';
+  if (q.questionType === 'choice' && Array.isArray(q.options)) {
+    interactionHtml = `
+      <div class="ket-paper-mcq-grid">
+        ${q.options.map(opt => `
+          <div class="ket-paper-opt-row">
+            <span class="ket-paper-opt-box">${opt.key}</span>
+            <span>${opt.text}</span>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  } else if (q.questionType === 'gap') {
+    interactionHtml = `
+      <div class="ket-paper-gap-line">
+        ✍️ Write your answer (1 word / number / time): ______________________________________
+      </div>
+    `;
+  } else if (q.questionType === 'writing') {
+    interactionHtml = renderPrintWritingLinedArea(q.ketPart);
+  } else if (q.questionType === 'speaking') {
+    interactionHtml = `
+      <div class="ket-paper-speaking-box">
+        <strong>🎙️ 考生口說關鍵字筆記欄 (Keywords & Complete Sentence Plan):</strong>
+        <div class="print-line-row"></div>
+        <div class="print-line-row"></div>
+      </div>
+    `;
+  }
+
+  return `
+    <div class="ket-paper-q-row">
+      <div class="ket-paper-q-head">
+        <div class="ket-paper-q-num">Question ${qNum} <span style="font-size:0.78rem; color:#555555; font-weight:normal;">(${stars})</span></div>
+        <span class="ket-paper-code-tag">${q.code}</span>
+      </div>
+      ${(isListening && !showAnswers) ? `
+        <div class="ket-paper-listening-meta">🎧 Audio Track [${q.code}] — 考場雙遍播音（空白學生卷已自動隱藏逐字稿與線索）</div>
+      ` : ''}
+      ${(!skipPassageHtml && q.passageHtml) ? `<div class="ket-paper-passage" style="margin-bottom:8px;">${q.passageHtml}</div>` : ''}
+      ${(!skipImage && q.image) ? `<img class="ket-paper-q-img" src="${q.image}" alt="${q.code}">` : ''}
+      ${q.instruction ? `<div style="font-size:0.84rem; color:#333333; margin-bottom:4px; font-style:italic;">${q.instruction}</div>` : ''}
+      <div style="font-size:0.93rem; font-weight:700; color:#111111;">${q.prompt || ''}</div>
+      ${interactionHtml}
+      ${showAnswers ? renderPrintTeacherKeyBox(q) : ''}
+    </div>
+  `;
+}
+
+function renderPrintKetBookletBody(questions, showAnswers, startNum) {
+  let qCounter = startNum || 1;
+  const groups = groupPrintQuestionsByPart(questions);
+  const groupsByPart = {};
+  groups.forEach(g => {
+    if (!groupsByPart[g.part]) groupsByPart[g.part] = [];
+    groupsByPart[g.part].push(g);
+  });
+
+  const sections = ['reading_writing', 'listening', 'speaking'];
+  let html = '';
+
+  sections.forEach(secKey => {
+    const secMeta = PRINT_SECTION_BARS[secKey];
+    const secParts = secMeta.parts.filter(p => groupsByPart[p] && groupsByPart[p].length > 0);
+    if (secParts.length === 0) return;
+
+    const secQCount = secParts.reduce((sum, p) => sum + groupsByPart[p].reduce((s2, g) => s2 + g.items.length, 0), 0);
+    html += `
+      <div class="ket-paper-section-bar">
+        <span>${secMeta.barTitle} — ${secMeta.barSub}</span>
+        <span style="font-size:0.84rem;">${secQCount} Questions</span>
+      </div>
+    `;
+
+    secParts.forEach(partCode => {
+      const partMeta = PRINT_PART_META[partCode] || { name: partCode, inst: '' };
+      const partGroups = groupsByPart[partCode];
+      const partCount = partGroups.reduce((s, g) => s + g.items.length, 0);
+
+      html += `
+        <div class="ket-paper-part-head">
+          <div class="ket-paper-part-title">
+            <span>${partMeta.name}</span>
+            <span>[${partCount} Marks]</span>
+          </div>
+          <p class="ket-paper-part-inst">${partMeta.inst}</p>
+        </div>
+      `;
+
+      partGroups.forEach(grp => {
+        const hasSharedPassage = grp.items.length > 1 && Boolean(grp.passageHtml || grp.sharedImage);
+        const normShared = normalizePrintHtml(grp.passageHtml);
+
+        html += `<div class="ket-paper-group">`;
+        if (hasSharedPassage) {
+          html += `
+            <div class="ket-paper-passage">
+              ${grp.passageTitle ? `<div class="ket-paper-passage-title">📖 Shared Passage: ${grp.passageTitle} (Questions ${qCounter}–${qCounter + grp.items.length - 1})</div>` : ''}
+              ${grp.passageHtml || ''}
+              ${grp.sharedImage ? `<img src="${grp.sharedImage}" alt="${grp.passageTitle || grp.part}">` : ''}
+            </div>
+          `;
+        }
+
+        grp.items.forEach(q => {
+          const skipPass = hasSharedPassage && Boolean(grp.passageHtml) && normalizePrintHtml(q.passageHtml) === normShared;
+          const skipImg = hasSharedPassage && Boolean(grp.sharedImage) && q.image === grp.sharedImage;
+          html += renderPrintQuestionRow(q, qCounter++, showAnswers, skipPass, skipImg);
+        });
+
+        html += `</div>`;
+      });
+    });
+  });
+
+  return html;
+}
+
 function renderPrintPod() {
   const container = document.getElementById('view-print');
   if (!container || !window.KET_DATA) return;
@@ -3983,7 +4606,8 @@ function renderPrintPod() {
   if (!AppState.printSheetMode) AppState.printSheetMode = 'u1';
   if (AppState.printShowAnswers === undefined) AppState.printShowAnswers = false;
 
-  const mode = AppState.printSheetMode;
+  const rawMode = AppState.printSheetMode;
+  const mode = rawMode === 'rev' ? 'revision' : rawMode;
   const showAnswers = AppState.printShowAnswers;
   const candidateName = AppState.currentAccount === 'rex' ? 'Rex (6年級)' : (AppState.currentAccount === 'hugo' ? 'Hugo (5年級)' : (AppState.currentAccount === 'test1' ? '家長測試1' : '訪客考生'));
 
@@ -3993,8 +4617,8 @@ function renderPrintPod() {
       <div class="card-ac no-print" style="margin-bottom:16px; padding:12px 18px;">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:10px;">
           <div>
-            <h3 style="margin:0; font-size:1.15rem; font-weight:900; color:var(--ac-wood);">🖨️ A4 考卷與手寫練習單列印引擎 (@media print)</h3>
-            <span style="font-size:0.8rem; color:var(--ac-wood-light);">支援標準 A4 輸出無失真黑白測驗卷、35字警戒線寫作單、71分總複習全真卷與個人錯題本</span>
+            <h3 style="margin:0; font-size:1.15rem; font-weight:900; color:var(--ac-wood);">🖨️ Cambridge KET 官方全真 A4 考卷列印引擎 (@media print)</h3>
+            <span style="font-size:0.8rem; color:var(--ac-wood-light);">100% 獨立自足命題（自動合併共享短文、25/35字寫作格線、個人化 KET 錯題考卷、教師卷含四維詳解與聽力稿）</span>
           </div>
           <div>
             <button class="ac-btn ac-btn-green" style="font-size:1.05rem; padding:10px 22px; font-weight:900; box-shadow:0 4px 0 var(--ac-green-border);" onclick="triggerPrint()">
@@ -4006,30 +4630,22 @@ function renderPrintPod() {
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; border-top:2px solid var(--ac-wood-border); padding-top:10px;">
           <!-- 考卷樣式切換 -->
           <div class="rw-nav-pills" style="margin:0;">
-            <button class="rw-nav-btn ${mode === 'u1' ? 'active' : ''}" onclick="setPrintMode('u1')">
-              📄 Unit 1 綜合測驗卷
-            </button>
-            <button class="rw-nav-btn ${mode === 'u2' ? 'active' : ''}" onclick="setPrintMode('u2')">
-              📄 Unit 2 綜合測驗卷
-            </button>
-            <button class="rw-nav-btn ${mode === 'u3' ? 'active' : ''}" onclick="setPrintMode('u3')">
-              📄 Unit 3 綜合測驗卷
-            </button>
-            <button class="rw-nav-btn ${mode === 'writing' ? 'active' : ''}" onclick="setPrintMode('writing')">
-              📝 Writing Part 7 手寫橫線單
-            </button>
-            <button class="rw-nav-btn ${mode === 'revision' ? 'active' : ''}" onclick="setPrintMode('revision')">
-              🏆 Revision 71分總複習全真卷
-            </button>
-            <button class="rw-nav-btn ${mode === 'errorbook' ? 'active' : ''}" onclick="setPrintMode('errorbook')">
-              📕 個人化熱力錯題訂正單
-            </button>
+            <button class="rw-nav-btn ${mode === 'u1' ? 'active' : ''}" onclick="setPrintMode('u1')">📄 Unit 1 全真卷</button>
+            <button class="rw-nav-btn ${mode === 'u2' ? 'active' : ''}" onclick="setPrintMode('u2')">📄 Unit 2 全真卷</button>
+            <button class="rw-nav-btn ${mode === 'u3' ? 'active' : ''}" onclick="setPrintMode('u3')">📄 Unit 3 全真卷</button>
+            <button class="rw-nav-btn ${mode === 'revision' ? 'active' : ''}" onclick="setPrintMode('revision')">🏆 Revision 總複習全真卷</button>
+            <button class="rw-nav-btn ${mode === 'rw_full' ? 'active' : ''}" onclick="setPrintMode('rw_full')">📖 Paper 1 讀寫專項</button>
+            <button class="rw-nav-btn ${mode === 'ls_full' ? 'active' : ''}" onclick="setPrintMode('ls_full')">🎧 Paper 2 聽力專項</button>
+            <button class="rw-nav-btn ${mode === 'sp_cards' ? 'active' : ''}" onclick="setPrintMode('sp_cards')">🎙️ Paper 3 口說題卡</button>
+            <button class="rw-nav-btn ${mode === 'writing' ? 'active' : ''}" onclick="setPrintMode('writing')">📝 Part 6/7 寫作橫線本</button>
+            <button class="rw-nav-btn ${mode === 'vocab_core' ? 'active' : ''}" onclick="setPrintMode('vocab_core')">🔤 字彙與錯句語境卷</button>
+            <button class="rw-nav-btn ${mode === 'errorbook' ? 'active' : ''}" onclick="setPrintMode('errorbook')">📕 個人化 KET 錯題考卷</button>
           </div>
 
           <!-- 解答模式切換 -->
           <div>
             <button class="ac-btn ac-btn-sm ${showAnswers ? 'ac-btn-orange' : 'ac-btn-cream'}" onclick="togglePrintAnswers()">
-              ${showAnswers ? '🔑 目前：教師詳解答案卷 (含解答與解析)' : '📝 目前：學生空白測驗卷 (乾淨作答用)'}
+              ${showAnswers ? '🔑 目前：教師詳解答案卷 (含四維詳解、範文與聽力稿)' : '📝 目前：學生空白測驗卷 (乾淨作答零劇透)'}
             </button>
           </div>
         </div>
@@ -4044,360 +4660,267 @@ function renderPrintPod() {
 }
 
 function renderPrintSheetContent(mode, showAnswers, candidate, data) {
+  const effectiveMode = mode === 'rev' ? 'revision' : mode;
   const dateStr = new Date().toLocaleDateString('zh-TW', { year: 'numeric', month: '2-digit', day: '2-digit' });
+  const bankQs = (window.KET_EXAM_BANK && Array.isArray(window.KET_EXAM_BANK.questions))
+    ? window.KET_EXAM_BANK.questions
+    : [];
+  const sortedBank = bankQs.slice().sort((a, b) => {
+    const unitRank = { u1: 1, u2: 2, u3: 3, rev: 4 };
+    const ua = unitRank[a.unitId] || 9;
+    const ub = unitRank[b.unitId] || 9;
+    if (effectiveMode === 'rw_full' || effectiveMode === 'ls_full' || effectiveMode === 'sp_cards' || effectiveMode === 'writing') {
+      const pa = PRINT_PART_ORDER.indexOf(a.ketPart);
+      const pb = PRINT_PART_ORDER.indexOf(b.ketPart);
+      if (pa !== pb) return pa - pb;
+    }
+    if (ua !== ub) return ua - ub;
+    return PRINT_PART_ORDER.indexOf(a.ketPart) - PRINT_PART_ORDER.indexOf(b.ketPart);
+  });
 
-  // 1. Writing Part 7 手寫橫線作答單 (含 35+ 字警戒標示與劍橋 Rubric 評分表)
-  if (mode === 'writing') {
-    const u1wp7 = data.units[0].exercises.writingPart7;
-    const model13 = u1wp7.modelAnswers ? u1wp7.modelAnswers['13shield'] : null;
-    const model15 = u1wp7.modelAnswers ? u1wp7.modelAnswers['15shield'] : null;
+  // 1. Unit 1 / Unit 2 / Unit 3 全真 14-Part 考卷
+  if (effectiveMode === 'u1' || effectiveMode === 'u2' || effectiveMode === 'u3') {
+    const uIdx = effectiveMode === 'u1' ? 0 : (effectiveMode === 'u2' ? 1 : 2);
+    const unit = (data && data.units && data.units[uIdx]) || { number: uIdx + 1, title: effectiveMode.toUpperCase(), topic: '' };
+    const unitQs = sortedBank.filter(q => q.unitId === effectiveMode);
+    const cover = getPrintPaperCover(
+      `UNIT ${unit.number} FULL MOCK EXAM PAPER`,
+      `Unit ${unit.number}: ${unit.title} — ${unit.topic} (Part 1–14 Full Coverage)`,
+      `${unitQs.length} Questions`,
+      candidate,
+      dateStr,
+      `<div>Score: <strong>[ &nbsp;&nbsp;&nbsp;&nbsp; / ${unitQs.length} ]</strong></div>`
+    );
+    if (unitQs.length === 0) {
+      return cover + `<div style="padding:24px; text-align:center;">目前尚未載入 KET 全真題庫。</div>`;
+    }
+    return cover + renderPrintKetBookletBody(unitQs, showAnswers, 1);
+  }
 
-    return `
-      <div class="print-exam-header">
-        <div>
-          <h2 style="font-size:1.35rem; font-weight:900; margin:0 0 4px 0;">CAMBRIDGE ASSESSMENT ENGLISH | A2 KEY FOR SCHOOLS</h2>
-          <h3 style="font-size:1.1rem; font-weight:bold; margin:0; color:#333333;">Paper 1: Reading and Writing — Part 7 Story Writing (35+ Words)</h3>
-        </div>
-        <div style="text-align:right;">
-          <span style="border:2px solid #000; padding:4px 10px; font-weight:bold; font-size:1rem;">滿分：15 分 (Rubric)</span>
-        </div>
+  // 2. 分科專項全真卷 (Reading & Writing / Listening / Speaking / Part 6&7 Writing)
+  if (effectiveMode === 'rw_full' || effectiveMode === 'ls_full' || effectiveMode === 'sp_cards' || effectiveMode === 'writing') {
+    const modeConfig = {
+      rw_full: {
+        title: 'PAPER 1: READING & WRITING — SPECIALIST BOOKLET',
+        sub: 'Part 1–7 Comprehensive Reading & Writing Practice (100% Self-Contained)',
+        filterFn: q => q.section === 'reading' || q.section === 'writing' || (q.ketPart && q.ketPart.startsWith('RW'))
+      },
+      ls_full: {
+        title: 'PAPER 2: LISTENING — SPECIALIST PRACTICE BOOKLET',
+        sub: 'Part 1–5 Cambridge Listening Diagnostic (Audio Played Twice per Track)',
+        filterFn: q => q.section === 'listening' || (q.ketPart && q.ketPart.startsWith('LS'))
+      },
+      sp_cards: {
+        title: 'PAPER 3: SPEAKING — EXAMINER & CANDIDATE TASK CARDS',
+        sub: 'Part 1 Personal Questions & Part 2 Collaborative 5-Prompt Cards',
+        filterFn: q => q.section === 'speaking' || (q.ketPart && q.ketPart.startsWith('SP'))
+      },
+      writing: {
+        title: 'PAPER 1 WRITING — PART 6 & PART 7 OFFICIAL LINED BOOKLET',
+        sub: 'Guided Message (25+ Words) & Three-Picture Story Writing (35+ Words) + Cambridge Rubric',
+        filterFn: q => q.ketPart === 'RWP6' || q.ketPart === 'RWP7'
+      }
+    }[effectiveMode];
+
+    const filteredQs = sortedBank.filter(modeConfig.filterFn);
+    const cover = getPrintPaperCover(
+      modeConfig.title,
+      modeConfig.sub,
+      `${filteredQs.length} Tasks`,
+      candidate,
+      dateStr,
+      `<div>Status: <strong>${showAnswers ? 'Teacher Key Mode' : 'Student Exam Sheet'}</strong></div>`
+    );
+    return cover + renderPrintKetBookletBody(filteredQs, showAnswers, 1);
+  }
+
+  // 3. Revision 總複習全真卷（融合 KET 官方 Revision 試題 + 100% 獨立完整句子版 Units 1-3 文法複習）
+  if (effectiveMode === 'revision') {
+    const revBankQs = sortedBank.filter(q => q.unitId === 'rev');
+    const cover = getPrintPaperCover(
+      'UNITS 1–3 COMPREHENSIVE REVISION EXAM',
+      'Part A: Official KET Comprehensive Questions + Part B: Self-Contained Grammar & Context Review',
+      `Part A: ${revBankQs.length} KET Qs + Part B: 45 Checks`,
+      candidate,
+      dateStr
+    );
+
+    const revBankBody = revBankQs.length > 0 ? renderPrintKetBookletBody(revBankQs, showAnswers, 1) : '';
+    const selfContainedGrammarHtml = `
+      <div class="ket-paper-section-bar">
+        <span>PART B · UNITS 1–3 SELF-CONTAINED GRAMMAR & VOCABULARY CONTEXT DRILL</span>
+        <span style="font-size:0.84rem;">獨立完整句子診斷（無須課本即可作答）</span>
       </div>
 
-      <div class="print-student-fields" style="margin-bottom:14px; border-bottom:1px solid #CCCCCC; padding-bottom:10px;">
-        <div>Candidate: <u>${candidate}</u></div>
-        <div>Date: <u>${dateStr}</u></div>
-        <div>Target: <strong>13 Shields (Merit, 82%+)</strong></div>
+      <div class="ket-paper-q-row">
+        <div class="ket-paper-part-title"><span>Section B1 · Unit 1 Have got / Do & Does / Family in Context</span><span>[15 Marks]</span></div>
+        <div style="font-size:0.88rem; line-height:1.7;">
+          1. A: ________________ (you / have got) any brothers? &nbsp; B: Yes, I ________________ (have got) one younger sister.<br>
+          2. A: ________________ (she / have got) dark curly hair? &nbsp; B: No, she ________________ (not / have got) dark hair; she has got blonde hair.<br>
+          3. My mum's mother visits us every Sunday. She is my <strong>g</strong>________________.<br>
+          4. My father's brother lives in London. He is my favourite <strong>u</strong>________________.<br>
+          5. What time ________________ (do / does) your best friend usually go to bed on school nights?<br>
+          6. How often ________________ (do / does) your cousins play badminton with you at the sports centre?
+        </div>
+        ${showAnswers ? `
+          <div class="ket-paper-answer-box">
+            <strong>✅ 教師解答：</strong> 1. Have you got / have got ('ve got) &nbsp; 2. Has she got / hasn't got &nbsp; 3. grandmother &nbsp; 4. uncle &nbsp; 5. does &nbsp; 6. do
+          </div>
+        ` : ''}
       </div>
 
-      <div style="margin-bottom:12px; line-height:1.5;">
-        <strong>Instructions:</strong> Look at the three pictures. Write the story shown in the pictures. Write <strong>35 words or more</strong>.
+      <div class="ket-paper-q-row">
+        <div class="ket-paper-part-title"><span>Section B2 · Unit 2 Adverbs of Frequency, Like vs Would Like & Hobbies in Context</span><span>[15 Marks]</span></div>
+        <div style="font-size:0.86rem; font-style:italic; margin-bottom:4px;">Word Bank for Q4–Q6: [ acting / camping / cooking / photography / sailing ]</div>
+        <div style="font-size:0.88rem; line-height:1.7;">
+          1. Rewrite using <strong>usually</strong>: <em>"I play tennis on Wednesdays."</em> ➔ _____________________________________________<br>
+          2. Rewrite using <strong>never</strong>: <em>"They are late for morning assembly."</em> ➔ _____________________________________________<br>
+          3. A: Where ________________ (you / would like / go) this weekend? B: I love ________________ (swim), so ________________ (go) to the beach sounds great!<br>
+          4. Making warm noodles and soup for your family in the kitchen is called ________________.<br>
+          5. Sleeping outdoors in a tent under the stars in the forest is called ________________.<br>
+          6. Performing on a stage in front of an audience at the drama club is called ________________.
+        </div>
+        ${showAnswers ? `
+          <div class="ket-paper-answer-box">
+            <strong>✅ 教師解答：</strong> 1. I usually play tennis on Wednesdays. &nbsp; 2. They are never late for morning assembly. &nbsp; 3. would you like to go / swimming / going &nbsp; 4. cooking &nbsp; 5. camping &nbsp; 6. acting
+          </div>
+        ` : ''}
       </div>
 
-      <div style="display:flex; justify-content:center; gap:14px; margin-bottom:16px; text-align:center;">
-        <div style="border:1px solid #777; padding:4px; border-radius:4px; max-width:30%;">
-          <img src="assets/images/u1/u1_writing_part7_bookshop.jpg" style="max-width:100%; height:auto;" alt="Picture 1">
-          <small style="display:block; font-weight:bold;">Picture 1: Bookshop</small>
+      <div class="ket-paper-q-row">
+        <div class="ket-paper-part-title"><span>Section B3 · Unit 3 Home, Food Quantifiers & Have to in Full Sentences</span><span>[15 Marks]</span></div>
+        <div style="font-size:0.88rem; line-height:1.7;">
+          1. My bedroom is quite dark in the evening, so I turn on the desk <strong>l</strong>________________.<br>
+          2. We keep all the clean plates and bowls inside a tall kitchen <strong>c</strong>________________.<br>
+          3. Are there ________________ (some / any) fresh tomatoes in the fridge for our omelette?<br>
+          4. Can I have ________________ (a / an / some) glass of cold apple juice after cooking?<br>
+          5. My older brother ________________ (has to / have to) finish his science project before dinner.<br>
+          6. We ________________ (don't have to / doesn't have to) wear school uniforms during the Saturday cooking workshop.
         </div>
-        <div style="border:1px solid #777; padding:4px; border-radius:4px; max-width:30%;">
-          <img src="assets/images/u1/u1_writing_part7_exam.jpg" style="max-width:100%; height:auto;" alt="Picture 2">
-          <small style="display:block; font-weight:bold;">Picture 2: Rain & Street</small>
-        </div>
-        <div style="border:1px solid #777; padding:4px; border-radius:4px; max-width:30%;">
-          <img src="assets/images/u3/u3_writing_part7_picnic_rain.jpg" style="max-width:100%; height:auto;" alt="Picture 3">
-          <small style="display:block; font-weight:bold;">Picture 3: At Home</small>
-        </div>
+        ${showAnswers ? `
+          <div class="ket-paper-answer-box">
+            <strong>✅ 教師解答：</strong> 1. lamp &nbsp; 2. cupboard &nbsp; 3. any &nbsp; 4. a &nbsp; 5. has to &nbsp; 6. don't have to
+          </div>
+        ` : ''}
       </div>
+    `;
 
-      <div style="margin-bottom:16px;">
-        <strong style="display:block; margin-bottom:6px;">Your Story (Write clearly on the lines below):</strong>
-        <div class="print-line-row"></div>
-        <div class="print-line-row"></div>
-        <div class="print-line-row"></div>
-        <div class="print-line-row"></div>
-        <div class="print-line-row print-line-dashed">
-          <span class="print-milestone-marker">🚩 35+ 字 KET 滿分安全警戒線 (35-Word Safe Threshold)</span>
-        </div>
-        <div class="print-line-row"></div>
-        <div class="print-line-row"></div>
-        <div class="print-line-row"></div>
-        <div class="print-line-row"></div>
-        <div class="print-line-row"></div>
-      </div>
+    return cover + revBankBody + selfContainedGrammarHtml;
+  }
 
-      <!-- 劍橋官方 3 大評分點評分表格 -->
-      <table style="width:100%; border-collapse:collapse; margin-top:14px; border:2px solid #000; font-size:0.86rem;">
-        <thead>
-          <tr style="background:#F0F0F0; border-bottom:2px solid #000;">
-            <th style="padding:6px; text-align:left; border-right:1px solid #000;">評分項目 (Cambridge Rubric)</th>
-            <th style="padding:6px; text-align:left; border-right:1px solid #000;">評分檢核點 (Key Criteria)</th>
-            <th style="padding:6px; width:70px; text-align:center;">得分 (0~5)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr style="border-bottom:1px solid #CCCCCC;">
-            <td style="padding:6px; font-weight:bold; border-right:1px solid #000;">1. 內容 (Content)</td>
-            <td style="padding:6px; border-right:1px solid #000;">完全涵蓋三格圖片之主要情節與角色動作，無遺漏。</td>
-            <td style="padding:6px; text-align:center; font-weight:bold;">[ &nbsp; / 5 ]</td>
-          </tr>
-          <tr style="border-bottom:1px solid #CCCCCC;">
-            <td style="padding:6px; font-weight:bold; border-right:1px solid #000;">2. 組織 (Organisation)</td>
-            <td style="padding:6px; border-right:1px solid #000;">情節具連貫性，正確使用連接詞 (and, but, because, so, when, then)。</td>
-            <td style="padding:6px; text-align:center; font-weight:bold;">[ &nbsp; / 5 ]</td>
-          </tr>
-          <tr style="border-bottom:2px solid #000;">
-            <td style="padding:6px; font-weight:bold; border-right:1px solid #000;">3. 語言 (Language)</td>
-            <td style="padding:6px; border-right:1px solid #000;">正確使用過去式動詞 (went, saw, started, bought) 與豐富單字，文法錯誤極少。</td>
-            <td style="padding:6px; text-align:center; font-weight:bold;">[ &nbsp; / 5 ]</td>
-          </tr>
-          <tr style="background:#F9F9F9;">
-            <td colspan="2" style="padding:6px; font-weight:bold; text-align:right; border-right:1px solid #000;">寫作總分 (Total Score)：</td>
-            <td style="padding:6px; text-align:center; font-weight:bold; font-size:1rem;">[ &nbsp; / 15 ]</td>
-          </tr>
-        </tbody>
-      </table>
+  // 4. 字彙與易錯診斷語境單 (從例句挖空，徹底杜絕無上下文單詞中翻英或半截片段)
+  if (effectiveMode === 'vocab_core') {
+    const cover = getPrintPaperCover(
+      'CORE VOCABULARY & ERROR CORRECTION IN CONTEXT',
+      'Units 1–3 Sentence Cloze (Zero Isolated Fragments) + High-Frequency Grammar Fix',
+      '3 Units Contextual Drill',
+      candidate,
+      dateStr
+    );
 
-      ${showAnswers && model13 && model15 ? `
-        <div style="margin-top:16px; padding:12px; border:2px dashed #40916C; background:#F4FDF7; font-size:0.86rem;">
-          <h4 style="color:#2D6A4F; margin:0 0 6px 0; font-size:0.95rem;">🔑 教師解析：滿分範文對照 (Model Answers)</h4>
+    const unitsHtml = (data.units || []).map(u => {
+      const vocabs = (u.vocabulary || []).filter(v => v.example && new RegExp(`\\b${v.word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'i').test(v.example)).slice(0, 6);
+      const mistakes = (u.commonMistakes || []).slice(0, 4);
+      const clozeRows = vocabs.map((v, idx) => {
+        const escapedWord = v.word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const masked = v.example.replace(new RegExp(`\\b${escapedWord}\\b`, 'gi'), '<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>');
+        return `
           <div style="margin-bottom:6px;">
-            <strong>【13 盾保底範文 (Merit, 41字)】：</strong><br>
-            <em>"${model13.text}"</em>
+            ${idx + 1}. ${masked} <span style="color:#555555;">(${v.pos} · 提示：${v.zh})</span>
+            ${showAnswers ? `<br><span style="color:#2D6A4F; font-weight:bold;">✅ Answer: ${v.word}</span> <small>(搭配：${v.collocation || ''})</small>` : ''}
           </div>
-          <div>
-            <strong>【15 盾卓越範文 (Distinction, 58字)】：</strong><br>
-            <em>"${model15.text}"</em><br>
-            <small style="color:#555;">💡 亮點特色：${model15.features ? model15.features.join('；') : '過去進行式與連接詞靈活混用。'}</small>
+        `;
+      }).join('');
+
+      const mistakeRows = mistakes.map((m, idx) => `
+        <div style="margin-bottom:6px;">
+          ${idx + 1}. Find and fix the mistake: <em>"${m.wrong}"</em><br>
+          &nbsp;&nbsp;&nbsp;Corrected sentence: ${showAnswers
+            ? `<strong style="color:#2D6A4F;">"${m.correct}"</strong> <small>(考點：${m.rule})</small>`
+            : '______________________________________________________________'}
+        </div>
+      `).join('');
+
+      return `
+        <div class="ket-paper-section-bar">
+          <span>UNIT ${u.number} · ${u.title} (${u.topic})</span>
+          <span style="font-size:0.84rem;">例句情境填空 & 常見錯句訂正</span>
+        </div>
+        <div class="ket-paper-q-row">
+          <div class="ket-paper-part-title"><span>Part 1 · Contextual Vocabulary Cloze</span><span>[${vocabs.length} Marks]</span></div>
+          <div style="font-size:0.9rem; line-height:1.6;">${clozeRows}</div>
+        </div>
+        <div class="ket-paper-q-row">
+          <div class="ket-paper-part-title"><span>Part 2 · Error Correction Sentences</span><span>[${mistakes.length} Marks]</span></div>
+          <div style="font-size:0.9rem; line-height:1.6;">${mistakeRows}</div>
+        </div>
+      `;
+    }).join('');
+
+    return cover + unitsHtml;
+  }
+
+  // 5. 個人化 KET 錯題精準訂正考卷（支援從 KET_EXAM_BANK 還原完整文章、圖表、選項與教師四維詳解）
+  if (effectiveMode === 'errorbook') {
+    const netErrors = (AppState.accountData && AppState.accountData.netErrors) || {};
+    const errKeys = Object.keys(netErrors)
+      .filter(k => netErrors[k] && netErrors[k].count > 0)
+      .sort((a, b) => (netErrors[b].count || 0) - (netErrors[a].count || 0));
+
+    const cover = getPrintPaperCover(
+      'PERSONALIZED KET ERROR REMEDIATION WORKSHEET',
+      '5-Color Heatmap Targeted Re-Practice Paper (Full Context & Passages Included)',
+      `待訂正題數：${errKeys.length} 題`,
+      candidate,
+      dateStr,
+      `<div>Target: <strong>Zero Errors (淨錯歸零)</strong></div>`
+    );
+
+    if (errKeys.length === 0) {
+      return cover + `
+        <div style="padding:36px; text-align:center; font-size:1.05rem; border:1px dashed #666;">
+          🎉 太棒了！考生【${candidate}】目前沒有待訂正錯題！<br>
+          <small style="color:#555555;">（若要測試錯題卷，可於錯題本分頁載入模擬錯題，或在 KET 全真題庫挑戰後產生錯題記錄）</small>
+        </div>
+      `;
+    }
+
+    const bodyHtml = errKeys.map((k, idx) => {
+      const errItem = netErrors[k];
+      const heat = getHeatLevel(errItem.count);
+      const bankQ = sortedBank.find(q => q.code === k);
+
+      if (bankQ) {
+        const wrongBadge = `
+          <div style="display:flex; justify-content:space-between; align-items:center; background:#F8F9FA; border:1px solid #888; padding:4px 10px; font-size:0.8rem; font-weight:bold; margin-bottom:6px;">
+            <span>🔥 錯題熱度：[${heat.label}] ｜ 上次錯答：${errItem.wrongAnswer || '未標記 / 自評未達標'}</span>
+            <span>累積淨錯：${errItem.count} 次</span>
           </div>
-        </div>
-      ` : ''}
-    `;
-  }
+        `;
+        return `<div class="ket-paper-group">${wrongBadge}${renderPrintQuestionRow(bankQ, idx + 1, showAnswers, false, false)}</div>`;
+      }
 
-  // 2. Unit 1 / 2 / 3 綜合測驗卷
-  if (mode === 'u1' || mode === 'u2' || mode === 'u3') {
-    const uIdx = mode === 'u1' ? 0 : (mode === 'u2' ? 1 : 2);
-    const unit = data.units[uIdx];
-    const vocabList = unit.vocabulary || [];
-    const mistakesList = unit.commonMistakes || [];
-
-    return `
-      <div class="print-exam-header">
-        <div>
-          <h2 style="font-size:1.35rem; font-weight:900; margin:0 0 4px 0;">CAMBRIDGE A2 KEY (KET) — UNIT ${unit.number} DIAGNOSTIC EXAM</h2>
-          <h3 style="font-size:1.1rem; font-weight:bold; margin:0; color:#333333;">Unit ${unit.number}: ${unit.title} (${unit.topic})</h3>
-        </div>
-        <div style="text-align:right;">
-          <span style="border:2px solid #000; padding:4px 10px; font-weight:bold; font-size:1rem;">滿分：30 分</span>
-        </div>
-      </div>
-
-      <div class="print-student-fields" style="margin-bottom:14px; border-bottom:1px solid #CCCCCC; padding-bottom:10px;">
-        <div>Candidate: <u>${candidate}</u></div>
-        <div>Date: <u>${dateStr}</u></div>
-        <div>Target: <strong>13 Shields (82%+)</strong></div>
-        <div>Score: <strong>[ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; / 30 ]</strong></div>
-      </div>
-
-      <!-- Part A: Vocabulary -->
-      <div style="margin-bottom:14px;">
-        <h4 style="font-size:1rem; border-bottom:1px solid #000; padding-bottom:4px; margin-bottom:8px;">
-          Part A: Vocabulary & Collocation (10 Marks, 1 mark each)
-        </h4>
-        <div style="line-height:1.7; font-size:0.9rem;">
-          ${vocabList.slice(0, 10).map((v, i) => `
-            <div>
-              ${i + 1}. <strong>${v.zh}</strong> (${v.pos}):
-              ${showAnswers
-                ? `<u><strong>${v.word}</strong></u> &nbsp; <span style="color:#2D6A4F;">(搭配：${v.collocation || ''})</span>`
-                : `____________________ &nbsp; (搭配：${v.collocation ? v.collocation.replace(new RegExp(v.word, 'gi'), '_____') : ''})`}
+      // 非題庫型舊格式錯題亦以完整獨立框格印出
+      return `
+        <div class="ket-paper-q-row">
+          <div class="ket-paper-q-head">
+            <div class="ket-paper-q-num">#${idx + 1}. [${heat.label}] ${errItem.title || k}</div>
+            <span class="ket-paper-code-tag">淨錯 ${errItem.count} 次</span>
+          </div>
+          ${errItem.prompt ? `<div style="margin-bottom:6px; background:#F8F9FA; padding:6px 10px; font-size:0.9rem;">題目：${errItem.prompt}</div>` : ''}
+          <div style="font-size:0.86rem; color:#444444; margin-bottom:4px;">❌ 上次錯誤作答：${errItem.wrongAnswer || '未填寫 / 選錯'}</div>
+          <div class="ket-paper-gap-line">✍️ 正確訂正手寫欄：______________________________________________________</div>
+          ${showAnswers ? `
+            <div class="ket-paper-answer-box">
+              <div><strong>✅ 正確答案：</strong><u>${errItem.correctAnswer || errItem.answer || ''}</u></div>
+              <div><strong>💡 考點說明：</strong>${errItem.rule || errItem.explanation || ''}</div>
             </div>
-          `).join('')}
+          ` : ''}
         </div>
-      </div>
+      `;
+    }).join('');
 
-      <!-- Part B: Common Mistakes -->
-      <div style="margin-bottom:14px;">
-        <h4 style="font-size:1rem; border-bottom:1px solid #000; padding-bottom:4px; margin-bottom:8px;">
-          Part B: Common Mistakes — Error Correction (10 Marks, 2 marks each)
-        </h4>
-        <div style="line-height:1.7; font-size:0.9rem;">
-          ${mistakesList.slice(0, 5).map((m, i) => `
-            <div style="margin-bottom:6px;">
-              ${i + 1}. [題目句子含錯誤]：<em>"${m.wrong}"</em><br>
-              &nbsp;&nbsp;&nbsp;改正：${showAnswers
-                ? `<strong style="color:#2D6A4F;">"${m.correct}"</strong> &nbsp; <small style="color:#555;">(考點：${m.rule})</small>`
-                : `__________________________________________________`}
-            </div>
-          `).join('')}
-        </div>
-      </div>
-
-      <!-- Part C: Grammar Focus -->
-      <div style="margin-bottom:14px;">
-        <h4 style="font-size:1rem; border-bottom:1px solid #000; padding-bottom:4px; margin-bottom:8px;">
-          Part C: Grammar & Sentence Structure (10 Marks)
-        </h4>
-        <div style="line-height:1.7; font-size:0.9rem;">
-          <div>1. 本單元核心文法：${unit.grammarFocus ? unit.grammarFocus.join('；') : '重點句型'}</div>
-          <div>2. 請寫出 2 句包含本單元核心文法之完整英文句子：</div>
-          <div class="print-line-row" style="margin-top:6px;"></div>
-          <div class="print-line-row"></div>
-        </div>
-      </div>
-    `;
-  }
-
-  // 3. Revision 71分總複習全真卷
-  if (mode === 'revision') {
-    return `
-      <div class="print-exam-header">
-        <div>
-          <h2 style="font-size:1.35rem; font-weight:900; margin:0 0 4px 0;">CAMBRIDGE A2 KEY (KET) — REVISION EXAM (UNITS 1 - 3)</h2>
-          <h3 style="font-size:1.1rem; font-weight:bold; margin:0; color:#333333;">Official Coursebook Review (Pages 78–80)</h3>
-        </div>
-        <div style="text-align:right;">
-          <span style="border:2px solid #000; padding:4px 10px; font-weight:bold; font-size:1rem;">總分：71 分</span>
-        </div>
-      </div>
-
-      <div class="print-student-fields" style="margin-bottom:14px; border-bottom:1px solid #CCCCCC; padding-bottom:10px;">
-        <div>Candidate: <u>${candidate}</u></div>
-        <div>Date: <u>${dateStr}</u></div>
-        <div>Target: <strong>13 Shields (82% / 59分)</strong></div>
-        <div>Total Score: <strong>[ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; / 71 ]</strong></div>
-      </div>
-
-      <!-- Section 1: Unit 1 Revision (27 Marks) -->
-      <div style="margin-bottom:14px;">
-        <h4 style="font-size:1rem; border-bottom:2px solid #000; padding-bottom:4px; margin-bottom:8px;">
-          Section 1: Unit 1 Revision (p.78, 27 Marks)
-        </h4>
-        <div style="font-size:0.88rem; line-height:1.6;">
-          <strong>Ex 1: Complete dialogues with have got (8 Marks):</strong><br>
-          1. A: (1) ____ (you) any brothers? B: Yes, I (2) ____ a sister.<br>
-          2. A: (3) ____ (she) dark hair? B: No, she (4) ____ blonde hair.<br>
-          3. A: (5) ____ (they) a pet? B: Yes, they (6) ____ a cat.<br>
-          4. A: (7) ____ (you) a big bedroom? B: No, I (8) ____.<br>
-          ${showAnswers ? `<div style="color:#2D6A4F; font-weight:bold; margin-bottom:6px;">[解答] (1) Have you got (2) have. I've got (3) Has she got (4) hasn't. She's got (5) Have they got (6) have. They've got (7) Have you got (8) haven't</div>` : ''}
-
-          <strong>Ex 2: Family words (5 Marks):</strong><br>
-          1. mother's mother: ____ &nbsp; 2. father's brother: ____ &nbsp; 3. aunt's children: ____<br>
-          4. father's daughter: ____ &nbsp; 5. mother and father: ____<br>
-          ${showAnswers ? `<div style="color:#2D6A4F; font-weight:bold; margin-bottom:6px;">[解答] 1. grandmother 2. uncle 3. cousins 4. daughter/sister 5. parents</div>` : ''}
-
-          <strong>Ex 3: Choose do / does (8 Marks):</strong><br>
-          1. What time (do/does) you go to bed? &nbsp; 2. (Do/Does) your friend live near you?<br>
-          3. Where (do/does) your cousins live? &nbsp; 4. (Do/Does) you play tennis?<br>
-          5. What (do/does) your parents do? &nbsp; 6. (Do/Does) your sister like reading?<br>
-          7. How often (do/does) you visit them? &nbsp; 8. (Do/Does) he watch TV?<br>
-          ${showAnswers ? `<div style="color:#2D6A4F; font-weight:bold; margin-bottom:6px;">[解答] 1. do 2. Does 3. do 4. Do 5. do 6. Does 7. do 8. Does</div>` : ''}
-
-          <strong>Ex 4: Adjectives (6 Marks):</strong><br>
-          1. black hair -> ____ &nbsp; 2. not tall or short -> of ____ height &nbsp; 3. ____ eyes<br>
-          4. not straight -> ____ hair &nbsp; 5. thin and fit -> ____ &nbsp; 6. on chin -> ____<br>
-          ${showAnswers ? `<div style="color:#2D6A4F; font-weight:bold; margin-bottom:6px;">[解答] 1. dark 2. medium 3. blue 4. curly 5. slim 6. beard</div>` : ''}
-        </div>
-      </div>
-
-      <!-- Section 2: Unit 2 Revision (20 Marks) -->
-      <div style="margin-bottom:14px;">
-        <h4 style="font-size:1rem; border-bottom:2px solid #000; padding-bottom:4px; margin-bottom:8px;">
-          Section 2: Unit 2 Revision (p.79, 20 Marks)
-        </h4>
-        <div style="font-size:0.88rem; line-height:1.6;">
-          <strong>Ex 1: Adverbs of frequency rewrite (5 Marks):</strong><br>
-          1. My mum takes photos of us. (often) ➔ ________________________________<br>
-          2. I play tennis on Wednesdays. (usually) ➔ ________________________________<br>
-          3. They are late for school. (never) ➔ ________________________________<br>
-          4. We go to cinema on Fridays. (sometimes) ➔ ________________________________<br>
-          5. He listens to music. (always) ➔ ________________________________<br>
-          ${showAnswers ? `<div style="color:#2D6A4F; font-weight:bold; margin-bottom:6px;">[解答] 1. My mum often takes photos... 2. I usually play... 3. They are never late... 4. We sometimes go... 5. He always listens...</div>` : ''}
-
-          <strong>Ex 2: like vs would like (7 Marks):</strong><br>
-          1. Where (1) ____ (you / go)? I (2) ____ (go) to sea because I (3) ____ (swim).<br>
-          2. (4) ____ (you / come) to party? Yes, I (5) ____! I (6) ____ (go) to parties.<br>
-          3. Do you (7) ____ (play) video games?<br>
-          ${showAnswers ? `<div style="color:#2D6A4F; font-weight:bold; margin-bottom:6px;">[解答] (1) would you like to go (2) would like to go (3) like swimming (4) Would you like to come (5) would love to / 'd like to (6) like going (7) like playing</div>` : ''}
-
-          <strong>Ex 3: Free time words (8 Marks):</strong><br>
-          [ cooking, photography, camping, sailing, painting, chess, acting, drawing ]<br>
-          1. dinner -> ____ &nbsp; 2. tent -> ____ &nbsp; 3. drama club -> ____ &nbsp; 4. photos -> ____<br>
-          5. boat -> ____ &nbsp; 6. board & pieces -> ____ &nbsp; 7. watercolours -> ____ &nbsp; 8. cartoons -> ____<br>
-          ${showAnswers ? `<div style="color:#2D6A4F; font-weight:bold; margin-bottom:6px;">[解答] 1. cooking 2. camping 3. acting 4. photography 5. sailing 6. chess 7. painting 8. drawing</div>` : ''}
-        </div>
-      </div>
-
-      <!-- Section 3: Unit 3 Revision (24 Marks) -->
-      <div style="margin-bottom:14px;">
-        <h4 style="font-size:1rem; border-bottom:2px solid #000; padding-bottom:4px; margin-bottom:8px;">
-          Section 3: Unit 3 Revision (p.80, 24 Marks)
-        </h4>
-        <div style="font-size:0.88rem; line-height:1.6;">
-          <strong>Ex 1: House & Furniture (8 Marks):</strong><br>
-          1. plates/cups in kitchen: c____ &nbsp; 2. brush hair: m____ &nbsp; 3. dark, turn on: l____<br>
-          4. watch TV on: s____ &nbsp; 5. cook food on: c____ &nbsp; 6. sleep in: b____<br>
-          7. dinner table: t____ &nbsp; 8. fresh air: w____<br>
-          ${showAnswers ? `<div style="color:#2D6A4F; font-weight:bold; margin-bottom:6px;">[解答] 1. cupboard 2. mirror 3. lamp 4. sofa 5. cooker 6. bed 7. table 8. window</div>` : ''}
-
-          <strong>Ex 2: There is/are, some/any, a/an (8 Marks):</strong><br>
-          1. There (is/are) a big armchair. &nbsp; 2. Are there (some/any) tomatoes?<br>
-          3. There isn't (a/an) oven. &nbsp; 4. We've got (some/any) strawberries.<br>
-          5. Is there (some/any) cheese? &nbsp; 6. There (is/are) five chairs.<br>
-          7. Can I have (a/some) glass of juice? &nbsp; 8. There are (some/any) flowers.<br>
-          ${showAnswers ? `<div style="color:#2D6A4F; font-weight:bold; margin-bottom:6px;">[解答] 1. is 2. any 3. an 4. some 5. any 6. are 7. a 8. some</div>` : ''}
-
-          <strong>Ex 3: have to forms (8 Marks):</strong><br>
-          1. My brother (has to / have to) do homework. &nbsp; 2. We (don't have to / doesn't have to) get up early.<br>
-          3. Do you (have to / has to) wear a uniform? &nbsp; 4. She (doesn't have to / don't have to) walk.<br>
-          5. Doctors (have to / has to) work nights. &nbsp; 6. Does Tim (have to / has to) help cook?<br>
-          7. You (have to / has to) be quiet. &nbsp; 8. I (don't have to / doesn't have to) clean daily.<br>
-          ${showAnswers ? `<div style="color:#2D6A4F; font-weight:bold; margin-bottom:6px;">[解答] 1. has to 2. don't have to 3. have to 4. doesn't have to 5. have to 6. have to 7. have to 8. don't have to</div>` : ''}
-        </div>
-      </div>
-    `;
-  }
-
-  // 4. Personalized Error Book Worksheet
-  if (mode === 'errorbook') {
-    const netErrors = AppState.accountData.netErrors || {};
-    const errKeys = Object.keys(netErrors).filter(k => netErrors[k].count > 0);
-
-    return `
-      <div class="print-exam-header">
-        <div>
-          <h2 style="font-size:1.35rem; font-weight:900; margin:0 0 4px 0;">CAMBRIDGE A2 KEY — 5-COLOR ERROR BOOK CORRECTION SHEET</h2>
-          <h3 style="font-size:1.1rem; font-weight:bold; margin:0; color:#333333;">Personalized Remediation & Mastery Checklist</h3>
-        </div>
-        <div style="text-align:right;">
-          <span style="border:2px solid #000; padding:4px 10px; font-weight:bold; font-size:1rem;">待訂正題數：${errKeys.length} 題</span>
-        </div>
-      </div>
-
-      <div class="print-student-fields" style="margin-bottom:14px; border-bottom:1px solid #CCCCCC; padding-bottom:10px;">
-        <div>Candidate: <u>${candidate}</u></div>
-        <div>Date: <u>${dateStr}</u></div>
-        <div>Target: <strong>Zero Errors (完全歸零消滅)</strong></div>
-      </div>
-
-      ${errKeys.length === 0 ? `
-        <div style="padding:40px; text-align:center; font-size:1.1rem;">
-          🎉 恭喜！目前考生【${candidate}】沒有任何累積錯題！<br>
-          <small style="color:#666;">（若需測試列印效果，可於錯題本頁面點擊「載入模擬錯題」後再行列印）</small>
-        </div>
-      ` : `
-        <div style="display:flex; flex-direction:column; gap:14px;">
-          ${errKeys.map((k, i) => {
-            const item = netErrors[k];
-            const heat = getHeatLevel(item.count);
-            return `
-              <div style="border:1px solid #444; border-radius:6px; padding:10px 14px; page-break-inside:avoid;">
-                <div style="display:flex; justify-content:space-between; margin-bottom:6px; font-weight:bold;">
-                  <span>#${i + 1}. [${heat.label}] ${item.title || k}</span>
-                  <span style="color:#C92A2A;">淨錯次數：${item.count} 次</span>
-                </div>
-                ${item.prompt ? `<div style="margin-bottom:6px; background:#F8F9FA; padding:6px;">題目：${item.prompt}</div>` : ''}
-                <div style="margin-bottom:4px; font-size:0.9rem; color:#A61E4D;">
-                  ❌ 原先錯誤答案：${item.wrongAnswer || '未填寫 / 選錯'}
-                </div>
-                <div style="margin-bottom:6px; font-size:0.9rem;">
-                  ✍️ 正確訂正手寫格：____________________________________________________
-                </div>
-                ${showAnswers ? `
-                  <div style="color:#2D6A4F; font-size:0.88rem; background:#EBFBEE; padding:6px; border-left:4px solid #40916C;">
-                    ✅ 正確答案：<strong>${item.correctAnswer || item.answer || ''}</strong><br>
-                    💡 考點規則：${item.rule || item.explanation || ''}
-                  </div>
-                ` : `
-                  <div style="font-size:0.85rem; color:#666;">
-                    💡 訂正思考筆記：__________________________________________________
-                  </div>
-                `}
-              </div>
-            `;
-          }).join('')}
-        </div>
-      `}
-    `;
+    return cover + bodyHtml;
   }
 
   return '';
@@ -4405,7 +4928,7 @@ function renderPrintSheetContent(mode, showAnswers, candidate, data) {
 
 window.setPrintMode = function(mode) {
   SoundFX.playClick();
-  AppState.printSheetMode = mode;
+  AppState.printSheetMode = mode === 'rev' ? 'revision' : mode;
   renderPrintPod();
 };
 
@@ -4423,6 +4946,1145 @@ window.triggerPrint = function() {
 function renderPrintPlaceholder() {
   renderPrintPod();
 }
+
+// =============================================================================
+// Phase A：🎯 KET 全真題庫方格考場 (view-arena) 核心模組
+// =============================================================================
+
+function matchesArenaUnitFilter(q, unitFilter, acc) {
+  if (unitFilter === 'onlyErrors') {
+    const stat = acc.questionStats ? acc.questionStats[q.code] : null;
+    const isNetError = stat && stat.net > 0;
+    const isInBook = acc.netErrors && acc.netErrors[q.code] && acc.netErrors[q.code].count > 0;
+    return Boolean(isNetError || isInBook);
+  }
+  if (unitFilter !== 'all') {
+    return q.unitId === unitFilter;
+  }
+  return true;
+}
+
+function matchesArenaDiffFilter(q, diffFilter) {
+  if (diffFilter === '1-2') return q.difficulty <= 2;
+  if (diffFilter === '3') return q.difficulty === 3;
+  if (diffFilter === '4-5') return q.difficulty >= 4;
+  return true;
+}
+
+// 取得當前篩選後的題庫題目清單
+function getArenaFilteredQuestions() {
+  const bank = window.KET_EXAM_BANK;
+  if (!bank || !Array.isArray(bank.questions)) return [];
+
+  const acc = AppState.accountData;
+  return bank.questions.filter(q =>
+    matchesArenaUnitFilter(q, AppState.arenaUnitFilter, acc) &&
+    (AppState.arenaPartFilter === 'all' || q.ketPart === AppState.arenaPartFilter) &&
+    matchesArenaDiffFilter(q, AppState.arenaDiffFilter)
+  );
+}
+
+// 計算 6 階淨錯熱度 class (netErr = err - ok)
+function getArenaHeatClass(errCnt, okCnt) {
+  if (errCnt === 0 && okCnt === 0) return 'heat-tie';
+  const netErr = errCnt - okCnt;
+  if (netErr >= 3) return 'heat-bad-heavy';
+  if (netErr === 2) return 'heat-bad-mid';
+  if (netErr === 1) return 'heat-bad-light';
+  if (netErr === 0) return 'heat-tie';
+  if (netErr === -1) return 'heat-ok-light';
+  return 'heat-ok-heavy'; // netErr <= -2
+}
+
+// 主渲染函式：KET 全真題庫方格考場
+function renderArenaPod() {
+  const container = document.getElementById('view-arena');
+  if (!container) return;
+
+  const bank = window.KET_EXAM_BANK || { ketParts: [], questions: [] };
+  const allQs = bank.questions || [];
+  const filteredQs = getArenaFilteredQuestions();
+  const acc = AppState.accountData;
+
+  // 防呆索引越界
+  if (AppState.arenaCurrentIndex >= filteredQs.length) {
+    AppState.arenaCurrentIndex = Math.max(0, filteredQs.length - 1);
+  }
+  const curIdx = AppState.arenaCurrentIndex;
+  const totalCount = filteredQs.length;
+  const currentQ = filteredQs[curIdx];
+
+  // 14 個官方 KET Part 清單 (RWP1~RWP7, LSP1~LSP5, SPP1~SPP2)
+  const defaultParts = [
+    { id: 'RWP1', name: 'RW Part 1 短訊/告示' },
+    { id: 'RWP2', name: 'RW Part 2 短文配對' },
+    { id: 'RWP3', name: 'RW Part 3 長文理解' },
+    { id: 'RWP4', name: 'RW Part 4 詞彙克漏字' },
+    { id: 'RWP5', name: 'RW Part 5 開放填空' },
+    { id: 'RWP6', name: 'WR Part 6 短訊寫作' },
+    { id: 'RWP7', name: 'WR Part 7 看圖寫故事' },
+    { id: 'LSP1', name: 'LS Part 1 圖片三選一' },
+    { id: 'LSP2', name: 'LS Part 2 表格填空' },
+    { id: 'LSP3', name: 'LS Part 3 長對話理解' },
+    { id: 'LSP4', name: 'LS Part 4 短對話主旨' },
+    { id: 'LSP5', name: 'LS Part 5 資訊配對' },
+    { id: 'SPP1', name: 'SP Part 1 考官問答' },
+    { id: 'SPP2', name: 'SP Part 2 五圖互動' }
+  ];
+  const ketParts = (bank.ketParts && bank.ketParts.length === 14) ? bank.ketParts : defaultParts;
+
+  // 依「當前選中單元」即時交叉計算每個 Part 與難度星等的真實題數（徹底修正顯示數字卻無題目的錯覺）
+  const unitFilteredQs = allQs.filter(q => matchesArenaUnitFilter(q, AppState.arenaUnitFilter, acc));
+  const partCounts = {};
+  unitFilteredQs.forEach(q => {
+    partCounts[q.ketPart] = (partCounts[q.ketPart] || 0) + 1;
+  });
+
+  const unitAndPartQs = unitFilteredQs.filter(q =>
+    AppState.arenaPartFilter === 'all' || q.ketPart === AppState.arenaPartFilter
+  );
+  const diffCounts = {
+    all: unitAndPartQs.length,
+    '1-2': unitAndPartQs.filter(q => matchesArenaDiffFilter(q, '1-2')).length,
+    '3': unitAndPartQs.filter(q => matchesArenaDiffFilter(q, '3')).length,
+    '4-5': unitAndPartQs.filter(q => matchesArenaDiffFilter(q, '4-5')).length
+  };
+
+  // 計算未消錯題總數
+  let errorCount = 0;
+  if (acc.questionStats) {
+    Object.keys(acc.questionStats).forEach(c => {
+      if (acc.questionStats[c].net > 0) errorCount++;
+    });
+  }
+
+  // 1. 雙層篩選膠囊列 HTML
+  const filterHtml = `
+    <div class="arena-filter-wrap">
+      <!-- 第一層：範圍單元 + 測驗模式 -->
+      <div class="arena-filter-row">
+        <span class="arena-row-label">📚 測驗單元：</span>
+        <div class="arena-pill-group">
+          <button class="arena-pill ${AppState.arenaUnitFilter === 'all' ? 'active' : ''}" onclick="setArenaUnitFilter('all')">
+            全部單元 <span class="pill-count">${allQs.length}</span>
+          </button>
+          <button class="arena-pill ${AppState.arenaUnitFilter === 'u1' ? 'active' : ''}" onclick="setArenaUnitFilter('u1')">
+            Unit 1 人物日常 <span class="pill-count">${allQs.filter(q => q.unitId === 'u1').length}</span>
+          </button>
+          <button class="arena-pill ${AppState.arenaUnitFilter === 'u2' ? 'active' : ''}" onclick="setArenaUnitFilter('u2')">
+            Unit 2 休閒時光 <span class="pill-count">${allQs.filter(q => q.unitId === 'u2').length}</span>
+          </button>
+          <button class="arena-pill ${AppState.arenaUnitFilter === 'u3' ? 'active' : ''}" onclick="setArenaUnitFilter('u3')">
+            Unit 3 美食饗宴 <span class="pill-count">${allQs.filter(q => q.unitId === 'u3').length}</span>
+          </button>
+          <button class="arena-pill ${AppState.arenaUnitFilter === 'rev' ? 'active' : ''}" onclick="setArenaUnitFilter('rev')">
+            Revision 總複習 <span class="pill-count">${allQs.filter(q => q.unitId === 'rev').length}</span>
+          </button>
+          <button class="arena-pill ${AppState.arenaUnitFilter === 'onlyErrors' ? 'active' : ''}" style="${errorCount > 0 ? 'border-color:#F43F5E;' : ''}" onclick="setArenaUnitFilter('onlyErrors')">
+            🔥 只練未消錯題 <span class="pill-count">${errorCount}</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 第二層：KET 官方 14 大 Part 分類膠囊 (即時連動上方單元數量) -->
+      <div class="arena-filter-row">
+        <span class="arena-row-label">🎯 官方考科：</span>
+        <div class="arena-pill-group">
+          <button class="arena-pill ${AppState.arenaPartFilter === 'all' ? 'active' : ''}" onclick="setArenaPartFilter('all')">
+            全部 Part <span class="pill-count">${unitFilteredQs.length}</span>
+          </button>
+          ${ketParts.map(p => {
+            const cnt = partCounts[p.id] || 0;
+            return `
+              <button class="arena-pill ${AppState.arenaPartFilter === p.id ? 'active' : ''} ${cnt === 0 ? 'is-empty' : ''}" onclick="setArenaPartFilter('${p.id}')">
+                ${p.fullName || p.name || p.id} <span class="pill-count">${cnt}</span>
+              </button>
+            `;
+          }).join('')}
+        </div>
+      </div>
+
+      <!-- 第三層：難度星等、做題模式切換與一鍵全部恢復未答 -->
+      <div class="arena-filter-row" style="justify-content:space-between;">
+        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+          <span class="arena-row-label">⭐ 難度星等：</span>
+          <div class="arena-pill-group">
+            <button class="arena-pill ${AppState.arenaDiffFilter === 'all' ? 'active' : ''}" onclick="setArenaDiffFilter('all')">全部 <span class="pill-count">${diffCounts.all}</span></button>
+            <button class="arena-pill ${AppState.arenaDiffFilter === '1-2' ? 'active' : ''} ${diffCounts['1-2'] === 0 ? 'is-empty' : ''}" onclick="setArenaDiffFilter('1-2')">★ 基礎 (1-2星) <span class="pill-count">${diffCounts['1-2']}</span></button>
+            <button class="arena-pill ${AppState.arenaDiffFilter === '3' ? 'active' : ''} ${diffCounts['3'] === 0 ? 'is-empty' : ''}" onclick="setArenaDiffFilter('3')">★★ 標準 (3星) <span class="pill-count">${diffCounts['3']}</span></button>
+            <button class="arena-pill ${AppState.arenaDiffFilter === '4-5' ? 'active' : ''} ${diffCounts['4-5'] === 0 ? 'is-empty' : ''}" onclick="setArenaDiffFilter('4-5')">★★★ 挑戰 (4-5星) <span class="pill-count">${diffCounts['4-5']}</span></button>
+          </div>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+          <button class="arena-pill ${AppState.arenaExamMode === 'instant' ? 'mode-active' : ''}" onclick="setArenaExamMode('instant')" title="每答一題立即批改並解鎖詳解">
+            ⚡ 單題即時批改
+          </button>
+          <button class="arena-pill ${AppState.arenaExamMode === 'mock' ? 'mode-active' : ''}" onclick="setArenaExamMode('mock')" title="純淨全真模擬，作答完全不給提示，交卷才對答案">
+            ⏱️ 純淨模擬考 (交卷對答案)
+          </button>
+          <button type="button" class="ac-btn ac-btn-sm ac-btn-cream" onclick="resetAllArenaProgress()" title="全部題目恢復成未答題狀態，綠字/紅字統計與 5 色錯題本 100% 保留">
+            🔄 全部恢復未答題
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // 若查無符合條件的題目
+  if (totalCount === 0 || !currentQ) {
+    container.innerHTML = `
+      ${filterHtml}
+      <div class="ket-exam-card" style="text-align:center; padding:40px 20px;">
+        <div style="font-size:2.8rem; margin-bottom:12px;">🏝️</div>
+        <h3 style="font-size:1.2rem; font-weight:900; color:var(--ac-wood); margin-bottom:8px;">目前篩選條件下尚無題目</h3>
+        <p style="font-size:0.9rem; color:var(--ac-wood-light); margin-bottom:16px;">請嘗試切換上方單元、Part 或難度星等膠囊查看更多題目！</p>
+        <button class="ac-btn ac-btn-green" onclick="setArenaUnitFilter('all'); setArenaPartFilter('all'); setArenaDiffFilter('all');">重置為全部題目</button>
+      </div>
+    `;
+    return;
+  }
+
+  // 2. 題號速跳抽屜盤按鈕清單 (Natural-webapp同款 48x44px 網格)
+  const drawerBtnsHtml = filteredQs.map((q, i) => {
+    const isCur = i === curIdx ? 'current' : '';
+    const isSessionDone = AppState.arenaSubmitted[q.code] === true || AppState.arenaRevealed[q.code] === true || (AppState.arenaExamMode === 'mock' && Boolean(AppState.arenaUserAnswers[q.code]));
+    const stats = (acc.questionStats && acc.questionStats[q.code]) || { ok: 0, err: 0, net: 0 };
+    const okCnt = stats.ok || 0;
+    const errCnt = stats.err || 0;
+    const heatCls = getArenaHeatClass(errCnt, okCnt);
+
+    return `
+      <button type="button" class="drawer-q-btn ${heatCls} ${isCur} ${isSessionDone ? 'session-done' : ''}" onclick="jumpArenaQuestion(${i})" title="第 ${i + 1} 題 [${q.code}]：答對 ${okCnt} 次 · 答錯 ${errCnt} 次 (淨錯 ${stats.net || 0})${isSessionDone ? ' · 本輪已作答' : ''}">
+        ${okCnt > 0 ? `<span class="q-badge-ok">${okCnt}</span>` : ''}
+        ${errCnt > 0 ? `<span class="q-badge-bad">${errCnt}</span>` : ''}
+        <span class="q-num-center">${i + 1}</span>
+      </button>
+    `;
+  }).join('');
+
+  // 3. 測驗頂部導覽列 (進度條 + 展開題號盤 + 快速切換)
+  const progressPct = Math.round(((curIdx + 1) / totalCount) * 100);
+  const headHtml = `
+    <div class="quiz-head">
+      <div class="quiz-nav-left">
+        <button type="button" class="ac-btn-icon" onclick="jumpToPod('dashboard', 'all')">← 返回戰情室</button>
+        <span style="font-weight:900; font-size:0.9rem; color:var(--ac-wood);">🎯 KET 全真考場</span>
+      </div>
+      <div class="progress" title="進度 ${progressPct}%"><i style="width: ${progressPct}%"></i></div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <button type="button" class="ac-btn-icon" ${curIdx === 0 ? 'disabled' : ''} onclick="jumpArenaQuestion(${curIdx - 1})">← 上一題</button>
+        <button type="button" class="count-badge-btn" onclick="toggleArenaDrawer()" title="展開/收合題號速跳盤">
+          🔢 第 ${curIdx + 1} / ${totalCount} 題 ${AppState.arenaDrawerOpen ? '▲' : '▾'}
+        </button>
+        ${(curIdx === totalCount - 1 && AppState.arenaExamMode === 'mock') ? `
+          <button type="button" class="ac-btn ac-btn-green" onclick="submitArenaMockExam()">🏁 交卷結算</button>
+        ` : `
+          <button type="button" class="ac-btn-icon" ${curIdx === totalCount - 1 ? 'disabled' : ''} onclick="jumpArenaQuestion(${curIdx + 1})">下一題 →</button>
+        `}
+      </div>
+    </div>
+
+    <!-- 頂部嵌入式折疊題號盤 (Grid Drawer) -->
+    <div id="quiz-grid-drawer" class="quiz-grid-drawer" style="display: ${AppState.arenaDrawerOpen ? 'block' : 'none'};">
+      <div class="grid-drawer-head">
+        <div class="drawer-legend-bar">
+          <span class="leg-item"><b class="leg-dot ok"></b> 綠小字=累計答對</span>
+          <span class="leg-item"><b class="leg-dot bad"></b> 紅小字=累計答錯</span>
+          <span class="leg-item"><b class="leg-dot red-shade"></b> 底色越紅代表淨錯越多</span>
+          <span class="leg-item"><b class="leg-dot" style="background:var(--ac-green-dark); width:14px; height:4px; border-radius:2px;"></b> 綠底條=本輪已作答</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:6px;">
+          <button type="button" class="ac-btn ac-btn-sm ac-btn-cream" onclick="resetAllArenaProgress()">🔄 全部恢復未答</button>
+          <button type="button" class="btn-close-drawer" onclick="toggleArenaDrawer()">✕</button>
+        </div>
+      </div>
+      <div class="drawer-q-grid">
+        ${drawerBtnsHtml}
+      </div>
+    </div>
+  `;
+
+  // 4. 純淨 KET 真考題目卡片渲染
+  const cardHtml = renderArenaQuestionCard(currentQ, curIdx, totalCount);
+
+  container.innerHTML = `
+    ${filterHtml}
+    ${headHtml}
+    ${cardHtml}
+  `;
+}
+
+// 渲染單道題目卡片 (含作答前零提示、作答互動、作答後四維度詳解與延伸學習重點)
+function renderArenaQuestionCard(q, idx, total) {
+  const acc = AppState.accountData;
+  const isMock = AppState.arenaExamMode === 'mock';
+  const isSubmitted = AppState.arenaSubmitted[q.code] === true;
+  const isRevealed = AppState.arenaRevealed[q.code] === true && !isSubmitted;
+  const showExplanation = isSubmitted || isRevealed;
+  const selfGrade = AppState.arenaSelfGraded[q.code];
+  const userAns = AppState.arenaUserAnswers[q.code];
+  const inErrorBook = acc.netErrors && acc.netErrors[q.code] && acc.netErrors[q.code].count > 0;
+  const isExtOpen = AppState.arenaExtensionOpen[q.code] === true;
+
+  // 1. 頂部標籤列
+  const tagsHtml = `
+    <div class="q-top-action-bar">
+      <div class="q-tags">
+        <span class="code-badge">${q.code}</span>
+        <span class="tag-part">${q.ketPartName || q.ketPart}</span>
+        <span class="tag-unit">${q.unitLabel || q.unitId.toUpperCase()}</span>
+        <span class="tag-stars">${'★'.repeat(q.difficulty || 3)}${'☆'.repeat(5 - (q.difficulty || 3))}</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <button class="ac-btn-icon" onclick="toggleArenaBookmark('${q.code}')" style="${inErrorBook ? 'color:var(--ac-red-dark); border-color:var(--ac-red-border);' : ''}">
+          ${inErrorBook ? '🔥 已在錯題本' : '＋ 存入錯題本'}
+        </button>
+      </div>
+    </div>
+  `;
+
+  // 2. 題目情境與提示指令 (100% 零提示！作答前絕不劇透)
+  const contextHtml = `
+    ${q.passageHtml ? `<div class="ket-passage-wrap">${q.passageHtml}</div>` : ''}
+    ${q.image ? `
+      <div style="text-align:center; margin:12px 0;">
+        <img src="${q.image}" alt="考卷圖片" style="max-width:100%; max-height:280px; object-fit:contain; border-radius:8px; border:2px solid var(--ac-wood-border);">
+      </div>
+    ` : ''}
+    ${q.instruction ? `<div class="ket-instruction">${q.instruction}</div>` : ''}
+    <div class="ket-prompt">${q.prompt}</div>
+  `;
+
+  // 3. 聽力考場播放器 (作答前 100% 鎖住隱藏逐字稿)
+  const isListening = q.section === 'listening' || (q.ketPart && q.ketPart.startsWith('LS'));
+  const audioPlayerHtml = isListening ? `
+    <div class="ket-audio-player-bar">
+      <span class="audio-label">🎧 考場錄音：</span>
+      <button type="button" class="ac-btn ac-btn-sm ac-btn-blue" onclick="playArenaAudio('${q.code}', 'double')">▶️ 播放考場錄音（英式雙遍）</button>
+      <button type="button" class="ac-btn ac-btn-sm" onclick="playArenaAudio('${q.code}', 1.0)">🔊 單遍播放</button>
+      <button type="button" class="ac-btn ac-btn-sm ac-btn-cream" onclick="playArenaAudio('${q.code}', 0.85)">🐢 0.85x 慢速</button>
+      <button type="button" class="ac-btn ac-btn-sm ac-btn-red" onclick="stopArenaAudio()">⏹️ 停止</button>
+    </div>
+  ` : '';
+
+  // 4. 作答交互區
+  let interactionHtml = '';
+
+  // A. 選擇題 (choice)
+  if (q.questionType === 'choice' && Array.isArray(q.options)) {
+    interactionHtml = `
+      <div class="ket-choices-list">
+        ${q.options.map(opt => {
+          let btnCls = 'ket-choice-btn';
+          const isSelected = userAns === opt.key;
+          if (isSelected) btnCls += ' selected';
+
+          if (isSubmitted) {
+            if (opt.key === q.answer) {
+              btnCls += ' correct';
+            } else if (isSelected && opt.key !== q.answer) {
+              btnCls += ' wrong';
+            }
+          }
+
+          const clickHandler = isSubmitted
+            ? ''
+            : (isMock
+                ? `onclick="selectArenaMockChoice('${q.code}', '${opt.key}')"`
+                : `onclick="answerArenaChoice('${q.code}', '${opt.key}')"`);
+
+          return `
+            <button type="button" class="${btnCls}" ${clickHandler} ${isSubmitted ? 'disabled' : ''}>
+              <span class="ket-opt-key">${opt.key}</span>
+              <span>${opt.text}</span>
+            </button>
+          `;
+        }).join('')}
+      </div>
+    `;
+  }
+  // B. 開放式填空題 (gap) - RW Part 5 / LS Part 2
+  else if (q.questionType === 'gap') {
+    const isCorrect = isSubmitted && (
+      selfGrade === 'ok' || (
+        selfGrade !== 'bad' && (
+          Array.isArray(q.answer)
+            ? q.answer.map(a => a.toLowerCase().trim()).includes((userAns || '').toLowerCase().trim())
+            : (userAns || '').toLowerCase().trim() === String(q.answer).toLowerCase().trim()
+        )
+      )
+    );
+    const ansDisplay = Array.isArray(q.answer) ? q.answer.join(' / ') : String(q.answer || '');
+
+    interactionHtml = `
+      <div class="ket-gap-row">
+        <label style="font-weight:900; color:var(--ac-wood);">✍️ 請填寫答案：</label>
+        <input type="text" id="arena-gap-input" class="ket-gap-input ${isSubmitted ? (isCorrect ? 'correct' : 'wrong') : ''}"
+          value="${userAns || ''}"
+          placeholder="填寫 1 個單字..."
+          ${(isSubmitted || isRevealed) ? 'disabled' : ''}
+          onkeydown="if(event.key==='Enter') submitArenaGap('${q.code}')">
+        ${(!isSubmitted && !isRevealed) ? `
+          <button class="ac-btn ac-btn-green" onclick="submitArenaGap('${q.code}')">送出答案</button>
+          <button type="button" class="btn-see-answer" onclick="revealArenaAnswer('${q.code}')" title="用紙筆寫在紙上時，直接看答案並自評對錯">👀 看答案 (紙筆自評)</button>
+        ` : ''}
+      </div>
+      ${isRevealed ? `
+        <div class="ket-selfgrade-banner">
+          <div style="font-weight:900; color:var(--ac-wood);">📋 紙筆核對標準答案：</div>
+          <div class="ket-selfgrade-ans">✅ ${ansDisplay}</div>
+          <div style="font-size:0.86rem; color:var(--ac-wood);">對照完後，請點選你的紙筆作答結果（將同步紀錄進紅綠方格與錯題本）：</div>
+          <div class="selfgrade-actions">
+            <button type="button" class="btn-self-ok" onclick="selfGradeArenaQuestion('${q.code}', true)">⭕ 我答對 (+1 綠字)</button>
+            <button type="button" class="btn-self-bad" onclick="selfGradeArenaQuestion('${q.code}', false)">❌ 我答錯 (+1 紅字 / 入錯題本)</button>
+          </div>
+        </div>
+      ` : ''}
+    `;
+  }
+  // C. 寫作題 (writing) - WR Part 6 / 7
+  else if (q.questionType === 'writing') {
+    const minWords = (q.ketPart === 'RWP7') ? 35 : 25;
+    const curText = userAns || '';
+    const curWords = curText.trim() ? curText.trim().split(/\s+/).length : 0;
+
+    interactionHtml = `
+      <div class="ket-writing-wrap">
+        <textarea id="arena-writing-input" class="ket-writing-textarea" placeholder="在此依考題撰寫完整英文短文 (達標字數後點擊送出，或於紙本手寫完點擊「看答案」自評)..."
+          oninput="onArenaWritingInput(this, ${minWords})" ${(isSubmitted || isRevealed) ? 'disabled' : ''}>${curText}</textarea>
+        <div class="ket-writing-meta" style="flex-wrap:wrap; gap:8px;">
+          <span id="arena-word-count-badge" class="ket-word-count-badge ${curWords >= minWords ? 'passed' : ''}">
+            目前字數：${curWords} 字 (官方標準：${minWords}+ 字)
+          </span>
+          ${(!isSubmitted && !isRevealed) ? `
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <button class="ac-btn ac-btn-green" onclick="submitArenaWriting('${q.code}')">完成寫作並對照檢核與範文</button>
+              <button type="button" class="btn-see-answer" onclick="revealArenaAnswer('${q.code}')">👀 看答案 (紙筆自評)</button>
+            </div>
+          ` : ''}
+        </div>
+        ${(isRevealed || isSubmitted) && !selfGrade ? `
+          <div class="ket-selfgrade-banner">
+            <div style="font-weight:900; color:var(--ac-wood);">📝 請比對下方 13/15 盾範文與三大檢查點進行自評：</div>
+            <div class="selfgrade-actions">
+              <button type="button" class="btn-self-ok" onclick="selfGradeArenaQuestion('${q.code}', true)">⭕ 我答對 / 達標 (+1 綠字)</button>
+              <button type="button" class="btn-self-bad" onclick="selfGradeArenaQuestion('${q.code}', false)">❌ 我答錯 / 需加強 (+1 紅字)</button>
+            </div>
+          </div>
+        ` : (selfGrade ? `
+          <div style="margin-top:8px; font-weight:900; color:${selfGrade === 'ok' ? '#15803D' : '#BE123C'};">
+            ${selfGrade === 'ok' ? '✅ 本輪自評結果：答對達標（已記入綠字統計）' : '❌ 本輪自評結果：尚須加強（已記入紅字統計與錯題本）'}
+          </div>
+        ` : '')}
+      </div>
+    `;
+  }
+  // D. 口說題 (speaking) - SP Part 1 / 2
+  else if (q.questionType === 'speaking') {
+    interactionHtml = `
+      <div style="margin:14px 0;">
+        <div style="font-size:0.88rem; color:var(--ac-wood); margin-bottom:8px;">
+          請先自己大聲開口練習回答，完成後點擊下方按鈕看 15 盾滿分範例並自評：
+        </div>
+        ${(!isSubmitted && !isRevealed) ? `
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <button class="ac-btn ac-btn-green" onclick="submitArenaSpeaking('${q.code}')">查看高分回答策略與詳解</button>
+            <button type="button" class="btn-see-answer" onclick="revealArenaAnswer('${q.code}')">👀 看答案 (自評流暢度)</button>
+          </div>
+        ` : ''}
+        ${(isRevealed || isSubmitted) && !selfGrade ? `
+          <div class="ket-selfgrade-banner">
+            <div style="font-weight:900; color:var(--ac-wood);">🎙️ 口說回答完畢，對照下方 13/15 盾範例後請自評：</div>
+            <div class="selfgrade-actions">
+              <button type="button" class="btn-self-ok" onclick="selfGradeArenaQuestion('${q.code}', true)">⭕ 我答對 / 表達流暢 (+1 綠字)</button>
+              <button type="button" class="btn-self-bad" onclick="selfGradeArenaQuestion('${q.code}', false)">❌ 我答錯 / 卡詞需加強 (+1 紅字)</button>
+            </div>
+          </div>
+        ` : (selfGrade ? `
+          <div style="margin-top:8px; font-weight:900; color:${selfGrade === 'ok' ? '#15803D' : '#BE123C'};">
+            ${selfGrade === 'ok' ? '✅ 本輪口說自評：流暢達標（已記入綠字統計）' : '❌ 本輪口說自評：卡詞需加強（已記入錯題本）'}
+          </div>
+        ` : '')}
+      </div>
+    `;
+  }
+
+  // 5. 交卷 / 點「看答案」後解鎖四維度詳解 + 延伸學習重點
+  let explanationHtml = '';
+  if (showExplanation && q.explanation) {
+    // 陷阱拆解 (遍歷 distractorAnalysis 或 commonTraps)
+    let trapsListHtml = '';
+    if (q.explanation.distractorAnalysis && typeof q.explanation.distractorAnalysis === 'object') {
+      trapsListHtml = Object.keys(q.explanation.distractorAnalysis).map(optKey => {
+        return `<div style="margin-bottom:4px;">${q.explanation.distractorAnalysis[optKey]}</div>`;
+      }).join('');
+    } else if (Array.isArray(q.explanation.commonTraps)) {
+      trapsListHtml = q.explanation.commonTraps.map(t => {
+        return `<div style="margin-bottom:4px;">• <strong>${t.wrong}：</strong>${t.whyWrong}</div>`;
+      }).join('');
+    } else if (q.explanation.traps) {
+      trapsListHtml = `<div>${q.explanation.traps}</div>`;
+    }
+
+    // 聽力逐字稿對照 (若為聽力題且已批改)
+    let tapescriptHtml = '';
+    if (isListening && Array.isArray(q.audioLines) && q.audioLines.length > 0) {
+      tapescriptHtml = `
+        <div class="exp-audio-tapescript">
+          <strong style="color:var(--ac-blue-dark);">📜 聽力逐字稿與關鍵定位句：</strong>
+          <div style="margin-top:6px; line-height:1.6;">
+            ${q.audioLines.map(line => {
+              const speaker = (typeof line === 'object' && line.speaker) ? `<strong>${line.speaker}:</strong> ` : '';
+              const text = (typeof line === 'object' && line.text) ? line.text : String(line);
+              const isClue = typeof line === 'object' && line.isClue;
+              const isTrap = typeof line === 'object' && line.isTrap;
+              const cls = isClue ? 'background:#E7F6E1; padding:2px 6px; border-radius:6px; border-left:3px solid #2D6A4F; margin:2px 0;'
+                : (isTrap ? 'background:#FCE4EC; padding:2px 6px; border-radius:6px; border-left:3px solid #C9184A; text-decoration:line-through; margin:2px 0;' : 'margin:2px 0;');
+              return `<div style="${cls}">${speaker}${text}</div>`;
+            }).join('')}
+          </div>
+          ${q.distractorXray && (q.distractorXray.correctClue || q.distractorXray.distractorTrap) ? `
+            <div style="margin-top:8px; padding-top:8px; border-top:1px dashed var(--ac-blue-border); font-size:0.86rem;">
+              ${q.distractorXray.correctClue ? `<div style="color:#166534;">🟢 得分關鍵句：${q.distractorXray.correctClue}</div>` : ''}
+              ${q.distractorXray.distractorTrap ? `<div style="color:#9F1239; margin-top:2px;">🔴 干擾陷阱句：<s>${q.distractorXray.distractorTrap}</s></div>` : ''}
+            </div>
+          ` : ''}
+        </div>
+      `;
+    }
+
+    // 寫作/口說 13 盾 vs 15 盾高分範文對照 (作答批改後解鎖)
+    let modelAnswersHtml = '';
+    if (q.modelAnswers) {
+      const m = q.modelAnswers;
+      modelAnswersHtml = `
+        <div style="background:#FFFDF7; border:2px solid var(--ac-green-border); border-radius:12px; padding:10px 14px; margin-bottom:10px;">
+          <strong style="color:var(--ac-green-dark);">🏆 劍橋 13 盾 vs 15 盾滿分範文對照：</strong>
+          ${Array.isArray(m.checklist) && m.checklist.length > 0 ? `
+            <div style="margin:6px 0; font-size:0.86rem; background:#F0FDF4; padding:6px 10px; border-radius:8px;">
+              <strong>📋 三大得分檢查點：</strong>
+              ${m.checklist.map(c => `<div>☑️ ${c}</div>`).join('')}
+            </div>
+          ` : ''}
+          ${m.band13 ? `
+            <div style="margin-top:6px; padding:8px; background:#FFF9E6; border-left:4px solid #F4A261; border-radius:6px;">
+              <strong>🛡️ 13 盾 Merit 穩定達標範文：</strong>
+              <p style="margin:4px 0;">${m.band13}</p>
+              <button type="button" class="ac-btn ac-btn-sm ac-btn-cream" onclick="TTSEngine.speak('${escapeJsStr(m.band13)}')">🔊 朗讀 13 盾範文</button>
+            </div>
+          ` : ''}
+          ${m.band15 ? `
+            <div style="margin-top:6px; padding:8px; background:#E7F6E1; border-left:4px solid #2D6A4F; border-radius:6px;">
+              <strong>👑 15 盾 Distinction 滿分範文：</strong>
+              <p style="margin:4px 0;">${m.band15}</p>
+              <button type="button" class="ac-btn ac-btn-sm ac-btn-green" onclick="TTSEngine.speak('${escapeJsStr(m.band15)}')">🔊 朗讀 15 盾範文</button>
+            </div>
+          ` : ''}
+        </div>
+      `;
+    }
+
+    // 延伸學習重點摺疊內容
+    const ext = q.extensionStudy;
+    let extensionBoxHtml = '';
+    if (ext && isExtOpen) {
+      extensionBoxHtml = `
+        <div class="ket-extension-box">
+          ${ext.synonyms && Array.isArray(ext.synonyms) ? `
+            <div class="ext-section">
+              <div class="ext-title">🔄 劍橋高頻同義詞家族：</div>
+              <ul>
+                ${ext.synonyms.map(syn => `<li>${syn}</li>`).join('')}
+              </ul>
+            </div>
+          ` : ''}
+
+          ${ext.grammarCompare ? `
+            <div class="ext-section">
+              <div class="ext-title">⚖️ Flyers 升 KET 必考盲點比較：</div>
+              <div style="white-space:pre-line; color:var(--ac-wood);">${ext.grammarCompare}</div>
+            </div>
+          ` : ''}
+
+          ${ext.examVariations ? `
+            <div class="ext-section">
+              <div class="ext-title">🔮 下次考場可能會這樣變形考你：</div>
+              <div style="white-space:pre-line; color:var(--ac-wood);">${ext.examVariations}</div>
+            </div>
+          ` : ''}
+        </div>
+      `;
+    }
+
+    explanationHtml = `
+      <div class="ket-explanation-panel">
+        <h4 style="font-size:1.05rem; font-weight:900; color:var(--ac-green-dark); margin-bottom:12px;">
+          🎯 劍橋官方四維度核心考點詳解：
+        </h4>
+
+        ${q.explanation.examPurpose ? `
+          <div class="exp-block-purpose">
+            <strong>🎯 這題考官想考什麼？（出題目的）</strong>
+            <p style="margin-top:4px;">${q.explanation.examPurpose}</p>
+          </div>
+        ` : ''}
+
+        ${q.explanation.correctReason ? `
+          <div class="exp-block-correct">
+            <strong>✅ 正解證據與解題邏輯</strong>
+            <p style="margin-top:4px;">${q.explanation.correctReason}</p>
+          </div>
+        ` : ''}
+
+        ${trapsListHtml ? `
+          <div class="exp-block-traps">
+            <strong>❌ 其他選項為什麼錯？陷阱拆解</strong>
+            <div style="margin-top:4px;">${trapsListHtml}</div>
+          </div>
+        ` : ''}
+
+        ${modelAnswersHtml}
+        ${tapescriptHtml}
+
+        <!-- 💡 延伸學習重點可折疊卡片按鈕 + 重練按鈕 -->
+        <div style="margin-top:12px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+          ${ext ? `
+            <button type="button" class="btn-extension-toggle" onclick="toggleArenaExtension('${q.code}')">
+              💡 延伸學習重點 ${isExtOpen ? '▲' : '▾'}
+            </button>
+          ` : '<span></span>'}
+          <button type="button" class="ac-btn ac-btn-sm ac-btn-cream" onclick="retryArenaQuestion('${q.code}')" title="清除本次作答畫面重新挑戰（歷史紅綠計數會保留累積）">
+            🔄 再重練一次本題
+          </button>
+        </div>
+        ${extensionBoxHtml}
+      </div>
+    `;
+  }
+
+  const bottomNavHtml = `
+    <div class="arena-bottom-nav">
+      <div class="arena-bottom-nav-group">
+        <button type="button" class="ac-btn-icon" ${idx === 0 ? 'disabled' : ''} onclick="jumpArenaQuestion(${idx - 1}, true)">← 上一題</button>
+        <button type="button" class="count-badge-btn" onclick="toggleArenaDrawer()" title="展開/收合題號速跳盤">
+          🔢 第 ${idx + 1} / ${total} 題
+        </button>
+      </div>
+      <div class="arena-bottom-nav-group">
+        <button type="button" class="ac-btn ac-btn-sm ac-btn-cream" onclick="retryArenaQuestion('${q.code}')">🔄 重練本題</button>
+        ${(idx === total - 1 && isMock) ? `
+          <button type="button" class="ac-btn ac-btn-green" onclick="submitArenaMockExam()">🏁 交卷結算</button>
+        ` : `
+          <button type="button" class="ac-btn ac-btn-sm ac-btn-green" ${idx === total - 1 ? 'disabled' : ''} onclick="jumpArenaQuestion(${idx + 1}, true)">下一題 →</button>
+        `}
+      </div>
+    </div>
+  `;
+
+  return `
+    <article class="ket-exam-card">
+      ${tagsHtml}
+      ${contextHtml}
+      ${audioPlayerHtml}
+      ${interactionHtml}
+      ${explanationHtml}
+      ${bottomNavHtml}
+    </article>
+  `;
+}
+
+// -----------------------------------------------------------------------------
+// KET 全真題庫考場操作與互動控制器 (Global Window Actions)
+// -----------------------------------------------------------------------------
+
+// 切換單元篩選
+window.setArenaUnitFilter = function(unit) {
+  SoundFX.playClick();
+  AppState.arenaUnitFilter = unit;
+  AppState.arenaCurrentIndex = 0;
+  renderArenaPod();
+};
+
+// 切換 Part 官方考科篩選
+window.setArenaPartFilter = function(part) {
+  SoundFX.playClick();
+  AppState.arenaPartFilter = part;
+  AppState.arenaCurrentIndex = 0;
+  renderArenaPod();
+};
+
+// 切換難度星等篩選
+window.setArenaDiffFilter = function(diff) {
+  SoundFX.playClick();
+  AppState.arenaDiffFilter = diff;
+  AppState.arenaCurrentIndex = 0;
+  renderArenaPod();
+};
+
+// 切換做題模式 (instant: 即時判分 / mock: 純淨模考)
+window.setArenaExamMode = function(mode) {
+  SoundFX.playClick();
+  AppState.arenaExamMode = mode;
+  renderArenaPod();
+};
+
+// 展開 / 收合題號速跳盤
+window.toggleArenaDrawer = function() {
+  SoundFX.playClick();
+  AppState.arenaDrawerOpen = !AppState.arenaDrawerOpen;
+  const drawerEl = document.getElementById('quiz-grid-drawer');
+  if (drawerEl) {
+    drawerEl.style.display = AppState.arenaDrawerOpen ? 'block' : 'none';
+  }
+};
+
+// 快速跳至指定題號（scrollToCard=true 時平滑捲回考題頂部）
+window.jumpArenaQuestion = function(idx, scrollToCard = false) {
+  SoundFX.playClick();
+  stopArenaAudio();
+  AppState.arenaCurrentIndex = idx;
+  renderArenaPod();
+  if (scrollToCard) {
+    const head = document.querySelector('#view-arena .quiz-head');
+    if (head && typeof head.scrollIntoView === 'function') {
+      head.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+};
+
+// 更新題目答題統計數據 (ok / err / net)
+function recordArenaQuestionResult(code, isCorrect, wrongAnswer, correctAnswer, explanation) {
+  const acc = AppState.accountData;
+  if (!acc.questionStats) acc.questionStats = {};
+  if (!acc.questionStats[code]) {
+    acc.questionStats[code] = { ok: 0, err: 0, net: 0, lastAt: 0 };
+  }
+
+  const bank = window.KET_EXAM_BANK;
+  const q = bank && Array.isArray(bank.questions) ? bank.questions.find(item => item.code === code) : null;
+
+  const stat = acc.questionStats[code];
+  if (isCorrect) {
+    stat.ok += 1;
+    // 消減錯題本中的紅點
+    if (acc.netErrors && acc.netErrors[code] && acc.netErrors[code].count > 0) {
+      acc.netErrors[code].count = Math.max(0, acc.netErrors[code].count - 1);
+      acc.netErrors[code].timestamp = Date.now();
+    }
+  } else {
+    stat.err += 1;
+    // 記入 5 色錯題本（對齊單元、科別與時間戳，支援從錯題本篩選並一鍵跳回原題）
+    if (!acc.netErrors) acc.netErrors = {};
+    const prev = acc.netErrors[code];
+    acc.netErrors[code] = {
+      id: code,
+      count: (prev ? (prev.count || 0) : 0) + 1,
+      itemType: 'ket_exam',
+      unit: q ? (q.unitId || 'u1') : (prev ? prev.unit : 'u1'),
+      type: q ? (q.section === 'listening' ? 'listening' : 'reading') : (prev ? prev.type : 'reading'),
+      title: q ? `${q.ketPartName || q.ketPart} [${code}]` : `KET 題庫 [${code}]`,
+      prompt: q ? (q.prompt || '') : (prev ? prev.prompt : ''),
+      wrongAnswer: wrongAnswer || '選錯',
+      correctAnswer: correctAnswer || '',
+      rule: explanation || '請詳閱四維度解題邏輯',
+      timestamp: Date.now(),
+      lastUpdated: new Date().toISOString()
+    };
+  }
+
+  stat.net = stat.err - stat.ok;
+  stat.lastAt = Date.now();
+
+  AccountManager.saveAccount(AppState.currentAccount, acc);
+  updateHeaderDisplay();
+}
+
+// 選擇題即時批改 (instant 模式)
+window.answerArenaChoice = function(code, selectedKey) {
+  const bank = window.KET_EXAM_BANK;
+  if (!bank || !Array.isArray(bank.questions)) return;
+  const q = bank.questions.find(item => item.code === code);
+  if (!q) return;
+
+  AppState.arenaUserAnswers[code] = selectedKey;
+  AppState.arenaSubmitted[code] = true;
+
+  const isCorrect = selectedKey === q.answer;
+  const acc = AppState.accountData;
+
+  if (isCorrect) {
+    SoundFX.playCorrect();
+    VisualFX.burstParticles(window.innerWidth / 2, window.innerHeight / 2, '🎉 答對了！+50 哩');
+    acc.nookMiles += 50;
+  } else {
+    SoundFX.playWrong();
+  }
+
+  recordArenaQuestionResult(
+    code,
+    isCorrect,
+    selectedKey,
+    q.answer,
+    q.explanation ? q.explanation.correctReason : ''
+  );
+
+  renderArenaPod();
+};
+
+// 選擇題暫存選項 (mock 模擬考模式)
+window.selectArenaMockChoice = function(code, selectedKey) {
+  SoundFX.playClick();
+  AppState.arenaUserAnswers[code] = selectedKey;
+  renderArenaPod();
+};
+
+// 開放式填空送出
+window.submitArenaGap = function(code) {
+  const inputEl = document.getElementById('arena-gap-input');
+  if (!inputEl) return;
+  const val = inputEl.value.trim();
+  if (!val) {
+    alert('請先輸入答案單字！');
+    return;
+  }
+
+  const bank = window.KET_EXAM_BANK;
+  const q = bank.questions.find(item => item.code === code);
+  if (!q) return;
+
+  AppState.arenaUserAnswers[code] = val;
+
+  // 若為 instant 模式立即判分
+  if (AppState.arenaExamMode === 'instant') {
+    AppState.arenaSubmitted[code] = true;
+    const accepted = Array.isArray(q.answer)
+      ? q.answer.map(a => a.toLowerCase().trim())
+      : [String(q.answer).toLowerCase().trim()];
+    const isCorrect = accepted.includes(val.toLowerCase());
+
+    const acc = AppState.accountData;
+    if (isCorrect) {
+      SoundFX.playCorrect();
+      VisualFX.burstParticles(window.innerWidth / 2, window.innerHeight / 2, '🎉 填空全對！+50 哩');
+      acc.nookMiles += 50;
+    } else {
+      SoundFX.playWrong();
+    }
+
+    recordArenaQuestionResult(
+      code,
+      isCorrect,
+      val,
+      Array.isArray(q.answer) ? q.answer.join(' / ') : q.answer,
+      q.explanation ? q.explanation.correctReason : ''
+    );
+  } else {
+    SoundFX.playClick();
+  }
+
+  renderArenaPod();
+};
+
+// 寫作題即時字數統計
+window.onArenaWritingInput = function(textarea, minWords) {
+  const text = textarea.value.trim();
+  const words = text ? text.split(/\s+/).length : 0;
+  const badge = document.getElementById('arena-word-count-badge');
+  if (badge) {
+    badge.textContent = `目前字數：${words} 字 (官方標準：${minWords}+ 字)`;
+    badge.classList.toggle('passed', words >= minWords);
+  }
+};
+
+// 寫作題完成對照
+window.submitArenaWriting = function(code) {
+  const textarea = document.getElementById('arena-writing-input');
+  if (textarea) {
+    AppState.arenaUserAnswers[code] = textarea.value;
+  }
+  AppState.arenaSubmitted[code] = true;
+  SoundFX.playFanfare();
+  VisualFX.burstParticles(window.innerWidth / 2, window.innerHeight / 2, '✍️ 寫作完成！解鎖範文與檢核清單');
+  AppState.accountData.nookMiles += 80;
+  AccountManager.saveAccount(AppState.currentAccount, AppState.accountData);
+  updateHeaderDisplay();
+  renderArenaPod();
+};
+
+// 口說題對照詳解
+window.submitArenaSpeaking = function(code) {
+  AppState.arenaSubmitted[code] = true;
+  SoundFX.playCorrect();
+  AppState.accountData.nookMiles += 60;
+  AccountManager.saveAccount(AppState.currentAccount, AppState.accountData);
+  updateHeaderDisplay();
+  renderArenaPod();
+};
+
+// 紙筆作答：「👀 看答案」解鎖標準解答、四維詳解與「我答對 / 我答錯」自評按鈕（尚未計分）
+window.revealArenaAnswer = function(code) {
+  SoundFX.playClick();
+  const gapInput = document.getElementById('arena-gap-input');
+  const writingInput = document.getElementById('arena-writing-input');
+  if (gapInput && gapInput.value) AppState.arenaUserAnswers[code] = gapInput.value;
+  if (writingInput && writingInput.value) AppState.arenaUserAnswers[code] = writingInput.value;
+
+  AppState.arenaRevealed[code] = true;
+  renderArenaPod();
+};
+
+// 紙筆 / 口說 / 寫作自評紀錄：「⭕ 我答對」或「❌ 我答錯」（即時更新方格綠紅計數與錯題本）
+window.selfGradeArenaQuestion = function(code, isCorrect) {
+  const bank = window.KET_EXAM_BANK;
+  const q = bank && Array.isArray(bank.questions) ? bank.questions.find(item => item.code === code) : null;
+  if (!q) return;
+
+  AppState.arenaSubmitted[code] = true;
+  delete AppState.arenaRevealed[code];
+  AppState.arenaSelfGraded[code] = isCorrect ? 'ok' : 'bad';
+
+  const typedAns = (AppState.arenaUserAnswers[code] || '').trim();
+  if (!typedAns) {
+    AppState.arenaUserAnswers[code] = isCorrect ? '紙筆自評：答對' : '紙筆自評：答錯';
+  }
+
+  const acc = AppState.accountData;
+  if (isCorrect) {
+    SoundFX.playCorrect();
+    VisualFX.burstParticles(window.innerWidth / 2, window.innerHeight / 2, '⭕ 自評答對！綠字 +1 (+50哩)');
+    acc.nookMiles += 50;
+  } else {
+    SoundFX.playWrong();
+    VisualFX.burstParticles(window.innerWidth / 2, window.innerHeight / 2, '📝 已記錄紅字並收入錯題本');
+  }
+
+  recordArenaQuestionResult(
+    code,
+    isCorrect,
+    typedAns || (isCorrect ? '紙筆自評：答對' : '紙筆自評：答錯'),
+    Array.isArray(q.answer) ? q.answer.join(' / ') : (q.answer || '參照範文檢核'),
+    q.explanation ? q.explanation.correctReason : ''
+  );
+
+  renderArenaPod();
+};
+
+// 全部題目恢復未答題狀態（只清本輪畫面暫存，100% 保留紅綠次數統計與 5 色錯題本）
+window.resetAllArenaProgress = function() {
+  SoundFX.playClick();
+  stopArenaAudio();
+  AppState.arenaSubmitted = {};
+  AppState.arenaUserAnswers = {};
+  AppState.arenaRevealed = {};
+  AppState.arenaSelfGraded = {};
+  AppState.arenaExtensionOpen = {};
+  AppState.arenaCurrentIndex = 0;
+  VisualFX.burstParticles(window.innerWidth / 2, window.innerHeight / 2, '🔄 全部恢復未答題狀態！（錯題與紅綠紀錄已保留）');
+  renderArenaPod();
+};
+
+// 模擬考模式交卷結算
+window.submitArenaMockExam = function() {
+  const bank = window.KET_EXAM_BANK;
+  if (!bank || !Array.isArray(bank.questions)) return;
+  const questions = getArenaFilteredQuestions();
+
+  if (!confirm(`確定要交卷結算目前篩選的 ${questions.length} 道試題嗎？`)) return;
+
+  let correctCount = 0;
+  const acc = AppState.accountData;
+
+  questions.forEach(q => {
+    AppState.arenaSubmitted[q.code] = true;
+    delete AppState.arenaRevealed[q.code];
+    const userVal = (AppState.arenaUserAnswers[q.code] || '').trim();
+
+    let isCorrect = false;
+    if (q.questionType === 'choice') {
+      isCorrect = userVal === q.answer;
+    } else if (q.questionType === 'gap') {
+      const accepted = Array.isArray(q.answer)
+        ? q.answer.map(a => a.toLowerCase().trim())
+        : [String(q.answer).toLowerCase().trim()];
+      isCorrect = accepted.includes(userVal.toLowerCase());
+    } else {
+      isCorrect = true;
+      AppState.arenaSelfGraded[q.code] = 'ok';
+    }
+
+    if (isCorrect) correctCount++;
+    recordArenaQuestionResult(
+      q.code,
+      isCorrect,
+      userVal || '未作答',
+      Array.isArray(q.answer) ? q.answer.join(' / ') : q.answer,
+      q.explanation ? q.explanation.correctReason : ''
+    );
+  });
+
+  const pct = Math.round((correctCount / questions.length) * 100);
+  SoundFX.playFanfare();
+  VisualFX.burstParticles(window.innerWidth / 2, window.innerHeight / 2, `🏁 模擬考交卷！得分率 ${pct}%`);
+  acc.nookMiles += correctCount * 50;
+  AccountManager.saveAccount(AppState.currentAccount, acc);
+  updateHeaderDisplay();
+
+  alert(`🏁 模擬考結算完成！\n總題數：${questions.length} 題\n答對題數：${correctCount} 題\n得分率：${pct}%\n\n所有題目的四維度詳解與延伸學習重點已全部解鎖！`);
+  renderArenaPod();
+};
+
+// 切換 [💡 延伸學習重點] 展開/收合
+window.toggleArenaExtension = function(code) {
+  SoundFX.playClick();
+  AppState.arenaExtensionOpen[code] = !AppState.arenaExtensionOpen[code];
+  renderArenaPod();
+};
+
+// 清除畫面作答重練本題（歷史紅綠次數累計保留）
+window.retryArenaQuestion = function(code) {
+  SoundFX.playClick();
+  delete AppState.arenaSubmitted[code];
+  delete AppState.arenaUserAnswers[code];
+  delete AppState.arenaRevealed[code];
+  delete AppState.arenaSelfGraded[code];
+  renderArenaPod();
+};
+
+// 由錯題本或外部錨點直接跳轉至 KET 全真模考場指定題號
+window.jumpToArenaByCode = function(code) {
+  SoundFX.playClick();
+  stopArenaAudio();
+  AppState.arenaUnitFilter = 'all';
+  AppState.arenaPartFilter = 'all';
+  AppState.arenaDiffFilter = 'all';
+  AppState.arenaExamMode = 'instant';
+
+  const bank = window.KET_EXAM_BANK;
+  const list = bank && Array.isArray(bank.questions) ? bank.questions : [];
+  const targetIdx = list.findIndex(item => item.code === code);
+  AppState.arenaCurrentIndex = targetIdx >= 0 ? targetIdx : 0;
+
+  // 清空當次暫存作答以便重新作答消錯
+  delete AppState.arenaSubmitted[code];
+  delete AppState.arenaUserAnswers[code];
+  delete AppState.arenaRevealed[code];
+  delete AppState.arenaSelfGraded[code];
+
+  AppState.currentTab = 'arena';
+  document.querySelectorAll('.nav-tab').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.tab === 'arena');
+  });
+  renderCurrentView();
+};
+
+// 存入 / 移出錯題本切換
+window.toggleArenaBookmark = function(code) {
+  SoundFX.playClick();
+  const acc = AppState.accountData;
+  if (!acc.netErrors) acc.netErrors = {};
+
+  const bank = window.KET_EXAM_BANK;
+  const q = bank && bank.questions ? bank.questions.find(item => item.code === code) : null;
+
+  if (acc.netErrors[code] && acc.netErrors[code].count > 0) {
+    acc.netErrors[code].count = 0;
+    acc.netErrors[code].timestamp = Date.now();
+    VisualFX.burstParticles(window.innerWidth / 2, window.innerHeight / 2, '已從錯題本移出！');
+  } else {
+    acc.netErrors[code] = {
+      id: code,
+      count: 1,
+      itemType: 'ket_exam',
+      unit: q ? (q.unitId || 'u1') : 'u1',
+      type: q ? (q.section === 'listening' ? 'listening' : 'reading') : 'reading',
+      title: q ? `${q.ketPartName || q.ketPart} [${code}]` : `KET 題目 [${code}]`,
+      prompt: q ? (q.prompt || '') : '',
+      wrongAnswer: '手動標記',
+      correctAnswer: q ? (Array.isArray(q.answer) ? q.answer.join(' / ') : q.answer) : '',
+      rule: q && q.explanation ? q.explanation.correctReason : '手動收藏複習',
+      timestamp: Date.now(),
+      lastUpdated: new Date().toISOString()
+    };
+    VisualFX.burstParticles(window.innerWidth / 2, window.innerHeight / 2, '🔥 已存入 5 色錯題本！');
+  }
+
+  AccountManager.saveAccount(AppState.currentAccount, acc);
+  updateHeaderDisplay();
+  renderArenaPod();
+};
+
+// 停止雙角色考場錄音播放
+let arenaAudioAbort = false;
+window.stopArenaAudio = function() {
+  arenaAudioAbort = true;
+  if (typeof speechSynthesis !== 'undefined') speechSynthesis.cancel();
+};
+
+// 播放雙角色英式考場音訊（不唸出說話者名稱，自動男女音高區分，支援雙遍/單遍/0.85x慢速）
+window.playArenaAudio = function(code, mode) {
+  SoundFX.playClick();
+  const bank = window.KET_EXAM_BANK;
+  if (!bank || !Array.isArray(bank.questions)) return;
+  const q = bank.questions.find(item => item.code === code);
+  if (!q) return;
+
+  arenaAudioAbort = false;
+  if (typeof speechSynthesis !== 'undefined') speechSynthesis.cancel();
+
+  const rate = mode === 0.85 ? 0.85 : 1.0;
+  const rawLines = (Array.isArray(q.audioLines) && q.audioLines.length > 0)
+    ? q.audioLines
+    : [{ speaker: 'Examiner', role: 'female', text: q.prompt || 'Listening test prompt' }];
+
+  // 解析每句的說話者性別/音調與純淨台詞
+  const parsedLines = rawLines.map(line => {
+    if (typeof line === 'object' && line.text) {
+      const spLower = (line.speaker || '').toLowerCase();
+      const isMale = line.role === 'male' || /boy|man|simon|tom|leo|dad|uncle|freddy|hasan|mr|interviewer/i.test(spLower);
+      return { text: line.text, gender: isMale ? 'male' : 'female', pitch: isMale ? 0.90 : 1.08 };
+    }
+    const str = String(line);
+    const m = str.match(/^([^:：]+)[:：]\s*(.+)$/);
+    if (m) {
+      const sp = m[1].trim();
+      const isMale = /boy|man|simon|tom|leo|dad|uncle|freddy|hasan|mr/i.test(sp);
+      return { text: m[2].trim(), gender: isMale ? 'male' : 'female', pitch: isMale ? 0.90 : 1.08 };
+    }
+    return { text: str, gender: 'female', pitch: 1.05 };
+  });
+
+  function playPass(passNum, onComplete) {
+    let idx = 0;
+    function nextLine() {
+      if (arenaAudioAbort) return;
+      if (idx >= parsedLines.length) {
+        if (onComplete) onComplete();
+        return;
+      }
+      const item = parsedLines[idx++];
+      TTSEngine.speak(item.text, {
+        rate,
+        pitch: item.pitch,
+        gender: item.gender,
+        onEnd: () => {
+          setTimeout(nextLine, 260);
+        }
+      });
+    }
+    nextLine();
+  }
+
+  if (mode === 'double') {
+    playPass(1, () => {
+      if (!arenaAudioAbort) {
+        setTimeout(() => playPass(2, null), 1200);
+      }
+    });
+  } else {
+    playPass(1, null);
+  }
+};
 
 // =============================================================================
 // 輔助函式 (Helper Utilities)

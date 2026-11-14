@@ -3,15 +3,15 @@
 ⚡ 0. 當下狀態快照 (TL;DR Current Snapshot)
 --------------------------------------------------------------------------------
 - 建立日期：2026-11-12
-- 最後更新：2026-11-13
-- 當前狀態：Phase 6 完工（iPhone 15 Pro 直向手機模式 393×852、Firebase Realtime Database 跨設備雙向雲端同步、全教材 35 幅高解析插圖與全單元 206 項測試 100% PASS，已自動建庫部署至 GitHub Pages！）
+- 最後更新：2026-11-14
+- 當前狀態：Phase A ~ G 全數完工並正式部署 GitHub Pages（`data/ket_exam_bank.js` **154 題 / 550.6 KB**，`Unit 1/2/3` 各自 100% 覆蓋全部 14 個官方 KET Part；`Rex` 與 `Hugo` 帳號已執行雲端與本機 `LAUNCH_RESET_EPOCH` 正式上線歸零，保留 `test1`/`test2` 測試沙盒）
 - 線上網址 (GitHub Pages)：https://ddd8836203.github.io/cambridge-ket-island/
 - GitHub 倉庫：https://github.com/ddd8836203/cambridge-ket-island
 - 適用對象：Rex (國小六年級)、Hugo (國小五年級)、家長/教學人員、維護 AI Agent
 - 目標檢定：2 個月（60 天）內參加劍橋英檢 A2 Key (KET)，奪取 **13 個盾牌以上（Cambridge Scale 135~142+ 分 / Grade B Merit ~ Grade A Distinction，整體答對率 ≥ 82%）**
 - 下一步待辦 (Next Actions)：
-  1. Rex 與 Hugo 開始使用兩台 iPad 進行每日 20 分鐘單元闖關與 5 色錯題消滅特訓。
-  2. 後續依排程擴充 Unit 4 ~ Unit 12 題庫。
+  1. Rex 與 Hugo 正式於線上版開始 154 題全真方格考場與 A4 實體考卷特訓。
+  2. 後續視學習進度擴充 Unit 4 ~ Unit 12 題庫。
 --------------------------------------------------------------------------------
 
 🧭 一、錨點索引大綱 (Indexed Outline — 標題 + 一句話結論)
@@ -24,6 +24,13 @@
 - [#GOAL-6] Phase 4 完工驗收與交付成果：閱寫雙欄考場、聽力雙人劇場與口說模擬室 100% 通過驗收 (verify_phase_4.js 13 PASS)。
 - [#GOAL-7] Phase 5 完工驗收與交付成果：5 色淨錯熱力階梯消錯重練、Revision 71 分闖關與 @media print A4 實體考卷列印引擎 100% 通過驗收 (verify_phase_5.js 8 PASS)。
 - [#GOAL-8] Phase 6 完工驗收與交付成果：iPhone 15 Pro 手機模式、Firebase 跨設備雙向雲端同步與全系統 206 項 E2E 測試 100% 通過 (verify_phase_6_e2e.js 17 PASS)。
+- [#GOAL-9] Phase A 完工驗收與交付成果：KET 全真題庫方格考場 (#view-arena)、48x44px 答題熱度速跳方格抽屜盤、四維度詳解與 [💡 延伸學習重點 ▾] 引擎 100% 通過驗收 (verify_phase_a.js 17 PASS)。
+- [#GOAL-10] Phase B 完工驗收與交付成果：Unit 1 100% 獨立自足・純淨真考題庫 (34 題) 覆蓋 9 大核心 Part，零課本依賴且通過 verify_phase_b.js 全檢。
+- [#GOAL-11] Phase C 完工驗收與交付成果：Unit 2 100% 獨立自足・純淨真考題庫 (32 題) 覆蓋 8 大核心 Part，補齊 LSP4/LSP5/RWP6 並通過 verify_phase_c.js 全檢。
+- [#GOAL-12] Phase D 完工與全系統總驗收成果：Unit 3 + Revision (34 題) 合併為 100 題滿血題庫覆蓋 14 個官方 Part，完成錯題本回流考場互通與 100 題無劇透壓測（待本機實測確認後推送 GitHub）。
+- [#GOAL-13] Phase E 考場 UX 與紙筆自評升級完工：新增考卡底部上一題/下一題導覽、全鍵入與口說寫作題「看答案 ➔ 我答對 / 我答錯」自評閉環、一鍵恢復本輪未答（保留歷史紅綠計數與錯題本），及依當前單元即時計算 14 Part 膠囊數字。
+- [#GOAL-14] Phase F Unit 1–3 全 14 大 Part 零缺口題庫擴充完工：補齊 54 題（U1 +15 ➔ 49 題、U2 +17 ➔ 49 題、U3 +22 ➔ 50 題），合併為 154 題（550.6 KB）實現三大單元 100% 全 14 Part 零空膠囊覆蓋。
+- [#GOAL-15] Phase G 官方 Cambridge A2 Key (KET) A4 列印引擎完工：全面整合 `KET_EXAM_BANK`、實作同篇共享閱讀文章自動去重合併、消除教科書半截殘題、支援 Paper 1–3 專項卷、教師詳解暨聽力逐字稿卷與個人化 KET 錯題重練考卷。
 
 ================================================================================
 📖 二、單一真實來源細節 (Single-Source Detailed Specifications)
@@ -153,3 +160,96 @@
      - 全系統 35 幅高解析插圖（12 幅跨頁原圖 + 23 張裁切題目圖）100% 存在且有效。
      - 全單元 58 核心詞彙與 35 題常犯錯改錯題 100% 邏輯閉環。
 - **驗收結果**：`node verify_phase_6_e2e.js` 17 項斷言 100% PASS；全系統 6 階段累計 206 項測試全檢通過。
+
+---
+
+### [#GOAL-9] Phase A 完工驗收與交付成果 (Phase A KET Arena & 4D Explanation)
+- **實作模組與成果**：
+  1. **KET 全真題庫方格考場 (`#view-arena`)**：
+     - 主導覽加入 `🎯 KET 全真題庫` 分頁，戰情室頂部增設顯眼動森快捷開考橫幅。
+     - 雙層篩選膠囊：單元（`all`, `u1`, `u2`, `u3`, `rev`, `onlyErrors`）、KET 官方 14 大 Part（`RWP1`~`RWP7`, `LSP1`~`LSP5`, `SPP1`~`SPP2`，動態顯示各分類目前題數）、難度星等（`1-2`、`3`、`4-5`）。
+     - 支援模式切換：`⚡ 單題即時批改` vs `⏱️ 純淨模擬考 (交卷才對答案)`。
+  2. **《自然學習網頁》同款 48x44px 折疊速跳題號方格盤 (`#quiz-grid-drawer`)**：
+     - 每個方格顯示中央粗體題號、左上角綠色答對次數 (`.q-badge-ok`)、右上角紅色答錯次數 (`.q-badge-bad`)。
+     - 6 階淨錯熱度階梯底色（`netErr = err - ok`：`heat-bad-heavy`, `heat-bad-mid`, `heat-bad-light`, `heat-tie`, `heat-ok-light`, `heat-ok-heavy`）。
+  3. **純淨真考零提示與四維度詳解引擎**：
+     - 作答前 100% 零提示、不劇透任何文法或單字，聽力題目隱藏逐字稿（僅開放考場錄音播放器）。
+     - 答題/交卷後立即解鎖四維度詳解：`examPurpose`（考官出題目的）、`correctReason`（正解邏輯）、`distractorAnalysis`（錯誤選項陷阱拆解）。
+     - 獨立小按鈕 `[💡 延伸學習重點 ▾]`：折疊展開同義詞家族 (`synonyms`)、Flyers 升 KET 盲點比較 (`grammarCompare`)、考場變形預測 (`examVariations`)。
+  4. **跨設備雙向雲端同步整合 (`questionStats`)**：
+     - 在 AccountManager 初始沙盒與雲端合併中加入 `questionStats: { [code]: { ok, err, net, lastAt } }`，iPad 與 iPhone 15 Pro 答題熱度數字無縫同步。
+- **驗收結果**：`node verify_phase_a.js` 17 項斷言 100% PASS，`node verify_phase_6_e2e.js` 17 項斷言 100% PASS。
+
+---
+
+### [#GOAL-10] Phase B 完工驗收與交付成果 (Unit 1 Exam Bank Delivery)
+- **實作模組與成果**：
+  1. **建置 Unit 1 100% 獨立自足純淨真考題庫 (`data/ket_exam_bank_u1.js`)**：
+     - 總題數共 34 題（代碼範圍 `U01-RWP1-S2-001` ~ `U01-SPP1-S3-034`），嚴格遵守零課本依賴（Zero Textbook Dependency）。
+     - 覆蓋 9 大核心 KET Part：
+       - `RWP1` (4 題: 001~004)：原創日常簡訊、家規便條、學校門禁告示與遺失物領取短訊。
+       - `RWP2` (7 題: 005~011)：Leo / Bastian / Callum 三位青少年家庭生活配對題，每題皆內建完整自足之三篇短文 HTML 並具備全部錯誤選項之深度陷阱剖析。
+       - `RWP3` (5 題: 012~016)：Simon 海島渡輪上學原創校園專訪長文，涵蓋細節、時間數字、極端天氣應變與作者態度推論題。
+       - `RWP4` (6 題: 017~022)：雙胞胎大家庭 "Life in a Big Twin Family" 6 空克漏字，測驗 crowded, alone, look after, get home, tidy up, unusual 等高頻詞彙。
+       - `RWP5` (5 題: 023~027)："My New Neighbour" 5 格無選項開放填空，測驗 has, does, at, with, their。
+       - `LSP1` (2 題: 028~029)：見面時間修改陷阱（搭配 u1_clocks.jpg）與外貌服裝排除題（搭配 u1_speaking_people_af.jpg），附多輪逐字稿。
+       - `LSP3` (3 題: 030~032)：Simon 與 Amanda 雙人長對話聽力理解，含晚睡原因、渡輪開船時刻與本島姑姑家吃晚餐等細節。
+       - `RWP7` (1 題: 033)：連環三格圖趕校車故事寫作（搭配 u1_writing_part7_exam.jpg），附 13 盾與 15 盾標準範文及時態檢核清單。
+       - `SPP1` (1 題: 034)：口說個人問答（家庭與週日活動），附考官互動音檔逐字稿與 13/15 盾延伸答題模範。
+  2. **四維度詳解與延伸學習重點全面配置**：
+     - 每題均包含小五/小六學生專屬之 `examPurpose`、`correctReason`、選擇題各選項 `distractorAnalysis`、開放/寫作/口說 `commonTraps`。
+     - 每題均配置 `extensionStudy`（`synonyms` 考場同義代換、`grammarCompare` 易混淆文法盲點、`examVariations` 考場題型變形）。
+- **驗收結果**：`node verify_phase_b.js` 100% PASS（34 題全數通過格式、完整性與無課本依賴檢查）。
+
+---
+
+### [#GOAL-11] Phase C 完工驗收與交付成果 (Unit 2 Exam Bank Delivery)
+- **實作模組與成果**：
+  1. **建置 Unit 2 100% 獨立自足純淨真考題庫 (`data/ket_exam_bank_u2.js`)**：
+     - 總題數共 32 題（覆蓋 `RWP1, RWP3, RWP4, RWP5, LSP4, LSP5, RWP6, SPP1` 8 大 Part）。
+     - 補齊 Listening Part 4 短對話主旨、Listening Part 5 資訊配對與 Writing Part 6 短訊寫作題型，全數具備自足 HTML / 音訊腳本 / 四維度詳解與 `extensionStudy`。
+- **驗收結果**：`node verify_phase_c.js` 100% PASS（32 題全數通過驗證）。
+
+---
+
+### [#GOAL-12] Phase D 完工與全系統總驗收成果 (Unit 3 + Revision & Full 100-Question Bank)
+- **實作模組與成果**：
+  1. **建置 Unit 3 & Revision 題庫 (`data/ket_exam_bank_u3.js`) 與統一編譯器 (`build_exam_bank.js`)**：
+     - `data/ket_exam_bank_u3.js` 收錄 34 題（28 題 Unit 3 + 6 題 Revision `rev`），涵蓋 `RWP1, RWP4, RWP5, LSP2, LSP3, RWP7, SPP2` 等考科，補齊最後缺口的 `LSP2` 表格填空與 `SPP2` 雙人五圖討論。
+     - 透過 `build_exam_bank.js` 組裝為 `data/ket_exam_bank.js`（`100` 題、`309.0 KB`，完整覆蓋全部 14 個 KET 官方 Part）。
+  2. **錯題本與方格考場互通 (`app.js`) & 版面修正**：
+     - `recordArenaQuestionResult` 與 `toggleArenaBookmark` 精準寫入 `unit`、`type`、`itemType: 'ket_exam'` 與 `timestamp`。
+     - 新增 `window.jumpToArenaByCode(code)` 並整合於 `startErrorQuiz()`，錯題本中點擊 `🎯 KET 全真考題` 的「⚡ 立即重練消錯」可直接跳轉至 `#view-arena` 原題卡片重作。
+     - 修正桌機/iPad 頂部列溢出、`layout-desktop` 切換與 iPhone 15 Pro `@media` 語法，暫緩推送 GitHub 供使用者本機測試驗證。
+- **驗收結果**：`verify_phase_d.js`（組裝 100 題 + `verify_phase_a.js` 17 PASS + `verify_phase_6_e2e.js` 17 PASS）、`verify_phase_b.js`、`verify_phase_c.js` 與 100 題執行期無劇透/全操作冒煙測試全數 PASS。
+
+---
+
+### [#GOAL-13] Phase E 考場 UX 與紙筆自評升級完工 (Phase E Delivery)
+- **目標與成果**：
+  1. 題卡最底部新增上一題／下一題與題號速跳按鈕列（`.arena-bottom-nav`），切換時自動平滑置頂題卡並支援鍵盤 `ArrowLeft` / `ArrowRight`。
+  2. 所有手寫／鍵入及開放題（`#view-arena` `gap`/`writing`/`speaking`、`#view-rw` Part 5、`#view-listening` Part 2、`Revision` 練習）全面配置 `👀 看答案` ➔ `⭕ 我答對 / ❌ 我答錯` 紙筆自評流程；並徹底移除 `Revision` 輸入框內會直接劇透答案的 `placeholder`。
+  3. 頂部工具列新增 `🔄 全部恢復未答題` 按鈕，清空本輪作答／暫存／揭曉與游標並保留全部歷史紅綠統計與 5 色錯題本（以 `.session-done` 綠點標示本輪已完成題目）。
+  4. 膠囊篩選計數器改為依當前單元即時交叉重算 14 大 Part 題數，並對數量為 0 的膠囊套用 `.is-empty` 淡化樣式。
+- **驗收結果**：`node verify_phase_e.js` 20 項斷言 100% PASS。
+
+---
+
+### [#GOAL-14] Phase F Unit 1–3 全 14 大 Part 零缺口題庫擴充完工 (Phase F Delivery)
+- **目標與成果**：
+  1. 消滅單一單元內部分 Part 題數為 0 之缺口，由平行 Flash 出題子代理補齊原創自足 KET 試題：
+     - `data/ket_exam_bank_u1.js`：擴充 +15 題至 **49 題**（補齊 `RWP6`, `LSP2`, `LSP4`, `LSP5`, `SPP2`）。
+     - `data/ket_exam_bank_u2.js`：擴充 +17 題至 **49 題**（補齊 `RWP2`, `RWP7`, `LSP1`, `LSP2`, `LSP3`, `SPP2`）。
+     - `data/ket_exam_bank_u3.js`：擴充 +22 題至 **50 題 Unit 3** + **6 題 Revision (`rev`)** = **56 題**（補齊 `RWP2`, `RWP3`, `RWP6`, `LSP1`, `LSP4`, `LSP5`, `SPP1`）。
+  2. 透過 `build_exam_bank.js` 合併輸出 `data/ket_exam_bank.js`（共 **154 題 / 550.6 KB**），確保 Unit 1、Unit 2、Unit 3 各自具備全部 14 個官方 KET Part。
+- **驗收結果**：`node verify_phase_f.js` 9 項斷言 100% PASS（0 錯誤、0 重複題號、圖檔全數存在）。
+
+---
+
+### [#GOAL-15] Phase G 官方 Cambridge A2 Key (KET) A4 列印引擎完工 (Phase G Delivery)
+- **目標與成果**：
+  1. 重構 `#view-print`（`renderPrintPod` / `renderPrintSheetContent`）與 `style.css` `@media print` 樣式（`.ket-paper-*`），輸出標準黑白可印刷之 Cambridge A2 Key 官方版面。
+  2. 支援 10 種切頁模式：`Unit 1 / 2 / 3 全真卷`、`Revision 總複習全真卷 (含 rev alias)`、`Paper 1 讀寫專項`、`Paper 2 聽力專項`、`Paper 3 口說題卡`、`Part 6/7 寫作橫線本`（含 25+/35+ 字紅虛線安全警戒線與 Cambridge 3 項 Rubric）、`字彙與錯句語境卷` 與 `個人化 KET 錯題考卷`。
+  3. 實作 `groupPrintQuestionsByPart()`：同 `unitId` + `ketPart` + 非空 `passageTitle` 之多題自動合併於單一共享短文／共圖頁首；徹底消滅 `"dinner -> ____"` 等無上下文半截殘題。
+  4. 嚴格區分「學生空白卷（零答案與逐字稿劇透）」與「教師詳解卷（標準答案 + 四維詳解 + 寫作 13/15 盾範文 + 含 `[★關鍵線索]/[⚠干擾陷阱]` 之完整聽力逐字稿）」。
+- **驗收結果**：`node verify_phase_g.js` 44 項斷言 100% PASS（覆蓋全部 154 題學生／教師渲染與 U1–U3 全部 14 Part 膠囊聯動）。

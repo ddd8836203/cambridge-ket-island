@@ -5,18 +5,27 @@ Antigravity 於進入專案時自動載入並嚴格遵循。
 
 ---
 
-## 1. 階段切分與模型標註鐵律 (Phase & Model Tagging)
+## 1. 階段切分與模型分級標註鐵律 (Phase, Model & Effort Tagging)
 - 面對中大型任務，嚴禁單次一股腦寫完。必須拆分為獨立階段（Phase A / B / C / D），每階段聚焦單一職責。
-- 規劃階段時，必須明確標註每一階段建議使用的模型：
-  - **[Gemini 4 Argon / Pro]**：僅限高難度架構設計、複雜邏輯除錯、跨系統規劃。
-  - **[Gemini 3.8 Flash]**：所有資料轉換、批次腳本、音訊/檔案處理、標準前端功能與 CSS 實作，一律標註使用 Flash 以節省高階模型額度。
+- 規劃階段時，必須同時標註「模型 + 思考強度 (Effort)」，嚴格依額度池分工：
+  - **[Orchestrator (Argon) / Gemini 4 Argon (High)]** *(長週期配額，最謹慎使用)*：僅限 Phase A 跨系統架構總控、Pre-Flight 規格對齊、重大重構決策。禁止拿來寫大量樣板碼或批次資料。
+  - **[Gemini 4 Hydrogen (Medium / High)]** *(短週期主力)*：預設複雜開發、中等難度除錯、核心業務邏輯與驗證腳本設計。僅在極複雜推理時升至 `High / Extra`。
+  - **[Gemini 3.8 Flash (Low / Medium)]** *(極速省額度)*：所有資料轉換、50+ 筆題庫/單字生成、批次腳本、音訊/檔案處理、標準前端/CSS 實作。
+  - **[Claude Sonnet 5.5 / Opus 5.5 (Medium)]** *(獨立額度池／異質審查)*：
+    1. **異質 Code Review**：Gemini 完成核心實作後，可於驗收階段派發執行邏輯審查與邊界抓漏，消除單一模型家族盲點。
+    2. **額度備援**：當 Gemini 主池接近耗盡時無縫接手。
+  - **[GPT-OSS 120B (Medium)]** *(獨立額度池／純文字粗工)*：離線規格整理、Log 摘要或非關鍵性文字轉換備援。
 
 ---
 
-## 2. 子代理隔離與主視窗 Token 保護 (Subagent Isolation)
-- 凡涉及大量文字生成（如 50+ 筆單字/題庫）、批次檔案處理、多步驟寫碼，**強制派發 `Model: "flash"` 的子代理 (`invoke_subagent`)** 執行。
-- 若資料量龐大，優先切分為平行 Flash 子代理同步處理。
-- 子代理回傳給主視窗的報告必須精簡（僅回傳統計數據與驗證結果，禁止把幾千行原始碼貼回主視窗消耗 Token）。
+## 2. 子代理與 Swarm 雙軌隔離原則 (Subagent & Swarm Routing)
+- **輕量平行任務（`invoke_subagent`）**：
+  - 凡涉及大量文字生成（如 50+ 筆單字/題庫）、批次檔案處理、多步驟寫碼，**強制派發子代理執行**；若資料量龐大，優先切分為平行 Flash 子代理同步處理。
+  - ⚠️ **工具參數限制**：`invoke_subagent` 僅支援抽象層級 `Model: "flash" | "flash_lite" | "pro" | "inherit"`（預設傳 `"flash"`，僅高難度委託傳 `"pro"`）。
+  - 子代理回傳給主視窗的報告必須精簡（僅回傳統計數據與驗證結果，禁止把幾千行原始碼貼回主視窗消耗 Token）。
+- **重型團隊協作（`/teamwork` / `swarm`）**：
+  - 若需精準指定異質模型或 Effort（如 `"gemini-3.8-flash-medium"`、`"claude-sonnet-5-5-medium"`、`"gemini-4-hydrogen-high"`），主控代理應使用 `swarm` 的 `add{model}` 明確覆寫 worker 模型。
+  - **授權覆寫預設值**：本專案明確授權 Swarm Coordinator 依任務屬性為不同 worker 降級或分派異質模型（例如 `author` 用 `gemini-3.8-flash-medium`、`verifier` 用 `claude-sonnet-5-5-medium`），避免整隊繼承昂貴的 `Argon` / `Hydrogen High` 模型燒光配額。
 
 ---
 
@@ -32,6 +41,9 @@ Antigravity 於進入專案時自動載入並嚴格遵循。
   1. Phase N 完成後，主代理執行 `verify_phase_N.js`。
   2. 若驗證通過 (`exit code 0`)，**主代理不等待人類輸入，立即自動啟動 Phase N+1**，一路推進直到所有指定階段全部完成才輸出總結報告。
   3. 若驗證失敗，自動派子代理修復（最多重試 2 次）；若仍失敗才中斷並回報。
+  4. **撞額度不斷線（Quota Fallback）**：若執行期間任一模型出現額度耗盡（Quota Exhausted）或限流：
+     - **Swarm 模式**：立即用 `swarm{action:"model"}` 將卡住的 worker 無縫切換至獨立額度池（優先序：`gemini-4-hydrogen-medium` ➔ `claude-sonnet-5-5-medium` ➔ `gpt-oss-120b-medium`），保留原對話脈絡繼續推進，**禁止直接 kill 重來**。
+     - **一般階段**：自動改派剩餘額度較高的對應等級模型完成該 Phase，並於最終報告註明實際切換軌跡。
 
 ---
 

@@ -26,32 +26,32 @@
         </div>
 
         <div class="unit-selector-capsules" id="unit-selector-capsules">
-          <button class="unit-capsule active" data-unit="all">全部單元 (U1~U3)</button>
-          <button class="unit-capsule" data-unit="u1">Unit 1 人物日常</button>
-          <button class="unit-capsule" data-unit="u2">Unit 2 學校生活</button>
-          <button class="unit-capsule" data-unit="u3">Unit 3 美食饗宴</button>
+          <button class="unit-capsule active" data-unit="all">全部 U1~3</button>
+          <button class="unit-capsule" data-unit="u1">U1 人物</button>
+          <button class="unit-capsule" data-unit="u2">U2 休閒</button>
+          <button class="unit-capsule" data-unit="u3">U3 美食</button>
         </div>
       </div>
 
-      <!-- 控制項：字級、iPad模式、音效、帳號切換 -->
+      <!-- 控制項：帳號、哩數、多設備切換、雲端、字級、音效 -->
       <div class="topbar-right">
         <!-- 4 帳號快速切換膠囊 -->
         <div class="account-capsules" id="account-capsules">
           <button class="acc-btn active" data-account="rex" id="acc-rex" title="Rex (6年級) - 15盾目標生">
             <span class="acc-avatar">🦁</span>
-            <span class="acc-name">Rex (6年級)</span>
+            <span class="acc-name">Rex (6年)</span>
           </button>
           <button class="acc-btn" data-account="hugo" id="acc-hugo" title="Hugo (5年級) - 字根詞性強化模式">
             <span class="acc-avatar">🐯</span>
-            <span class="acc-name">Hugo (5年級)</span>
+            <span class="acc-name">Hugo (5年)</span>
           </button>
           <button class="acc-btn" data-account="test1" id="acc-test1" title="家長測試 1 - 驗證沙盒">
             <span class="acc-avatar">🧪</span>
-            <span class="acc-name">家長測試1</span>
+            <span class="acc-name">測試1</span>
           </button>
           <button class="acc-btn" data-account="test2" id="acc-test2" title="訪客測試 2 - 演練展示">
             <span class="acc-avatar">🛠️</span>
-            <span class="acc-name">訪客測試2</span>
+            <span class="acc-name">測試2</span>
           </button>
         </div>
 
@@ -62,8 +62,11 @@
           <span class="nook-miles-unit">哩</span>
         </div>
 
-        <!-- 多設備模式切換鈕 (雙 iPad + iPhone 15 Pro) -->
+        <!-- 多設備模式切換鈕 (電腦全寬 + 雙 iPad + iPhone 15 Pro) -->
         <div class="device-layout-controls" id="device-layout-controls">
+          <button class="ac-btn-icon" id="btn-layout-desktop" title="切換至電腦寬螢幕模式 (最大 1520px)">
+            💻 電腦
+          </button>
           <button class="ac-btn-icon active" id="btn-layout-102" title="切換至 iPad 10.2吋 橫向模式 (1080×810)">
             📱 10.2"
           </button>
@@ -78,7 +81,7 @@
         <!-- 雲端雙向同步按鈕與狀態指示 (Firebase /ket_prep_v1_users/) -->
         <button class="ac-btn-icon cloud-sync-btn" id="btn-cloud-sync" title="點擊立即手動與 Firebase 雲端雙向同步" onclick="syncFromCloud(AppState.currentAccount, true)">
           <span id="cloud-sync-status-icon">🟢</span>
-          <span id="cloud-sync-status-text">雲端已同步</span>
+          <span id="cloud-sync-status-text">已同步</span>
         </button>
 
         <!-- 5 段字級縮放控制 -->
@@ -95,46 +98,54 @@
       </div>
     </header>
 
-    <!-- 主功能分頁導覽列 -->
-    <nav class="ac-nav-tabs" id="ac-nav-tabs">
-      <button class="nav-tab active" data-tab="dashboard" id="tab-dashboard">
-        <span class="tab-icon">🏝️</span>
-        <span class="tab-label">島嶼戰情室 (15盾雷達)</span>
-      </button>
-      <button class="nav-tab" data-tab="vocab" id="tab-vocab">
-        <span class="tab-icon">🃏</span>
-        <span class="tab-label">單字搭配詞艙 (58詞)</span>
-      </button>
-      <button class="nav-tab" data-tab="mistakes" id="tab-mistakes">
-        <span class="tab-icon">🪲</span>
-        <span class="tab-label">傅達抓蟲特訓 (35題)</span>
-      </button>
-      <button class="nav-tab" data-tab="spreads" id="tab-spreads">
-        <span class="tab-icon">🗺️</span>
-        <span class="tab-label">課本跨頁原圖 (12頁)</span>
-      </button>
-      <button class="nav-tab" data-tab="rw" id="tab-rw">
-        <span class="tab-icon">📖</span>
-        <span class="tab-label">閱寫考場 (Part 1~7)</span>
-      </button>
-      <button class="nav-tab" data-tab="listening" id="tab-listening">
-        <span class="tab-icon">🎧</span>
-        <span class="tab-label">聽力劇場 (Part 2~4)</span>
-      </button>
-      <button class="nav-tab" data-tab="speaking" id="tab-speaking">
-        <span class="tab-icon">🎙️</span>
-        <span class="tab-label">口說對練室 (Part 1~2)</span>
-      </button>
-      <button class="nav-tab" data-tab="errorbook" id="tab-errorbook">
-        <span class="tab-icon">📕</span>
-        <span class="tab-label">5色錯題熱力本</span>
-        <span class="error-badge-count" id="tab-error-count">0</span>
-      </button>
-      <button class="nav-tab" data-tab="print" id="tab-print">
-        <span class="tab-icon">🖨️</span>
-        <span class="tab-label">A4 考卷列印</span>
-      </button>
-    </nav>
+    <!-- 主功能分頁導覽列（支援電腦多排免滑 / 滾輪橫移 / 左右箭頭切換） -->
+    <div class="ac-nav-tabs-bar" id="ac-nav-tabs-bar">
+      <button class="nav-scroll-arrow" id="btn-nav-scroll-left" title="向左捲動分頁" aria-label="向左捲動分頁">◀</button>
+      <nav class="ac-nav-tabs" id="ac-nav-tabs">
+        <button class="nav-tab active" data-tab="dashboard" id="tab-dashboard">
+          <span class="tab-icon">🏝️</span>
+          <span class="tab-label">戰情室</span>
+        </button>
+        <button class="nav-tab" data-tab="arena" id="tab-arena">
+          <span class="tab-icon">🎯</span>
+          <span class="tab-label">KET 全真題庫</span>
+        </button>
+        <button class="nav-tab" data-tab="vocab" id="tab-vocab">
+          <span class="tab-icon">🃏</span>
+          <span class="tab-label">單字 (58)</span>
+        </button>
+        <button class="nav-tab" data-tab="mistakes" id="tab-mistakes">
+          <span class="tab-icon">🪲</span>
+          <span class="tab-label">抓蟲 (35)</span>
+        </button>
+        <button class="nav-tab" data-tab="spreads" id="tab-spreads">
+          <span class="tab-icon">🗺️</span>
+          <span class="tab-label">課本原圖</span>
+        </button>
+        <button class="nav-tab" data-tab="rw" id="tab-rw">
+          <span class="tab-icon">📖</span>
+          <span class="tab-label">閱寫 & 複習</span>
+        </button>
+        <button class="nav-tab" data-tab="listening" id="tab-listening">
+          <span class="tab-icon">🎧</span>
+          <span class="tab-label">聽力劇場</span>
+        </button>
+        <button class="nav-tab" data-tab="speaking" id="tab-speaking">
+          <span class="tab-icon">🎙️</span>
+          <span class="tab-label">口說對練</span>
+        </button>
+        <button class="nav-tab" data-tab="errorbook" id="tab-errorbook">
+          <span class="tab-icon">📕</span>
+          <span class="tab-label">5色錯題本</span>
+          <span class="error-badge-count" id="tab-error-count">0</span>
+        </button>
+        <button class="nav-tab" data-tab="print" id="tab-print">
+          <span class="tab-icon">🖨️</span>
+          <span class="tab-label">A4 列印</span>
+        </button>
+      </nav>
+      <button class="nav-scroll-arrow" id="btn-nav-scroll-right" title="向右捲動分頁" aria-label="向右捲動分頁">▶</button>
+    </div>
 
     <!-- 主視圖容器區塊 -->
     <main class="ac-main-content" id="ac-main-content">
@@ -142,6 +153,9 @@
       <section class="ac-view active" id="view-dashboard">
         <!-- 由 app.js 動態渲染 renderDashboard() -->
       </section>
+
+      <!-- 1.5 🎯 KET 全真題庫方格考場 -->
+      <section class="ac-view" id="view-arena"></section>
 
       <!-- 2. 🃏 單字與搭配詞學習艙 -->
       <section class="ac-view" id="view-vocab">
@@ -200,6 +214,7 @@
 
   <!-- 資料庫與主程式碼 -->
   <script src="data/ket_u1_u3.js"></script>
+  <script src="data/ket_exam_bank.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

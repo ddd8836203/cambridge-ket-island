@@ -3,8 +3,8 @@
 ⚡ 0. 當下狀態快照 (TL;DR Current Snapshot)
 --------------------------------------------------------------------------------
 - 建立日期：2026-11-12
-- 最後更新：2026-11-13
-- 當前狀態：Phase 6 完工（iPhone 15 Pro 手機直向模式 393×852、Firebase RTDB 跨設備雙向同步 /ket_prep_v1_users/、35 幅資產 100% 關聯與 E2E 全檢全數通過，累計 206 項測試 100% PASS）
+- 最後更新：2026-11-14
+- 當前狀態：Phase A ~ G 全數完工並正式推上 GitHub Pages（`data/ket_exam_bank.js` 累計 **154 題 / 550.6 KB**，`Unit 1/2/3` 各自 100% 覆蓋全部 14 個官方 KET Part；透過 `LAUNCH_RESET_EPOCH = '20261114_official_v1'` 與 Firebase 覆寫完成 `Rex` / `Hugo` 正式上線歸零，保留 `test1` / `test2` 測試帳號）
 - 線上網址 (GitHub Pages)：https://ddd8836203.github.io/cambridge-ket-island/
 - GitHub 倉庫：https://github.com/ddd8836203/cambridge-ket-island
 - 適用對象：Rex (6年級)、Hugo (5年級)、維護 AI Agent、英語教學人員
@@ -14,7 +14,8 @@
   3. iPhone 15 Pro 直向 (`1179×2556` ➔ CSS `393×852` @3x, 支援 Dynamic Island 與 Home 安全區)
   4. Windows 桌面端 Chrome / Edge
 - 下一步待辦 (Next Actions)：
-  1. 交付 Rex 與 Hugo 於兩台 iPad 進行實戰演練與家長 iPhone 15 Pro 遠端監看。
+  1. 雙 iPad 與 iPhone 15 Pro 直接開啟 GitHub Pages 網址即可同步全新歸零後之 Rex / Hugo 正式帳號。
+  2. 後續視需求擴充 Unit 4 ~ Unit 12。
 --------------------------------------------------------------------------------
 
 🧭 一、錨點索引大綱 (Indexed Outline — 標題 + 一句話結論)
@@ -31,6 +32,11 @@
 - [#ARCH-5] Phase 4 閱寫雙欄考場、聽力語音劇場與口說模擬架構規格：50:50 獨立滾動容器、雙角色語音佇列、Distractor X-Ray 與雙軌寫作架構。
 - [#ARCH-6] 5 色淨錯熱力演算法與 @media print 原生列印架構設計原因：採淨錯次數階梯 (heat-1 ~ heat-5) 自動消錯重練，並以純黑白免依賴 CSS 輸出極致清晰 A4 考卷。
 - [#ARCH-7] iPhone 15 Pro 手機響應架構與 Firebase RTDB 防回滾雙向同步設計原因：透過 393px 單欄堆疊與抽屜模式、聯集防回滾合併，實現跨雙 iPad 與 iPhone 隨時隨地無縫備考。
+- [#ARCH-8] KET 全真題庫方格考場架構與四維度詳解/延伸學習引擎設計原因：採用 Natural-webapp 同款 48x44px 紅綠小字題號盤、100% 零提示純淨考場、交卷四維度解析與延伸同義詞/盲點預測。
+- [#ARCH-9] 錯題本與 KET 方格考場互通架構及電腦/手機頂部導覽修復設計原因：錯題本識別 `ket_exam` 題目改為直接喚起 `jumpToArenaByCode` 回原題完整場景重練，並修正 `.ac-topbar` 與 `@media` 斷點混寫問題。
+- [#ARCH-10] 紙筆自評（「看答案 ➔ 我答對 / 我答錯」）、本輪重設與動態聯動膠囊設計原因：支援先紙筆作答再自主批改計分、徹底清除 `Revision` 劇透佔位提示、保留長期紅綠統計同時一鍵恢復本輪未答狀態，並按單元即時計算各 Part 題數。
+- [#ARCH-11] 全單元 14 Part 零缺口標準化與平行分片出題架構：將原本跨單元分散的 14 個 KET 官方考科補齊至 Unit 1/2/3 每單元皆滿 14 Part，消滅切換單元後出現大量「0」膠囊之空洞體驗。
+- [#ARCH-12] Cambridge 官方全真 A4 考卷編排與同篇文本去重合併演算法：按 `ketPart` + 非空 `passageTitle` 將共享文章與圖片合併置頂印出一次，杜絕 5–7 題重複印出同一篇文章，並在學生空白卷徹底屏蔽答案、四維詳解與聽力稿。
 
 ================================================================================
 📖 二、單一真實來源細節 (Single-Source Detailed Specifications)
@@ -218,3 +224,63 @@ window.KET_DATA = {
     - `shields`：依據單元對比兩端陣列，保留較高獲得狀態。
     - `netErrors`：依據各錯題項的最新 `updatedAt` 時間戳合併，確保在 iPad 消滅的錯題不會因手機端舊快照而回滾重現。
   - **即時狀態燈與自動同步**：切換帳號或啟動時自動 `syncFromCloud`，本地作答變更後透過 600ms Debounce 自動 `pushToCloud`，並於頂部導覽列提供雲端連線狀態燈與一鍵強制同步按鈕。
+
+---
+
+### [#ARCH-8] KET 全真題庫方格考場架構與四維度詳解/延伸學習引擎設計原因 (KET Arena & 4D Explanation Engine)
+- **自然學習網頁同款 48x44px 題號速跳抽屜盤 (`#quiz-grid-drawer`)**：
+  - **解決痛點**：以往小學生做完題目不知道自己哪一題錯最多，容易盲目刷題。
+  - **淨錯 6 階熱度視覺化**：
+    - 每個按鈕左上角顯示綠字累計答對次數 (`.q-badge-ok`)、右上角顯示紅字累計答錯次數 (`.q-badge-bad`)、中央為粗體題號。
+    - 依據 `netErr = err - ok` 賦予 6 階熱度底色：`heat-bad-heavy` (深紅錯很多)、`heat-bad-mid`、`heat-bad-light`、`heat-tie` (平手/未答)、`heat-ok-light`、`heat-ok-heavy` (精熟綠底)。
+    - 隨題目切換與交卷動態更新，一眼辨識最需要加強的弱點題目。
+- **作答前 100% 零提示純淨考場**：
+  - **解決劇透盲點**：剛通過 Flyers 的同學作答容易依賴提示詞（如填空字庫、文法定位提示）。本考場作答前完全隱藏所有中文提示、寫作積木與 Part 5 字庫；聽力題目完全隱藏逐字稿，僅保留考場播放器（雙遍/單遍/慢速）。
+- **四維度考點詳解面板**：
+  - 交卷後解鎖四大區塊：
+    1. `🎯 這題考官想考什麼？（出題目的）` (`examPurpose`)：從出題官視角破解考點本質（如同義改寫、時態陷阱）。
+    2. `✅ 正解證據與解題邏輯` (`correctReason`)：明確指出原文定位句與語意吻合點。
+    3. `❌ 其他選項為什麼錯？陷阱拆解` (`distractorAnalysis` / `commonTraps`)：逐一剖析干擾項設計思路（如張冠李戴、漏看轉折）。
+    4. 聽力題目解鎖 `📜 聽力逐字稿與紅綠燈陷阱對照`。
+- **獨立可折疊 [💡 延伸學習重點 ▾]**：
+  - 獨立小按鈕展開三大高分模組：
+    - 🔄 劍橋高頻同義詞家族 (`synonyms`)
+    - ⚖️ Flyers 升 KET 必考盲點比較 (`grammarCompare`)
+    - 🔮 下次考場可能會這樣變形考你 (`examVariations`)
+- **跨設備同步 (`questionStats`)**：
+  - 帳號存檔與 Firebase RTDB 雲端加入 `questionStats` 結構，雙向同步 ok、err、net 與 lastAt，確保 Rex / Hugo 在 iPad 上的方格答題進度即時同步到家長 iPhone 15 Pro！
+
+---
+
+### [#ARCH-9] 錯題本與 KET 方格考場互通架構及電腦/手機頂部導覽修復設計原因
+- **錯題本與 KET 考場一體化閉環 (`jumpToArenaByCode`)**：
+  - **設計原因**：KET 全真題庫涵蓋短文圖片、多段短文閱讀、填空上下文及雙人對話音訊，無法僅靠傳統單選文字彈窗重練。
+  - **運作方式**：`recordArenaQuestionResult` 與 `toggleArenaBookmark` 同步將 `itemType: 'ket_exam'`、`unit`、`type` 與 `timestamp` 寫入 `netErrors[code]`；在 `#view-errorbook` 中可按 `rev` 總複習與 `🎯 KET 全真考題` 篩選，點擊重練時由 `startErrorQuiz()` 識別並呼叫 `jumpToArenaByCode(code)`，重設考場篩選為全部並清除當題暫存後直接定位至該題卡片重作消錯。
+- **頂部導覽列換行、電腦模式按鈕與 `@media` 斷點修正**：
+  - 修正 CSS 中無效的選擇器逗號與 `@media` 混寫，允許 `.ac-topbar` / `.topbar-right` 自動換行並精簡膠囊標籤，補齊 `[💻 電腦]` (`layout-desktop`) 切換與導覽列左右滑動箭頭 (`[◀]` / `[▶]`) 及滾輪橫向滾動。
+- **語音引擎 (`TTSEngine`) 防錯微調**：
+  - 保護孤立單字母 `'a'` 發音（僅單獨字母 `'a'` 轉為 `'A.'`，避免誤改句中冠詞 `'a'`），並依對話角色性別自動切換英式男/女聲道音高。
+
+---
+
+### [#ARCH-10] 紙筆自評（「看答案 ➔ 我答對 / 我答錯」）、本輪重設與動態聯動膠囊設計原因
+- **雙軌鍵入自評閉環 (`arenaRevealed` / `arenaSelfGraded` / `revealArenaAnswer` / `selfGradeArenaQuestion`)**：
+  - **設計原因**：Rex 與 Hugo 常先在 A4 紙筆作答或口語唸出，不一定要用螢幕小鍵盤敲字；點「👀 看答案」立即顯示參考答案與四維詳解但 **暫不改動任何統計**，必須由孩子或家長點擊「⭕ 我答對」或「❌ 我答錯」才真正寫入 `questionStats`（綠／紅累計）與 5 色 `netErrors`，避免只是「偷看一下解答」卻誤計為錯題或對題。
+  - **零劇透掃除**：同步清除 `Revision` 輸入框內會直接曝光標準答案的 `placeholder`，改由 `REV_ANSWER_SHEET` 與 `revealRevisionExAnswers`／`selfGradeRevisionEx` 接管批改與單題自評。
+- **狀態分離 (`resetAllArenaProgress`)**：將單輪介面暫存 (`arenaUserAnswers`, `arenaSubmitted`, `arenaRevealed`, `arenaSelfGraded`, `arenaMockSubmitted`) 與長期學習資產 (`questionStats`, `netErrors`, `miles`) 徹底解耦，一鍵恢復未答時 100% 保護歷史紅綠數字與錯題熱度；方格盤另以右上小綠點 (`.session-done::after`) 區分本輪進度。
+- **跨篩選聯動計數 (`matchesArenaUnitFilter` / `matchesArenaDiffFilter`)**：依 `unitFilteredQs` 即時重算 14 個 Part 膠囊題數、依 `unitAndPartQs` 即時重算難度膠囊題數，讓數字永遠真實反映目前選擇的單元與考科。
+
+---
+
+### [#ARCH-11] 全單元 14 Part 零缺口標準化與平行分片出題架構
+- **問題背景**：原題庫雖總計覆蓋 14 Part，但部分考科集中在特定單元，導致切換單一單元時許多膠囊顯示「2」或「0」甚至空畫面。
+- **架構作法**：將 Unit 1 (`+15 -> 49`)、Unit 2 (`+17 -> 49`)、Unit 3 (`+22 -> 50`) 全部補齊為「每單元皆涵蓋 RWP1–7, LSP1–5, SPP1–2 共 14 科」；對於較大之單元擴充（如 U3 22 題），採讀寫與聽說平行分片子代理（RW 11 題 / LSSP 11 題）寫入獨立暫存模組並通過 `validateExamQuestions()` 後合併進單一單元檔，確保零衝突與零半截題目。
+
+---
+
+### [#ARCH-12] Cambridge 官方全真 A4 考卷編排與同篇文本去重合併演算法
+- **問題與原因**：原 `#view-print` 僅讀取舊版摘要題並出現無語境片段（如 `dinner -> ____`），與真考體例及方格題庫脫節。
+- **技術設計**：
+  1. **共享文章合併 (`groupPrintQuestionsByPart` + `normalizePrintHtml`)**：同一單元、同一 `ketPart` 且具備相同非空 `passageTitle` 之多題（例如 RWP2 5–7 題、RWP3 5 題、RWP4 6 題、LSP5 5 題），僅於群組頁首印出一次 `.ket-paper-passage` 與共同插圖（`sharedImage`）；各小題仍會核對 `normalizePrintHtml(q.passageHtml)` 是否與頁首一致，僅一致時略過重複渲染，確保跨版面零缺漏且節省紙張。
+  2. **空白卷零劇透隔離**：`showAnswers === false` 時隱藏全部答案框（`.ket-paper-answer-box`）與聽力逐字稿（僅保留 `.ket-paper-listening-meta` 提示由老師網頁播放錄音）；`showAnswers === true` 才展開標準答案、四維詳解、13/15 盾寫作範例與含 `[★關鍵線索]` / `[⚠干擾陷阱]` 標記之聽力逐字稿。
+  3. **紙筆排版防切頁**：`style.css` `@media print` 嚴格設定 `.ket-paper-passage`, `.ket-paper-q-row`, `.ket-paper-writing-box`, `.ket-paper-answer-box`, `.ket-notice-box`, `.ket-sms-box`, `.ket-email-box`, `.ket-triple-grid` 禁止題中跨頁截斷（`break-inside: avoid`），標題（`.ket-paper-section-bar`, `.ket-paper-part-head`）禁止孤立留於頁尾（`break-after: avoid`）。

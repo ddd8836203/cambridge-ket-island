@@ -3,11 +3,12 @@
 ⚡ 0. 當下狀態快照 (TL;DR Current Snapshot)
 --------------------------------------------------------------------------------
 - 建立日期：2026-11-12
-- 最後更新：2026-11-13
-- 當前狀態：Phase 6 完工（iPhone 15 Pro 手機模式 393×852、Firebase RTDB 跨設備雙向同步 /ket_prep_v1_users/、全教材 35 幅資產 100% 關聯與 verify_phase_6_e2e.js 17 項全檢通過，累計 206 項測試 100% PASS）
+- 最後更新：2026-11-14
+- 當前狀態：Phase A ~ G 全數完工（`data/ket_exam_bank.js` 編譯輸出 **154 題 / 550.6 KB** 自足式純淨真考題目：`Unit 1` 49 題、`Unit 2` 49 題、`Unit 3` 50 題均各自覆蓋全部 14 個 KET 官方 Part，外加 `Revision (rev)` 6 題，全驗證 100% PASS！）
 - 原始教材：`書本/KET Part1.pdf` (24 頁跨頁) & `書本/KET Part2.pdf` (20 頁跨頁) — 《Compact Key for Schools 2nd Edition Student's Book》
 - 下一步待辦 (Next Actions)：
-  1. 交付 Rex 與 Hugo 於兩台 iPad 進行實戰演練與家長 iPhone 15 Pro 遠端監看。
+  1. 使用者本機實測 `index.html` 並決定是否推送 GitHub Pages。
+  2. 後續如有擴充需求，可依 `build_exam_bank.js` 規格新增 Unit 4 ~ Unit 12 題庫分冊。
 --------------------------------------------------------------------------------
 
 🧭 一、錨點索引大綱 (Indexed Outline — 標題 + 一句話結論)
@@ -20,6 +21,12 @@
 - [#MAN-6] Phase 4 互動閱寫考場、聽力劇場與口說模擬資產清冊：記錄新增之後台模組函式與音訊控制管線。
 - [#MAN-7] Phase 5 5色熱力本、Revision 71分闖關與 A4 考卷列印資產清冊：記錄新增之 4 種考卷版型、Revision 10 大題評分與列印樣式規格。
 - [#MAN-8] Phase 6 全教材 35 幅資產完整性與跨設備清冊：35 幅高解析插圖 100% 關聯與跨設備適配驗證通過。
+- [#MAN-9] Phase A KET 全真題庫資產與考場規格清冊 (`data/ket_exam_bank.js`)：涵蓋 14 大 Part 官方結構、四維度詳解與延伸學習重點規格。
+- [#MAN-10] Phase B Unit 1 純淨真考題庫資產清冊 (`data/ket_exam_bank_u1.js`)：34 題自足式真考題目、9 大 Part 覆蓋率、插圖與音訊逐字稿資產清冊。
+- [#MAN-11] Phase C Unit 2 純淨真考題庫資產清冊 (`data/ket_exam_bank_u2.js`)：32 題自足式真考題目、8 大 Part 覆蓋率 (`RWP1/3/4/5/6, LSP4/5, SPP1`) 清冊。
+- [#MAN-12] Phase D Unit 3 + Revision 及組合題庫資產清冊 (`data/ket_exam_bank_u3.js` & `ket_exam_bank.js`)：34 題 (U3: 28 + Rev: 6) 與 100 題 (`309.0 KB`) 全官方 14 Part 總題庫編譯驗證清冊。
+- [#MAN-13] Phase F 全 14 Part 擴充題庫總清冊（`154` 題 / `550.6 KB`）：Unit 1 (`49` 題)、Unit 2 (`49` 題)、Unit 3 (`50` 題) 各自具備 14/14 官方 Part + Revision (`6` 題)，全部圖片與 4D 解析 0 錯誤驗證。
+- [#MAN-14] Phase E & Phase G 前端模組、樣式與獨立驗證腳本清冊 (`app.js`, `style.css`, `verify_phase_e/f/g.js`)：完整列舉自評控制函式、官方 A4 列印樣式類別與 3 份自動化驗收閘門。
 
 ================================================================================
 📖 二、單一真實來源細節 (Single-Source Detailed Specifications)
@@ -193,3 +200,71 @@
   34. `assets/images/u3/u3_cooking_school_notice.jpg` (U3 廚藝學校通知公告單)
   35. `assets/images/u3/u3_wendy_grandma_omelette.jpg` (U3 祖母煎蛋卷插圖)
 - **驗證狀態**：`verify_phase_6_e2e.js` 17 項斷言 100% PASS。
+
+---
+
+### [#MAN-9] Phase A KET 全真題庫資產與考場規格清冊 (`data/ket_exam_bank.js`)
+- **題庫版本**：`KET_EXAM_BANK (v2.0.0)`。
+- **14 個 KET 官方考科結構清冊**：
+  1. `RWP1`：RW Part 1 短訊/告示三選一
+  2. `RWP2`：RW Part 2 三選一文本配對
+  3. `RWP3`：RW Part 3 三選一長文理解
+  4. `RWP4`：RW Part 4 詞彙克漏字
+  5. `RWP5`：RW Part 5 開放式文法填空
+  6. `RWP6`：WR Part 6 短訊寫作 (25+字)
+  7. `RWP7`：WR Part 7 看圖寫故事 (35+字)
+  8. `LSP1`：LS Part 1 聽力圖片三選一
+  9. `LSP2`：LS Part 2 聽力表格填空
+  10. `LSP3`：LS Part 3 聽力長對話理解
+  11. `LSP4`：LS Part 4 聽力短對話主旨
+  12. `LSP5`：LS Part 5 聽力資訊配對
+  13. `SPP1`：SP Part 1 口說考官問答
+  14. `SPP2`：SP Part 2 口說五圖互動討論
+- **題目欄位標準規範**：
+  `code, unitId, unitLabel, section, ketPart, ketPartName, difficulty, questionType, passageTitle, noticeType, passageHtml, audioLines, image, instruction, prompt, options, answer, explanation { examPurpose, correctReason, distractorAnalysis, commonTraps }, extensionStudy { synonyms, grammarCompare, examVariations }`。
+- **驗證狀態**：`verify_phase_a.js` 17 項斷言 100% PASS。
+
+---
+
+### [#MAN-10] Phase B Unit 1 純淨真考題庫資產清冊 (`data/ket_exam_bank_u1.js`)
+- **題數統計**：`34` 題（Unit 1），覆蓋 `RWP1, RWP2, RWP3, RWP4, RWP5, LSP1, LSP3, RWP7, SPP1`（9 大 Part）。
+- **驗證狀態**：`verify_phase_b.js` 100% PASS。
+
+---
+
+### [#MAN-11] Phase C Unit 2 純淨真考題庫資產清冊 (`data/ket_exam_bank_u2.js`)
+- **題數統計**：`32` 題（Unit 2），覆蓋 `RWP1, RWP3, RWP4, RWP5, LSP4, LSP5, RWP6, SPP1`（8 大 Part）。
+- **驗證狀態**：`verify_phase_c.js` 100% PASS。
+
+---
+
+### [#MAN-12] Phase D Unit 3 + Revision 及組合題庫資產清冊 (`data/ket_exam_bank_u3.js` & `data/ket_exam_bank.js`)
+- **分冊題數**：`data/ket_exam_bank_u3.js` 共 `34` 題（Unit 3 共 `28` 題 + Revision `rev` 共 `6` 題），覆蓋 `RWP1, RWP4, RWP5, LSP2, LSP3, RWP7, SPP2`。
+- **總體合併輸出**：透過 `build_exam_bank.js` 組裝為 `data/ket_exam_bank.js`（`100` 題 / `309.0 KB`）：
+  - `Unit 1`：`34` 題
+  - `Unit 2`：`32` 題
+  - `Unit 3`：`28` 題
+  - `Revision (rev)`：`6` 題
+  - 官方考科覆蓋率：全部 14 個官方 Part (`RWP1`–`RWP7`, `LSP1`–`LSP5`, `SPP1`–`SPP2`) 100% 覆蓋。
+- **驗證狀態**：`verify_phase_d.js`（組裝 + `verify_phase_a.js` + `verify_phase_6_e2e.js`）100% PASS。
+
+---
+
+### [#MAN-13] Phase F 全 14 Part 擴充題庫總清冊 (`154` 題 / `550.6 KB`)
+- **合併編譯輸出**：`node build_exam_bank.js` ➔ `data/ket_exam_bank.js` (`v2.1.0`, `154` 題 / `550.6 KB`)，全部關聯圖檔均為 `assets/images/u1~u3/` 已驗證實體檔案（0 缺圖、0 課本頁碼依賴）。
+- **分冊明細與 14 Part 分布**：
+  - `data/ket_exam_bank_u1.js` (**Unit 1 · 49 題**)：`RWP1:4 RWP2:7 RWP3:5 RWP4:6 RWP5:5 RWP6:1 RWP7:1 LSP1:2 LSP2:5 LSP3:3 LSP4:3 LSP5:5 SPP1:1 SPP2:1`
+  - `data/ket_exam_bank_u2.js` (**Unit 2 · 49 題**)：`RWP1:4 RWP2:5 RWP3:5 RWP4:6 RWP5:6 RWP6:1 RWP7:1 LSP1:2 LSP2:5 LSP3:3 LSP4:4 LSP5:5 SPP1:1 SPP2:1`
+  - `data/ket_exam_bank_u3.js` (**Unit 3 · 50 題 + Revision `rev` · 6 題 = 56 題**)：Unit 3 分布為 `RWP1:4 RWP2:5 RWP3:5 RWP4:6 RWP5:5 RWP6:1 RWP7:1 LSP1:2 LSP2:5 LSP3:5 LSP4:3 LSP5:5 SPP1:1 SPP2:2`；Revision 涵蓋 `REV-RWP1`..`REV-RWP5` 6 題。
+- **驗證狀態**：`verify_phase_f.js` 9 項斷言、`verify_phase_b.js`、`verify_phase_c.js`、`verify_phase_d.js` 全數 100% PASS。
+
+---
+
+### [#MAN-14] Phase E & Phase G 前端模組、樣式與獨立驗證腳本清冊
+- **前端核心變更**：
+  - `app.js`：新增 `arenaRevealed`, `arenaSelfGraded`, `jumpArenaQuestion`, `revealArenaAnswer`, `selfGradeArenaQuestion`, `resetAllArenaProgress`, `matchesArenaUnitFilter`, `matchesArenaDiffFilter`, `revealLegacyGapAnswer`, `selfGradeLegacyGap`, `REV_ANSWER_SHEET`, `revealRevisionExAnswers`, `selfGradeRevisionEx`；重構 `renderPrintPod`, `renderPrintSheetContent`, `groupPrintQuestionsByPart`, `renderPrintKetBookletBody`, `renderPrintQuestionRow`, `renderPrintTeacherKeyBox`, `renderPrintWritingLinedArea`。
+  - `style.css`：新增 Phase E 導覽列/自評與空白膠囊樣式（`.arena-bottom-nav`, `.ket-selfgrade-banner`, `.btn-see-answer`, `.btn-self-ok`, `.btn-self-bad`, `.drawer-q-btn.session-done::after`, `.arena-pill.is-empty`）及 Phase G A4 考卷樣式（`.ket-paper-cover`, `.ket-paper-section-bar`, `.ket-paper-part-head`, `.ket-paper-passage`, `.ket-paper-q-row`, `.ket-paper-mcq-grid`, `.ket-paper-writing-box`, `.ket-paper-rubric`, `.ket-paper-tapescript`, `.ket-paper-answer-box`）與 `@media print` 換頁保護。大括號 `425/425` 平衡，0 筆 `backdrop-filter: blur()`。
+- **獨立驗證閘門腳本**：
+  - `verify_phase_e.js`（20 項執行期斷言）
+  - `verify_phase_f.js`（9 項全單元 14 Part 覆蓋與資產完整性斷言）
+  - `verify_phase_g.js`（45 項列印雙模式、文章去重、154 題全掃描、14 Part UI 膠囊聯動與 Rex/Hugo 正式上線歸零斷言）
