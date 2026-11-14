@@ -4,13 +4,13 @@
 --------------------------------------------------------------------------------
 - 建立日期：2026-11-12
 - 最後更新：2026-11-14
-- 當前狀態：Phase A ~ G 全數完工並正式部署 GitHub Pages（`data/ket_exam_bank.js` **154 題 / 550.6 KB**，`Unit 1/2/3` 各自 100% 覆蓋全部 14 個官方 KET Part；`Rex` 與 `Hugo` 帳號已執行雲端與本機 `LAUNCH_RESET_EPOCH` 正式上線歸零，保留 `test1`/`test2` 測試沙盒）
+- 當前狀態：Phase A ~ G 完工並已推送 GitHub Pages（含 **iPhone Safari/Chrome 語音無聲根治修復 (`TTSEngine`)** 暨 **進場強制選帳號＋密碼驗證 (`#ac-login-modal`)**，全套驗收 100% PASS）
 - 線上網址 (GitHub Pages)：https://ddd8836203.github.io/cambridge-ket-island/
 - GitHub 倉庫：https://github.com/ddd8836203/cambridge-ket-island
 - 適用對象：Rex (國小六年級)、Hugo (國小五年級)、家長/教學人員、維護 AI Agent
 - 目標檢定：2 個月（60 天）內參加劍橋英檢 A2 Key (KET)，奪取 **13 個盾牌以上（Cambridge Scale 135~142+ 分 / Grade B Merit ~ Grade A Distinction，整體答對率 ≥ 82%）**
 - 下一步待辦 (Next Actions)：
-  1. Rex 與 Hugo 正式於線上版開始 154 題全真方格考場與 A4 實體考卷特訓。
+  1. Rex 與 Hugo 可直接開啟 GitHub Pages 線上版，登入密碼驗證後開始練習（`test1` / `test2` 免密碼）。
   2. 後續視學習進度擴充 Unit 4 ~ Unit 12 題庫。
 --------------------------------------------------------------------------------
 

@@ -207,9 +207,86 @@
       </div>
       <div class="footer-right">
         <span class="footer-note">🎯 目標：13 盾牌 (135+ 分 Merit 卓越認證)</span>
+        <button class="footer-reset-btn" id="btn-switch-lock-account" onclick="openAccountLoginModal({ startup: false })" title="切換或重新驗證考生帳號">👤 換人登入</button>
         <button class="footer-reset-btn" id="btn-reset-test-account" title="重置目前帳號的測試數據">🔄 重設當前沙盒數據</button>
       </div>
     </footer>
+  </div>
+
+  <!-- 進場選帳號與密碼驗證視窗 (防止誤用帳號混淆紀錄 + 同步解鎖 iPhone 語音) -->
+  <div id="ac-login-modal" class="ac-login-modal open" role="dialog" aria-modal="true" aria-labelledby="login-modal-title">
+    <div class="ac-login-card" id="ac-login-card">
+      <div class="ac-login-header">
+        <div class="ac-login-badge">🏝️ 動森 KET 13盾衝刺島 · 登島護照查驗</div>
+        <h2 id="login-modal-title" class="ac-login-title">請問今天是哪位島民要練習？</h2>
+        <p class="ac-login-sub" id="login-modal-sub">請先點選自己的護照登入，才不會跟別人的錯題與盾牌混在一起喔！</p>
+      </div>
+
+      <div class="ac-login-grid" id="ac-login-grid">
+        <button type="button" class="ac-login-option" data-acc="rex" id="login-card-rex" onclick="selectLoginAccount('rex')">
+          <span class="ac-login-avatar">🦁</span>
+          <div class="ac-login-meta">
+            <strong>Rex (6年級)</strong>
+            <small>15 盾衝刺主帳號</small>
+          </div>
+          <span class="ac-login-lock">🔒 需密碼</span>
+        </button>
+        <button type="button" class="ac-login-option" data-acc="hugo" id="login-card-hugo" onclick="selectLoginAccount('hugo')">
+          <span class="ac-login-avatar">🐯</span>
+          <div class="ac-login-meta">
+            <strong>Hugo (5年級)</strong>
+            <small>字根詞性強化模式</small>
+          </div>
+          <span class="ac-login-lock">🔒 需密碼</span>
+        </button>
+        <button type="button" class="ac-login-option is-sandbox" data-acc="test1" id="login-card-test1" onclick="selectLoginAccount('test1')">
+          <span class="ac-login-avatar">🧪</span>
+          <div class="ac-login-meta">
+            <strong>測試1</strong>
+            <small>家長驗證沙盒</small>
+          </div>
+          <span class="ac-login-lock unlocked">🔓 免密碼進入</span>
+        </button>
+        <button type="button" class="ac-login-option is-sandbox" data-acc="test2" id="login-card-test2" onclick="selectLoginAccount('test2')">
+          <span class="ac-login-avatar">🛠️</span>
+          <div class="ac-login-meta">
+            <strong>測試2</strong>
+            <small>訪客演練沙盒</small>
+          </div>
+          <span class="ac-login-lock unlocked">🔓 免密碼進入</span>
+        </button>
+      </div>
+
+      <form id="login-password-panel" class="ac-login-pw-panel" style="display:none;" onsubmit="submitAccountPassword(event)">
+        <label for="login-password-input" class="ac-login-pw-label" id="login-password-label">
+          🔐 請輸入密碼：
+        </label>
+        <div class="ac-login-pw-row">
+          <input
+            type="password"
+            id="login-password-input"
+            class="ac-login-pw-input"
+            placeholder="輸入英文名稱 (大小寫不限)"
+            autocomplete="off"
+            autocapitalize="none"
+            autocorrect="off"
+            spellcheck="false"
+          >
+          <button type="button" class="ac-btn-icon ac-login-eye-btn" id="btn-toggle-pw-vis" onclick="toggleLoginPasswordVisibility()" aria-label="顯示或隱藏密碼" title="顯示或隱藏密碼">👁️</button>
+        </div>
+        <div id="login-error-msg" class="ac-login-error" style="display:none;"></div>
+        <div class="ac-login-pw-actions">
+          <button type="submit" class="ac-btn ac-btn-green ac-login-submit-btn" id="btn-login-confirm">🏝️ 驗證並進入衝刺島</button>
+          <button type="button" class="ac-btn" id="btn-login-cancel" style="display:none;" onclick="closeAccountLoginModal()">取消切換</button>
+        </div>
+      </form>
+
+      <div class="ac-login-footer">
+        <button type="button" class="ac-btn ac-btn-sm ac-btn-cream" id="btn-test-device-audio" onclick="testDeviceAudioFromModal()">🔊 測試 iPhone / 平板發音</button>
+        <button type="button" class="ac-btn ac-btn-sm" id="btn-login-cancel-bottom" style="display:none;" onclick="closeAccountLoginModal()">取消切換</button>
+        <span id="login-audio-test-status" class="ac-login-audio-status"></span>
+      </div>
+    </div>
   </div>
 
   <!-- 資料庫與主程式碼 -->

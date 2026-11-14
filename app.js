@@ -256,40 +256,132 @@ const VisualFX = (() => {
 })();
 
 // =============================================================================
-// 三、三層英式 TTS 語音引擎與手勢解鎖 (TTSEngine)
+// 三、三層英式 TTS 語音引擎與 iPhone/iPad Safari 深度修復 (TTSEngine)
 // =============================================================================
 const TTSEngine = (() => {
-  let isUnlocked = false;
+  let audioUnlocked = false;
+  let silentAudioEl = null;
+  let cachedVoices = [];
+  let speakSeqToken = 0;
+  let activeTimer = null;
 
-  // 首次使用者點擊時解鎖 WebKit AudioContext 與 SpeechSynthesis
-  function unlockOnFirstGesture() {
-    if (isUnlocked) return;
-    isUnlocked = true;
+  // 全域保留區：防止 iOS Safari/Chrome WebKit 提早 GC 回收 Utterance 導致靜音或失去 onend
+  const utterancePool = (typeof window !== 'undefined')
+    ? (window.__ttsUtterancePool = window.__ttsUtterancePool || [])
+    : [];
 
-    // 解鎖 Web Audio
-    SoundFX.getAudioContext();
+  // 含真實靜音取樣幀的合法 8-bit 8kHz 單聲道 WAV，強制把 iPhone WebKit 拉進 Playback 音訊通道（無視側邊靜音撥片）
+  const SILENT_WAV_DATA_URI =
+    'data:audio/wav;base64,UklGRsQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YYAAAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA';
 
-    // 解鎖 Web Speech
-    if ('speechSynthesis' in window) {
-      try {
-        const silent = new SpeechSynthesisUtterance('');
-        silent.volume = 0;
-        window.speechSynthesis.speak(silent);
-      } catch (e) {}
-    }
-    window.removeEventListener('click', unlockOnFirstGesture);
-    window.removeEventListener('touchstart', unlockOnFirstGesture);
+  function detectIOS() {
+    if (typeof navigator === 'undefined') return false;
+    const ua = navigator.userAgent || '';
+    return /iPhone|iPad|iPod/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   }
 
-  window.addEventListener('click', unlockOnFirstGesture, { once: true });
-  window.addEventListener('touchstart', unlockOnFirstGesture, { once: true });
+  function refreshVoices() {
+    if (!('speechSynthesis' in window) || typeof window.speechSynthesis.getVoices !== 'function') return [];
+    const list = window.speechSynthesis.getVoices() || [];
+    if (list.length > 0) cachedVoices = list;
+    return cachedVoices;
+  }
 
-  // 尋找最佳英式 (en-GB) 語音（支援男女雙角色切換）
+  if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+    try {
+      refreshVoices();
+      if ('onvoiceschanged' in window.speechSynthesis) {
+        window.speechSynthesis.onvoiceschanged = refreshVoices;
+      }
+    } catch (e) {}
+  }
+
+  // 強制切換 iOS AudioSession 為 playback 媒體播放通道
+  function activatePlaybackAudioSession() {
+    if (typeof navigator !== 'undefined' && navigator.audioSession) {
+      try {
+        navigator.audioSession.type = 'playback';
+      } catch (e) {}
+    }
+
+    if (typeof document !== 'undefined' && typeof document.createElement === 'function') {
+      try {
+        if (!silentAudioEl) {
+          silentAudioEl = document.createElement('audio');
+          if (silentAudioEl) {
+            silentAudioEl.src = SILENT_WAV_DATA_URI;
+            silentAudioEl.preload = 'auto';
+            silentAudioEl.volume = 0.01;
+            if ('playsInline' in silentAudioEl) silentAudioEl.playsInline = true;
+            if (typeof silentAudioEl.setAttribute === 'function') {
+              silentAudioEl.setAttribute('playsinline', '');
+              silentAudioEl.setAttribute('webkit-playsinline', '');
+            }
+          }
+        }
+        if (silentAudioEl && typeof silentAudioEl.play === 'function') {
+          silentAudioEl.currentTime = 0;
+          const p = silentAudioEl.play();
+          if (p && typeof p.catch === 'function') p.catch(() => {});
+        }
+      } catch (e) {}
+    }
+  }
+
+  // 於有效使用者點擊/放開手勢 (click / touchend) 同步解鎖音效與語音（避開 touchstart 假解鎖陷阱）
+  function unlockOnFirstGesture(warmSpeech = true) {
+    SoundFX.getAudioContext();
+    activatePlaybackAudioSession();
+
+    if (audioUnlocked) return;
+
+    if (warmSpeech && 'speechSynthesis' in window) {
+      try {
+        const synth = window.speechSynthesis;
+        if (synth.paused && typeof synth.resume === 'function') synth.resume();
+        if (!synth.speaking && !synth.pending) {
+          const silent = new SpeechSynthesisUtterance(' ');
+          silent.lang = 'en-GB';
+          silent.volume = 0;
+          silent.rate = 10;
+          utterancePool.push(silent);
+          silent.onend = silent.onerror = () => releaseUtterance(silent);
+          synth.speak(silent);
+        }
+      } catch (e) {}
+    }
+    audioUnlocked = true;
+  }
+
+  if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
+    const gestureHandler = () => unlockOnFirstGesture(true);
+    window.addEventListener('click', gestureHandler, { once: true, passive: true });
+    window.addEventListener('touchend', gestureHandler, { once: true, passive: true });
+  }
+
+  function releaseUtterance(u) {
+    const idx = utterancePool.indexOf(u);
+    if (idx !== -1) utterancePool.splice(idx, 1);
+  }
+
+  // 尋找最佳英式 (en-GB) 語音；iOS 優先採用內建 localService 避免雲端語音未下載導致無聲
   function getBestVoice(gender) {
     if (!('speechSynthesis' in window)) return null;
-    const voices = window.speechSynthesis.getVoices();
-    const enGbVoices = voices.filter(v => v.lang.startsWith('en-GB') || v.lang === 'en_GB');
-    const pool = enGbVoices.length > 0 ? enGbVoices : voices.filter(v => v.lang.startsWith('en'));
+    const voices = refreshVoices();
+    if (!voices || voices.length === 0) return null;
+
+    const isIOS = detectIOS();
+    const enGbVoices = voices.filter(v => {
+      const lang = (v.lang || '').replace('_', '-').toLowerCase();
+      return lang === 'en-gb' || lang.startsWith('en-gb-');
+    });
+    const enVoices = voices.filter(v => (v.lang || '').toLowerCase().startsWith('en'));
+
+    let pool = enGbVoices.length > 0 ? enGbVoices : enVoices;
+    if (isIOS) {
+      const localPool = pool.filter(v => v.localService !== false);
+      if (localPool.length > 0) pool = localPool;
+    }
 
     if (gender === 'male') {
       const m = pool.find(v => /Ryan|Daniel|Arthur|George|Oliver|Thomas|Male/i.test(v.name) && (v.name.includes('Natural') || v.name.includes('Online')))
@@ -301,45 +393,185 @@ const TTSEngine = (() => {
       if (f) return f;
     }
 
-    // 第一優先：微軟神經自然英音或 Google UK
+    // 第一優先：電腦版微軟神經自然英音或 Google UK
     const preferred = pool.find(v => v.name.includes('Natural') || v.name.includes('Online') || v.name.includes('Google UK'));
     if (preferred) return preferred;
 
+    // iOS 若無特定 en-GB 語音，交由系統依 lang='en-GB' 自動挑聲源最穩妥
+    if (isIOS && enGbVoices.length === 0) return null;
     return pool[0] || null;
   }
 
-  // 發音保護與朗讀
-  function speak(text, { rate = 1.0, pitch = 1.0, gender = null, onEnd = null } = {}) {
-    if (!('speechSynthesis' in window)) {
-      console.warn('此瀏覽器不支援 Web Speech API');
-      return;
-    }
-
-    window.speechSynthesis.cancel(); // 中斷前一次發音
-
+  function buildUtterance(text, { rate = 1.0, pitch = 1.0, gender = null } = {}) {
     // 僅針對單獨唸出字母 'a' 時轉念 'A.'，避免整句對話把冠詞 a 誤念成大字母 A
     const trimmed = String(text || '').trim();
     const processedText = trimmed.toLowerCase() === 'a' ? 'A.' : trimmed;
 
     const utterance = new SpeechSynthesisUtterance(processedText);
     utterance.lang = 'en-GB';
-    utterance.rate = rate;
-    utterance.pitch = pitch;
+    utterance.rate = Math.max(0.5, Math.min(2.0, rate || 1.0));
+    utterance.pitch = Math.max(0.5, Math.min(2.0, pitch || 1.0));
+    utterance.volume = 1.0;
 
     const voice = getBestVoice(gender);
     if (voice) {
       utterance.voice = voice;
+      if (voice.lang) {
+        utterance.lang = voice.lang.replace('_', '-');
+      }
+    }
+    return utterance;
+  }
+
+  function stop() {
+    speakSeqToken++;
+    if (activeTimer) {
+      clearTimeout(activeTimer);
+      activeTimer = null;
+    }
+    utterancePool.length = 0;
+    if ('speechSynthesis' in window) {
+      try {
+        window.speechSynthesis.cancel();
+      } catch (e) {}
+    }
+  }
+
+  // 若當前無語音在播放則不呼叫 cancel()，於點擊當下同步排入語音，徹底防止 iPhone cancel()+speak() 吞音 Bug
+  function runWithSafeCancel(fn) {
+    if (!('speechSynthesis' in window)) {
+      console.warn('此瀏覽器不支援 Web Speech API');
+      return;
+    }
+    const synth = window.speechSynthesis;
+    const myToken = ++speakSeqToken;
+    if (activeTimer) {
+      clearTimeout(activeTimer);
+      activeTimer = null;
     }
 
-    if (onEnd) {
-      utterance.onend = onEnd;
-    }
+    SoundFX.getAudioContext();
+    activatePlaybackAudioSession();
+    audioUnlocked = true;
 
-    window.speechSynthesis.speak(utterance);
+    try {
+      if (synth.paused && typeof synth.resume === 'function') {
+        synth.resume();
+      }
+    } catch (e) {}
+
+    // 僅以底層 synth.speaking / synth.pending 判斷是否需中斷，避免系統漏發 onend 造成誤延遲並脫離使用者手勢
+    const needCancel = Boolean(synth.speaking || synth.pending);
+    if (needCancel) {
+      utterancePool.length = 0;
+      try { synth.cancel(); } catch (e) {}
+      const delayMs = detectIOS() ? 80 : 25;
+      activeTimer = setTimeout(() => {
+        activeTimer = null;
+        if (myToken !== speakSeqToken) return;
+        try {
+          if (synth.paused && typeof synth.resume === 'function') synth.resume();
+        } catch (e) {}
+        fn(myToken);
+      }, delayMs);
+    } else {
+      utterancePool.length = 0;
+      fn(myToken);
+    }
+  }
+
+  // 單句發音保護與朗讀
+  function speak(text, { rate = 1.0, pitch = 1.0, gender = null, onEnd = null, onError = null } = {}) {
+    if (!('speechSynthesis' in window)) {
+      console.warn('此瀏覽器不支援 Web Speech API');
+      if (typeof onError === 'function') onError();
+      return;
+    }
+    const cleanText = String(text || '').trim();
+    if (!cleanText) return;
+
+    runWithSafeCancel((myToken) => {
+      if (myToken !== speakSeqToken) return;
+      const utterance = buildUtterance(cleanText, { rate, pitch, gender });
+      utterancePool.push(utterance);
+
+      let settled = false;
+      const finish = (isErr, ev) => {
+        if (settled) return;
+        settled = true;
+        releaseUtterance(utterance);
+        if (myToken !== speakSeqToken) return;
+        const errType = ev && ev.error;
+        if (isErr && errType !== 'interrupted' && errType !== 'canceled') {
+          if (typeof onError === 'function') onError(ev);
+        } else if (!isErr && typeof onEnd === 'function') {
+          onEnd();
+        }
+      };
+
+      utterance.onend = () => finish(false);
+      utterance.onerror = (ev) => finish(true, ev);
+
+      try {
+        window.speechSynthesis.speak(utterance);
+      } catch (e) {
+        finish(true, e);
+      }
+    });
+  }
+
+  // 多句對話同步排隊連播：在單一次點擊手勢內推入全句列，防止 iPhone Async Timer 後續句失聲
+  function speakSequence(items, { onItemStart = null, onItemEnd = null, onComplete = null, onError = null } = {}) {
+    if (!('speechSynthesis' in window) || !Array.isArray(items) || items.length === 0) return;
+
+    runWithSafeCancel((myToken) => {
+      if (myToken !== speakSeqToken) return;
+      const total = items.length;
+      let errNotified = false;
+
+      items.forEach((item, idx) => {
+        const utterance = buildUtterance(item.text, {
+          rate: item.rate || 1.0,
+          pitch: item.pitch || 1.0,
+          gender: item.gender || null
+        });
+        utterancePool.push(utterance);
+
+        utterance.onstart = () => {
+          if (myToken !== speakSeqToken) return;
+          if (typeof onItemStart === 'function') onItemStart(idx, item);
+        };
+
+        const handleDone = (isErr, ev) => {
+          releaseUtterance(utterance);
+          if (myToken !== speakSeqToken) return;
+          const errType = ev && ev.error;
+          if (isErr && errType !== 'interrupted' && errType !== 'canceled' && !errNotified) {
+            errNotified = true;
+            if (typeof onError === 'function') onError(ev);
+          }
+          if (typeof onItemEnd === 'function') onItemEnd(idx, item);
+          if (idx === total - 1 && typeof onComplete === 'function') {
+            onComplete();
+          }
+        };
+
+        utterance.onend = () => handleDone(false);
+        utterance.onerror = (ev) => handleDone(true, ev);
+
+        try {
+          window.speechSynthesis.speak(utterance);
+        } catch (e) {
+          handleDone(true, e);
+        }
+      });
+    });
   }
 
   return {
     speak,
+    speakSequence,
+    stop,
     unlockOnFirstGesture
   };
 })();
@@ -511,6 +743,11 @@ window.syncFromCloud = async function(accountId, notify = false) {
       console.warn('LocalStorage 存檔失敗:', e);
     }
 
+    // 唯有雲端仍為無新重置戳記之舊資料時才主动回寫覆蓋，避免新設備清空既有合法進度
+    if ((accId === 'rex' || accId === 'hugo') && remoteData && remoteData.resetEpoch !== LAUNCH_RESET_EPOCH) {
+      pushToCloud(accId);
+    }
+
     if (accId === AppState.currentAccount) {
       AppState.accountData = mergedData;
       updateHeaderDisplay();
@@ -637,12 +874,11 @@ const AccountManager = (() => {
     const resetFlagKey = `${STORAGE_PREFIX}launch_reset_${accountId}`;
 
     try {
-      // 若為 Rex / Hugo 且本機尚未執行過正式上線歸零，強制清除舊本機快取並重建全新空白狀態
+      // 若為 Rex / Hugo 且本機尚未執行過正式上線歸零，僅清除本機舊快取（不主動蓋寫雲端，交由 syncFromCloud 合併）
       if (isStudentAccount && localStorage.getItem(resetFlagKey) !== LAUNCH_RESET_EPOCH) {
         const fresh = createInitialAccountData(accountId);
         localStorage.setItem(resetFlagKey, LAUNCH_RESET_EPOCH);
         localStorage.setItem(getStorageKey(accountId), JSON.stringify(fresh));
-        pushToCloud(accountId);
         return fresh;
       }
 
@@ -653,7 +889,6 @@ const AccountManager = (() => {
           const fresh = createInitialAccountData(accountId);
           localStorage.setItem(resetFlagKey, LAUNCH_RESET_EPOCH);
           localStorage.setItem(getStorageKey(accountId), JSON.stringify(fresh));
-          pushToCloud(accountId);
           return fresh;
         }
         data.questionStats = data.questionStats || {};
@@ -666,15 +901,17 @@ const AccountManager = (() => {
     if (isStudentAccount) {
       try { localStorage.setItem(resetFlagKey, LAUNCH_RESET_EPOCH); } catch (e) {}
     }
-    saveAccount(accountId, initial);
+    saveAccount(accountId, initial, { skipCloudPush: true });
     return initial;
   }
 
-  function saveAccount(accountId, data) {
+  function saveAccount(accountId, data, { skipCloudPush = false } = {}) {
     try {
       localStorage.setItem(getStorageKey(accountId), JSON.stringify(data));
       // Phase 6: 自動推送至 Firebase 雲端 (防抖 600ms)
-      pushToCloud(accountId);
+      if (!skipCloudPush) {
+        pushToCloud(accountId);
+      }
     } catch (e) {
       console.error('寫入帳號存檔失敗：', e);
     }
@@ -752,8 +989,266 @@ const AppState = {
   arenaSelfGraded: {},       // { [code]: 'ok' | 'bad' } - 當輪自評紀錄
   arenaExtensionOpen: {},    // { [code]: boolean }
 
+  // 進場帳號與密碼閘門狀態
+  loginModalOpen: false,
+  loginStartupMode: true,
+  pendingLoginAccount: null,
+  isAuthenticated: false,
+
   // 當前帳號資料
   accountData: null
+};
+
+// =============================================================================
+// 五之一、進場帳號選擇與密碼驗證閘門 (AccountLoginGate)
+// 防止多考生共用設備誤用帳號混淆錯題紀錄，並於登入點擊當下完美解鎖 iPhone 語音
+// =============================================================================
+const ACCOUNT_LOGIN_PROFILES = {
+  rex:   { id: 'rex',   name: 'Rex (6年級)', grade: '6年級', password: 'rex' },
+  hugo:  { id: 'hugo',  name: 'Hugo (5年級)', grade: '5年級', password: 'hugo' },
+  test1: { id: 'test1', name: '測試1',       grade: '家長驗證沙盒', password: null },
+  test2: { id: 'test2', name: '測試2',       grade: '訪客演練沙盒', password: null }
+};
+
+function syncLoginCardHighlight(selectedId) {
+  if (typeof document === 'undefined' || typeof document.querySelectorAll !== 'function') return;
+  document.querySelectorAll('.ac-login-option').forEach(btn => {
+    const acc = btn.getAttribute ? btn.getAttribute('data-acc') : (btn.dataset && btn.dataset.acc);
+    btn.classList.toggle('active', Boolean(selectedId && acc === selectedId));
+  });
+}
+
+window.openAccountLoginModal = function({ startup = false, preselect = null } = {}) {
+  TTSEngine.stop();
+  AppState.loginModalOpen = true;
+  AppState.loginStartupMode = Boolean(startup);
+  AppState.pendingLoginAccount = preselect || null;
+
+  const modal = document.getElementById('ac-login-modal');
+  const titleEl = document.getElementById('login-modal-title');
+  const subEl = document.getElementById('login-modal-sub');
+  const pwPanel = document.getElementById('login-password-panel');
+  const pwLabel = document.getElementById('login-password-label');
+  const pwInput = document.getElementById('login-password-input');
+  const errEl = document.getElementById('login-error-msg');
+  const btnCancel = document.getElementById('btn-login-cancel');
+  const btnCancelBottom = document.getElementById('btn-login-cancel-bottom');
+  const audioStatus = document.getElementById('login-audio-test-status');
+
+  if (titleEl) {
+    titleEl.textContent = startup ? '請問今天是哪位島民要練習？' : '切換島民護照 / 重新登入驗證';
+  }
+  if (subEl) {
+    subEl.textContent = '請先點選自己的護照登入，才不會跟別人的錯題與盾牌混在一起喔！';
+  }
+  if (audioStatus) audioStatus.textContent = '';
+  if (errEl) {
+    errEl.style.display = 'none';
+    errEl.textContent = '';
+  }
+  if (pwInput) {
+    pwInput.value = '';
+    pwInput.type = 'password';
+  }
+
+  syncLoginCardHighlight(preselect);
+
+  const profile = preselect ? ACCOUNT_LOGIN_PROFILES[preselect] : null;
+  if (profile && profile.password) {
+    if (pwLabel) pwLabel.textContent = `🔐 請輸入 ${profile.name} 的密碼（英文名字，大小寫不限）：`;
+    if (pwInput) pwInput.placeholder = `輸入 ${profile.id} (不限大小寫)`;
+    if (pwPanel) pwPanel.style.display = 'block';
+    if (btnCancel) btnCancel.style.display = startup ? 'none' : 'inline-flex';
+    if (btnCancelBottom) btnCancelBottom.style.display = 'none';
+    if (pwInput && typeof pwInput.focus === 'function') {
+      setTimeout(() => pwInput.focus(), 60);
+    }
+  } else {
+    if (pwPanel) pwPanel.style.display = 'none';
+    if (btnCancel) btnCancel.style.display = 'none';
+    if (btnCancelBottom) btnCancelBottom.style.display = startup ? 'none' : 'inline-flex';
+  }
+
+  if (modal) {
+    modal.classList.add('open');
+    if (typeof modal.setAttribute === 'function') modal.setAttribute('aria-hidden', 'false');
+  }
+};
+
+window.closeAccountLoginModal = function() {
+  if (AppState.loginStartupMode && !AppState.isAuthenticated) return;
+  SoundFX.playClick();
+  AppState.loginModalOpen = false;
+  AppState.pendingLoginAccount = null;
+  const modal = document.getElementById('ac-login-modal');
+  if (modal) {
+    modal.classList.remove('open');
+    if (typeof modal.setAttribute === 'function') modal.setAttribute('aria-hidden', 'true');
+  }
+};
+
+window.selectLoginAccount = function(accId) {
+  TTSEngine.unlockOnFirstGesture(true);
+  SoundFX.playClick();
+  const profile = ACCOUNT_LOGIN_PROFILES[accId];
+  if (!profile) return;
+
+  // 測試帳號免密碼，點擊即進入
+  if (!profile.password) {
+    completeAccountLogin(accId);
+    return;
+  }
+
+  AppState.pendingLoginAccount = accId;
+  syncLoginCardHighlight(accId);
+
+  const pwPanel = document.getElementById('login-password-panel');
+  const pwLabel = document.getElementById('login-password-label');
+  const pwInput = document.getElementById('login-password-input');
+  const errEl = document.getElementById('login-error-msg');
+  const btnCancel = document.getElementById('btn-login-cancel');
+  const btnCancelBottom = document.getElementById('btn-login-cancel-bottom');
+
+  if (pwLabel) pwLabel.textContent = `🔐 請輸入 ${profile.name} 的密碼（英文名字，大小寫不限）：`;
+  if (pwInput) {
+    pwInput.value = '';
+    pwInput.type = 'password';
+    pwInput.placeholder = `輸入 ${profile.id} (不限大小寫)`;
+  }
+  if (errEl) {
+    errEl.style.display = 'none';
+    errEl.textContent = '';
+  }
+  if (pwPanel) pwPanel.style.display = 'block';
+  if (btnCancel) btnCancel.style.display = (AppState.loginStartupMode && !AppState.isAuthenticated) ? 'none' : 'inline-flex';
+  if (btnCancelBottom) btnCancelBottom.style.display = 'none';
+
+  if (pwInput && typeof pwInput.focus === 'function') {
+    setTimeout(() => pwInput.focus(), 40);
+  }
+};
+
+window.toggleLoginPasswordVisibility = function() {
+  const pwInput = document.getElementById('login-password-input');
+  const btnEye = document.getElementById('btn-toggle-pw-vis');
+  if (!pwInput) return;
+  const isPw = pwInput.type === 'password';
+  pwInput.type = isPw ? 'text' : 'password';
+  if (btnEye) btnEye.textContent = isPw ? '🙈' : '👁️';
+};
+
+window.submitAccountPassword = function(event) {
+  if (event && typeof event.preventDefault === 'function') event.preventDefault();
+  TTSEngine.unlockOnFirstGesture(true);
+
+  const accId = AppState.pendingLoginAccount;
+  const profile = accId ? ACCOUNT_LOGIN_PROFILES[accId] : null;
+  if (!profile) return;
+
+  if (!profile.password) {
+    completeAccountLogin(accId);
+    return;
+  }
+
+  const pwInput = document.getElementById('login-password-input');
+  const errEl = document.getElementById('login-error-msg');
+  const cardEl = document.getElementById('ac-login-card');
+  const entered = String(pwInput ? pwInput.value : '').trim().toLowerCase();
+
+  if (entered === profile.password.toLowerCase()) {
+    completeAccountLogin(accId);
+    return;
+  }
+
+  SoundFX.playWrong();
+  VisualFX.shakeElement(cardEl);
+  if (errEl) {
+    errEl.textContent = `❌ 密碼不正確喔！${profile.name} 的預設密碼就是英文名字「${profile.id}」（不限大小寫）。`;
+    errEl.style.display = 'block';
+  }
+  if (pwInput && typeof pwInput.focus === 'function') {
+    pwInput.focus();
+    if (typeof pwInput.select === 'function') pwInput.select();
+  }
+};
+
+window.completeAccountLogin = function(accId) {
+  const profile = ACCOUNT_LOGIN_PROFILES[accId];
+  if (!profile) return;
+
+  const switchedAccount = AppState.currentAccount !== accId;
+  AppState.loginModalOpen = false;
+  AppState.loginStartupMode = false;
+  AppState.pendingLoginAccount = null;
+  AppState.isAuthenticated = true;
+
+  if (switchedAccount) {
+    TTSEngine.stop();
+    AppState.arenaUserAnswers = {};
+    AppState.arenaSubmitted = {};
+    AppState.arenaRevealed = {};
+    AppState.arenaSelfGraded = {};
+    AppState.rwAnswers = {};
+    AppState.listeningAnswers = {};
+    AppState.speakingRevealed = {};
+    AppState.mistakeResults = {};
+    AppState.arenaCurrentIndex = 0;
+  }
+
+  AppState.currentAccount = accId;
+  AppState.accountData = AccountManager.loadAccount(accId);
+
+  const accBtns = document.querySelectorAll('.acc-btn');
+  accBtns.forEach(b => {
+    const btnAcc = b.getAttribute ? b.getAttribute('data-account') : (b.dataset && b.dataset.account);
+    b.classList.toggle('active', btnAcc === accId);
+  });
+
+  const pwInput = document.getElementById('login-password-input');
+  if (pwInput) pwInput.value = '';
+
+  const modal = document.getElementById('ac-login-modal');
+  if (modal) {
+    modal.classList.remove('open');
+    if (typeof modal.setAttribute === 'function') modal.setAttribute('aria-hidden', 'true');
+  }
+
+  SoundFX.playBebebese();
+  updateHeaderDisplay();
+  renderCurrentView();
+  syncFromCloud(accId);
+};
+
+window.requestAccountSwitch = function(targetAccountId) {
+  const profile = ACCOUNT_LOGIN_PROFILES[targetAccountId];
+  if (!profile) return;
+  SoundFX.playClick();
+  TTSEngine.unlockOnFirstGesture(true);
+
+  if (targetAccountId === AppState.currentAccount && AppState.isAuthenticated) {
+    return;
+  }
+
+  if (!profile.password) {
+    completeAccountLogin(targetAccountId);
+  } else {
+    openAccountLoginModal({ startup: false, preselect: targetAccountId });
+  }
+};
+
+window.testDeviceAudioFromModal = function() {
+  SoundFX.playClick();
+  const statusEl = document.getElementById('login-audio-test-status');
+  if (statusEl) statusEl.textContent = '🔊 正在測試發音...';
+  TTSEngine.speak('Welcome to Cambridge KET Island!', {
+    rate: 1.0,
+    onEnd: () => {
+      if (statusEl) statusEl.textContent = '✅ 語音發音正常！';
+    },
+    onError: () => {
+      if (statusEl) statusEl.textContent = '⚠️ 無法發音，請改用 Safari 開啟並調高媒體音量';
+    }
+  });
 };
 
 // =============================================================================
@@ -762,7 +1257,7 @@ const AppState = {
 
 // 初始化帳號與介面
 function initApp() {
-  // 載入 Rex 預設帳號
+  // 先行在本機建立視圖底層資料（不主動推上雲端），並立刻彈出帳號選單要求考生登入
   AppState.accountData = AccountManager.loadAccount(AppState.currentAccount);
 
   // 綁定頂部常駐控制器事件
@@ -789,17 +1284,15 @@ function initApp() {
     });
   }
 
-  // 渲染當前分頁與狀態列
+  // 渲染底層畫面並強制啟動選帳號視窗（避免誤用帳號與同步解鎖手機語音）
   updateHeaderDisplay();
   renderCurrentView();
+  openAccountLoginModal({ startup: true, preselect: null });
 
-  // 啟動時自動拉取 Firebase 雲端最新進度
-  syncFromCloud(AppState.currentAccount);
-
-  // KET 全真考場鍵盤左右鍵切換上一題/下一題（輸入框聚焦時略過）
+  // KET 全真考場鍵盤左右鍵切換上一題/下一題（輸入框聚焦或登入視窗開啟時略過）
   if (typeof document !== 'undefined' && typeof document.addEventListener === 'function') {
     document.addEventListener('keydown', (e) => {
-      if (AppState.currentTab !== 'arena') return;
+      if (AppState.loginModalOpen || AppState.currentTab !== 'arena') return;
       const activeTag = (document.activeElement && document.activeElement.tagName) ? document.activeElement.tagName.toUpperCase() : '';
       if (['INPUT', 'TEXTAREA', 'SELECT'].includes(activeTag)) return;
       const total = getArenaFilteredQuestions().length;
@@ -867,20 +1360,11 @@ function setupTopbarEvents() {
     });
   });
 
-  // 2. 帳號切換膠囊
+  // 2. 帳號切換膠囊（若切換至 Rex 或 Hugo，強制經過密碼驗證閘門）
   const accBtns = document.querySelectorAll('.acc-btn');
   accBtns.forEach(btn => {
     btn.addEventListener('click', () => {
-      SoundFX.playClick();
-      SoundFX.playBebebese();
-      accBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-
-      AppState.currentAccount = btn.dataset.account;
-      AppState.accountData = AccountManager.loadAccount(AppState.currentAccount);
-      updateHeaderDisplay();
-      renderCurrentView();
-      syncFromCloud(AppState.currentAccount);
+      requestAccountSwitch(btn.dataset.account);
     });
   });
 
@@ -3972,7 +4456,7 @@ window.switchListeningMode = function(mode) {
   AppState.listeningMode = mode;
   AppState.listeningIsPlaying = false;
   AppState.listeningCurrentIndex = -1;
-  window.speechSynthesis.cancel();
+  TTSEngine.stop();
   renderListeningPod();
 };
 
@@ -3990,13 +4474,14 @@ window.toggleDistractorXray = function() {
 
 window.playSingleDialogueLine = function(text, gender, index) {
   SoundFX.playClick();
-  window.speechSynthesis.cancel();
+  AppState.listeningIsPlaying = false;
   AppState.listeningCurrentIndex = index;
 
   const pitch = gender === 'male' ? 0.92 : 1.08;
   TTSEngine.speak(text, {
     rate: AppState.listeningSpeed || 1.0,
     pitch: pitch,
+    gender: gender || null,
     onEnd: () => {
       AppState.listeningCurrentIndex = -1;
       const b = document.getElementById(`bubble-line-${index}`);
@@ -4012,21 +4497,14 @@ window.playSingleDialogueLine = function(text, gender, index) {
 };
 
 window.toggleListeningPlayback = function() {
+  SoundFX.playClick();
   if (AppState.listeningIsPlaying) {
     AppState.listeningIsPlaying = false;
     AppState.listeningCurrentIndex = -1;
-    window.speechSynthesis.cancel();
+    TTSEngine.stop();
     renderListeningPod();
     return;
   }
-
-  AppState.listeningIsPlaying = true;
-  AppState.listeningCurrentIndex = 0;
-  playDialogueQueueStep();
-};
-
-function playDialogueQueueStep() {
-  if (!AppState.listeningIsPlaying) return;
 
   const data = window.KET_DATA;
   const mode = AppState.listeningMode || 'listeningPart3';
@@ -4036,36 +4514,53 @@ function playDialogueQueueStep() {
   else task = data.units[2].exercises.listeningPart2;
 
   const lines = task.tapescript || [];
-  if (AppState.listeningCurrentIndex >= lines.length) {
-    AppState.listeningIsPlaying = false;
-    AppState.listeningCurrentIndex = -1;
-    renderListeningPod();
-    return;
-  }
+  if (lines.length === 0) return;
 
-  const currentLine = lines[AppState.listeningCurrentIndex];
-  const isMale = (currentLine.speaker || '').includes('Simon') || (currentLine.speaker || '').includes('Boy');
-  const pitch = isMale ? 0.92 : 1.08;
+  AppState.listeningIsPlaying = true;
+  AppState.listeningCurrentIndex = 0;
 
-  // 高亮當前對話氣泡
+  const rate = AppState.listeningSpeed || 1.0;
+  const seqItems = lines.map(currentLine => {
+    const sp = currentLine.speaker || '';
+    const isMale = /Simon|Boy|Man|Tom|Leo|Dad/i.test(sp);
+    return {
+      text: currentLine.text,
+      rate,
+      gender: isMale ? 'male' : 'female',
+      pitch: isMale ? 0.92 : 1.08
+    };
+  });
+
+  // 先即時高亮第一句對話氣泡，同時在同一手勢內將全段對話一次排入 TTS 佇列（確保 iPhone 不中斷）
   document.querySelectorAll('.dialogue-bubble').forEach(b => b.classList.remove('speaking-now'));
-  const currentBubble = document.getElementById(`bubble-line-${AppState.listeningCurrentIndex}`);
-  if (currentBubble) {
-    currentBubble.classList.add('speaking-now');
-    currentBubble.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }
+  const firstBubble = document.getElementById('bubble-line-0');
+  if (firstBubble) firstBubble.classList.add('speaking-now');
 
-  TTSEngine.speak(currentLine.text, {
-    rate: AppState.listeningSpeed || 1.0,
-    pitch: pitch,
-    onEnd: () => {
-      if (AppState.listeningIsPlaying) {
-        AppState.listeningCurrentIndex++;
-        setTimeout(playDialogueQueueStep, 450);
+  TTSEngine.speakSequence(seqItems, {
+    onItemStart: (idx) => {
+      if (!AppState.listeningIsPlaying) return;
+      AppState.listeningCurrentIndex = idx;
+      document.querySelectorAll('.dialogue-bubble').forEach(b => b.classList.remove('speaking-now'));
+      const currentBubble = document.getElementById(`bubble-line-${idx}`);
+      if (currentBubble) {
+        currentBubble.classList.add('speaking-now');
+        if (typeof currentBubble.scrollIntoView === 'function') {
+          currentBubble.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
       }
+    },
+    onComplete: () => {
+      AppState.listeningIsPlaying = false;
+      AppState.listeningCurrentIndex = -1;
+      renderListeningPod();
+    },
+    onError: () => {
+      AppState.listeningIsPlaying = false;
+      AppState.listeningCurrentIndex = -1;
+      renderListeningPod();
     }
   });
-}
+};
 
 window.checkListeningAnswer = function(ansKey, selected, correct, qText) {
   SoundFX.playClick();
@@ -6015,22 +6510,17 @@ window.toggleArenaBookmark = function(code) {
 };
 
 // 停止雙角色考場錄音播放
-let arenaAudioAbort = false;
 window.stopArenaAudio = function() {
-  arenaAudioAbort = true;
-  if (typeof speechSynthesis !== 'undefined') speechSynthesis.cancel();
+  TTSEngine.stop();
 };
 
-// 播放雙角色英式考場音訊（不唸出說話者名稱，自動男女音高區分，支援雙遍/單遍/0.85x慢速）
+// 播放雙角色英式考場音訊（同步排入全句列以確保 iPhone Safari/Chrome 全程播畢，支援雙遍/單遍/0.85x慢速）
 window.playArenaAudio = function(code, mode) {
   SoundFX.playClick();
   const bank = window.KET_EXAM_BANK;
   if (!bank || !Array.isArray(bank.questions)) return;
   const q = bank.questions.find(item => item.code === code);
   if (!q) return;
-
-  arenaAudioAbort = false;
-  if (typeof speechSynthesis !== 'undefined') speechSynthesis.cancel();
 
   const rate = mode === 0.85 ? 0.85 : 1.0;
   const rawLines = (Array.isArray(q.audioLines) && q.audioLines.length > 0)
@@ -6042,48 +6532,28 @@ window.playArenaAudio = function(code, mode) {
     if (typeof line === 'object' && line.text) {
       const spLower = (line.speaker || '').toLowerCase();
       const isMale = line.role === 'male' || /boy|man|simon|tom|leo|dad|uncle|freddy|hasan|mr|interviewer/i.test(spLower);
-      return { text: line.text, gender: isMale ? 'male' : 'female', pitch: isMale ? 0.90 : 1.08 };
+      return { text: line.text, rate, gender: isMale ? 'male' : 'female', pitch: isMale ? 0.90 : 1.08 };
     }
     const str = String(line);
     const m = str.match(/^([^:：]+)[:：]\s*(.+)$/);
     if (m) {
       const sp = m[1].trim();
       const isMale = /boy|man|simon|tom|leo|dad|uncle|freddy|hasan|mr/i.test(sp);
-      return { text: m[2].trim(), gender: isMale ? 'male' : 'female', pitch: isMale ? 0.90 : 1.08 };
+      return { text: m[2].trim(), rate, gender: isMale ? 'male' : 'female', pitch: isMale ? 0.90 : 1.08 };
     }
-    return { text: str, gender: 'female', pitch: 1.05 };
+    return { text: str, rate, gender: 'female', pitch: 1.05 };
   });
 
-  function playPass(passNum, onComplete) {
-    let idx = 0;
-    function nextLine() {
-      if (arenaAudioAbort) return;
-      if (idx >= parsedLines.length) {
-        if (onComplete) onComplete();
-        return;
-      }
-      const item = parsedLines[idx++];
-      TTSEngine.speak(item.text, {
-        rate,
-        pitch: item.pitch,
-        gender: item.gender,
-        onEnd: () => {
-          setTimeout(nextLine, 260);
-        }
-      });
-    }
-    nextLine();
-  }
+  // 雙遍考場模式於同一使用者點擊內同步排入「第一遍 + Now listen again. + 第二遍」，徹底避開 iPhone setTimeout 擋音
+  const seqItems = mode === 'double'
+    ? [
+        ...parsedLines,
+        { text: 'Now listen again.', rate: 0.95, gender: 'female', pitch: 1.0 },
+        ...parsedLines
+      ]
+    : parsedLines;
 
-  if (mode === 'double') {
-    playPass(1, () => {
-      if (!arenaAudioAbort) {
-        setTimeout(() => playPass(2, null), 1200);
-      }
-    });
-  } else {
-    playPass(1, null);
-  }
+  TTSEngine.speakSequence(seqItems);
 };
 
 // =============================================================================

@@ -30,6 +30,7 @@ console.log('🖨️ Running Phase G Verification Gate (verify_phase_g.js)...');
 console.log('================================================================');
 
 const root = __dirname;
+const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
 const css = fs.readFileSync(path.join(root, 'style.css'), 'utf8');
 const js = fs.readFileSync(path.join(root, 'app.js'), 'utf8');
 
@@ -280,6 +281,100 @@ assert(
   freshHugo.nookMiles === 0 &&
   test1Acc.nookMiles === 100,
   'Official Launch Reset wipes stale Rex/Hugo local cache to 0 while keeping test1/test2 sandbox intact'
+);
+
+// 9. Startup Account Login Gate (Case-insensitive password for Rex/Hugo, passwordless for test1/test2) & iPhone TTS Fix
+assert(
+  AppState.loginModalOpen === true &&
+  document.getElementById('ac-login-modal').classList.contains('open') &&
+  !AppState.isAuthenticated,
+  'Startup immediately opens mandatory Account Login Modal before session'
+);
+
+assert(
+  css.includes('.ac-login-modal.open') && html.includes('id="ac-login-modal"'),
+  'HTML/CSS include #ac-login-modal & hide modal in @media print'
+);
+
+// 9a. Entering test1 without password works immediately
+selectLoginAccount('test1');
+assert(
+  AppState.currentAccount === 'test1' &&
+  AppState.isAuthenticated === true &&
+  AppState.loginModalOpen === false,
+  'Test account (test1) enters immediately with zero password'
+);
+
+// Record temporary answer in test1 session to confirm cross-account session wipe on switch
+AppState.arenaUserAnswers['TMP-Q'] = 'A';
+
+// 9b. Switching to Rex via topbar opens password prompt & rejects wrong password
+requestAccountSwitch('rex');
+assert(
+  AppState.loginModalOpen === true &&
+  AppState.pendingLoginAccount === 'rex' &&
+  AppState.currentAccount === 'test1',
+  'Switching to Rex requires password prompt and keeps active account on test1 until verified'
+);
+
+document.getElementById('login-password-input').value = 'wrongpass';
+submitAccountPassword();
+assert(
+  AppState.loginModalOpen === true &&
+  AppState.currentAccount === 'test1' &&
+  document.getElementById('login-error-msg').style.display === 'block',
+  'Wrong password blocks switch and displays child-friendly error message'
+);
+
+// 9c. Mixed-case whitespace-trimmed password unlocks Rex and isolates session state
+document.getElementById('login-password-input').value = '  ReX ';
+submitAccountPassword();
+assert(
+  AppState.currentAccount === 'rex' &&
+  AppState.loginModalOpen === false &&
+  !AppState.arenaUserAnswers['TMP-Q'],
+  'Case-insensitive password ("  ReX ") unlocks Rex account and wipes previous user session state'
+);
+
+// 9d. Switching to Hugo requires "HUGO" case-insensitive check
+requestAccountSwitch('hugo');
+document.getElementById('login-password-input').value = 'HUGO';
+submitAccountPassword();
+assert(
+  AppState.currentAccount === 'hugo' &&
+  AppState.loginModalOpen === false,
+  'Case-insensitive password ("HUGO") unlocks Hugo account'
+);
+
+// 9e. iPhone TTS synchronous playback protection & double-pass queue
+let ttsCancelCount = 0;
+const spokenTexts = [];
+global.speechSynthesis.speaking = false;
+global.speechSynthesis.pending = false;
+global.speechSynthesis.paused = false;
+global.speechSynthesis.cancel = () => { ttsCancelCount++; };
+global.speechSynthesis.speak = (u) => { spokenTexts.push(u.text); };
+
+TTSEngine.speak('surname', { rate: 1.0 });
+assert(
+  ttsCancelCount === 0 && spokenTexts.length === 1 && spokenTexts[0] === 'surname',
+  'iPhone TTS skips redundant cancel() when idle and speaks synchronously in tap gesture'
+);
+
+const sampleAudioQ = bank.questions.find(q => Array.isArray(q.audioLines) && q.audioLines.length >= 2);
+spokenTexts.length = 0;
+ttsCancelCount = 0;
+playArenaAudio(sampleAudioQ.code, 'double');
+const expectedQueueLen = sampleAudioQ.audioLines.length * 2 + 1;
+assert(
+  ttsCancelCount === 0 &&
+  spokenTexts.length === expectedQueueLen &&
+  spokenTexts.includes('Now listen again.'),
+  `playArenaAudio double-pass queues all ${expectedQueueLen} utterances synchronously in 1 tap (with "Now listen again.")`
+);
+assert(
+  js.includes('SILENT_WAV_DATA_URI') && js.includes('audioSession') && !js.includes("addEventListener('touchstart', unlockOnFirstGesture"),
+  'TTSEngine upgrades iPhone WebKit to playback session and removes broken touchstart single-shot trap'
 );
 
 console.log('----------------------------------------------------------------');

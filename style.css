@@ -3365,6 +3365,8 @@ body.layout-iphone-15pro .ac-footer {
   .ac-nav-tabs,
   .ac-footer,
   .ac-fx-layer,
+  .ac-login-modal,
+  .ac-login-modal.open,
   .rw-toolbar,
   .pod-controls-bar,
   .no-print,
@@ -3432,5 +3434,247 @@ body.layout-iphone-15pro .ac-footer {
   .print-page-break {
     page-break-before: always;
     break-before: page;
+  }
+}
+
+/* ==========================================================================
+   進場選帳號與密碼驗證視窗 (Animal Crossing Boarding Passport Modal)
+   ========================================================================== */
+.ac-login-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(45, 36, 26, 0.84);
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.ac-login-modal.open {
+  display: flex;
+}
+
+.ac-login-card {
+  width: 100%;
+  max-width: 560px;
+  max-height: 92dvh;
+  overflow-y: auto;
+  background: var(--ac-cream, #F7F4EB);
+  border: 4px solid var(--ac-wood-border, #8B6544);
+  border-radius: 26px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+  padding: 22px 24px;
+  color: var(--ac-wood, #5C3D2E);
+}
+
+.ac-login-header {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.ac-login-badge {
+  display: inline-block;
+  background: var(--ac-green, #78C850);
+  color: #FFFFFF;
+  font-size: 0.78rem;
+  font-weight: 900;
+  padding: 4px 14px;
+  border-radius: 999px;
+  border: 2px solid var(--ac-green-dark, #2D6A4F);
+  margin-bottom: 8px;
+}
+
+.ac-login-title {
+  font-size: 1.32rem;
+  font-weight: 900;
+  color: var(--ac-wood, #5C3D2E);
+  margin: 4px 0;
+}
+
+.ac-login-sub {
+  font-size: 0.88rem;
+  color: var(--ac-wood-light, #7A5C48);
+  margin: 0;
+}
+
+.ac-login-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.ac-login-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 14px 10px;
+  border-radius: 18px;
+  background: #FFFFFF;
+  border: 3px solid #D6C7B2;
+  cursor: pointer;
+  font-family: inherit;
+  color: var(--ac-wood, #5C3D2E);
+  transition: transform 0.14s ease, border-color 0.14s ease, background 0.14s ease;
+  text-align: center;
+}
+
+.ac-login-option:hover,
+.ac-login-option.active {
+  border-color: var(--ac-green-dark, #2D6A4F);
+  background: #EDFCE4;
+  transform: translateY(-2px);
+}
+
+.ac-login-option.is-sandbox {
+  background: #FFFDF7;
+}
+
+.ac-login-option.is-sandbox:hover,
+.ac-login-option.is-sandbox.active {
+  border-color: var(--ac-blue, #48CAE4);
+  background: #E8F7FD;
+}
+
+.ac-login-avatar {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.ac-login-meta strong {
+  display: block;
+  font-size: 1rem;
+  font-weight: 900;
+}
+
+.ac-login-meta small {
+  display: block;
+  font-size: 0.76rem;
+  color: var(--ac-wood-light, #7A5C48);
+  margin-top: 2px;
+}
+
+.ac-login-lock {
+  display: inline-block;
+  font-size: 0.74rem;
+  font-weight: 800;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: #FFF3D6;
+  color: #9A5B00;
+  border: 1.5px solid #E9B949;
+}
+
+.ac-login-lock.unlocked {
+  background: #E0F5FB;
+  color: #0077B6;
+  border-color: #72CBE8;
+}
+
+.ac-login-pw-panel {
+  background: #FFFFFF;
+  border: 2.5px solid var(--ac-green, #78C850);
+  border-radius: 16px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+}
+
+.ac-login-pw-label {
+  display: block;
+  font-size: 0.92rem;
+  font-weight: 900;
+  margin-bottom: 8px;
+  color: var(--ac-wood, #5C3D2E);
+}
+
+.ac-login-pw-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ac-login-pw-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 16px;
+  font-weight: 700;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 2px solid #C8B6A0;
+  background: #FFFDF8;
+  color: var(--ac-wood, #5C3D2E);
+  outline: none;
+}
+
+.ac-login-pw-input:focus {
+  border-color: var(--ac-green-dark, #2D6A4F);
+  background: #FFFFFF;
+}
+
+.ac-login-eye-btn {
+  flex: 0 0 auto;
+  font-size: 1rem;
+  padding: 9px 12px;
+}
+
+.ac-login-error {
+  margin-top: 8px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: #FDE8EC;
+  border: 1.5px solid #F29AAA;
+  color: #B91C1C;
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.ac-login-pw-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.ac-login-submit-btn {
+  flex: 1 1 180px;
+  font-weight: 900;
+  padding: 10px 14px;
+}
+
+.ac-login-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding-top: 8px;
+  border-top: 1.5px dashed #DECBB2;
+}
+
+.ac-login-audio-status {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--ac-green-dark, #2D6A4F);
+}
+
+@media (max-width: 520px) {
+  .ac-login-card {
+    padding: 16px 14px;
+    border-radius: 20px;
+  }
+
+  .ac-login-title {
+    font-size: 1.12rem;
+  }
+
+  .ac-login-grid {
+    gap: 8px;
+  }
+
+  .ac-login-option {
+    padding: 10px 8px;
   }
 }

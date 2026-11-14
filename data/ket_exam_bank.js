@@ -5,7 +5,7 @@
  */
 const KET_EXAM_BANK = {
   "version": "2.1.0",
-  "generatedAt": "2026-11-14T00:49:49.458Z",
+  "generatedAt": "2026-11-14T01:35:01.654Z",
   "ketParts": [
     {
       "id": "RWP1",

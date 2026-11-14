@@ -4,7 +4,7 @@
 --------------------------------------------------------------------------------
 - 建立日期：2026-11-12
 - 最後更新：2026-11-14
-- 當前狀態：Phase A ~ G 全數完工並正式推上 GitHub Pages（`data/ket_exam_bank.js` 累計 **154 題 / 550.6 KB**，`Unit 1/2/3` 各自 100% 覆蓋全部 14 個官方 KET Part；透過 `LAUNCH_RESET_EPOCH = '20261114_official_v1'` 與 Firebase 覆寫完成 `Rex` / `Hugo` 正式上線歸零，保留 `test1` / `test2` 測試帳號）
+- 當前狀態：Phase A ~ G 完工並已推送 GitHub Pages（含 **iPhone Safari/Chrome TTS 強制 Playback 解鎖 + 同步佇列** 與 **進場強制選帳號・密碼驗證閘門 (`#ac-login-modal`)**，通過全套回歸驗收）
 - 線上網址 (GitHub Pages)：https://ddd8836203.github.io/cambridge-ket-island/
 - GitHub 倉庫：https://github.com/ddd8836203/cambridge-ket-island
 - 適用對象：Rex (6年級)、Hugo (5年級)、維護 AI Agent、英語教學人員
@@ -14,7 +14,7 @@
   3. iPhone 15 Pro 直向 (`1179×2556` ➔ CSS `393×852` @3x, 支援 Dynamic Island 與 Home 安全區)
   4. Windows 桌面端 Chrome / Edge
 - 下一步待辦 (Next Actions)：
-  1. 雙 iPad 與 iPhone 15 Pro 直接開啟 GitHub Pages 網址即可同步全新歸零後之 Rex / Hugo 正式帳號。
+  1. 雙 iPad、iPhone 15 Pro 與桌機直接使用 GitHub Pages 線上版，透過護照登入驗證切換考生帳號。
   2. 後續視需求擴充 Unit 4 ~ Unit 12。
 --------------------------------------------------------------------------------
 
@@ -37,6 +37,7 @@
 - [#ARCH-10] 紙筆自評（「看答案 ➔ 我答對 / 我答錯」）、本輪重設與動態聯動膠囊設計原因：支援先紙筆作答再自主批改計分、徹底清除 `Revision` 劇透佔位提示、保留長期紅綠統計同時一鍵恢復本輪未答狀態，並按單元即時計算各 Part 題數。
 - [#ARCH-11] 全單元 14 Part 零缺口標準化與平行分片出題架構：將原本跨單元分散的 14 個 KET 官方考科補齊至 Unit 1/2/3 每單元皆滿 14 Part，消滅切換單元後出現大量「0」膠囊之空洞體驗。
 - [#ARCH-12] Cambridge 官方全真 A4 考卷編排與同篇文本去重合併演算法：按 `ketPart` + 非空 `passageTitle` 將共享文章與圖片合併置頂印出一次，杜絕 5–7 題重複印出同一篇文章，並在學生空白卷徹底屏蔽答案、四維詳解與聽力稿。
+- [#WHY-13] iPhone WebKit 靜音撥片繞過 / 語音防吞音 (`TTSEngine`) 與進場選帳號密碼閘門設計原因：修正 `touchstart` 假解鎖、強制 `playback` 音訊通道與同步佇列以解決 iPhone 無聲問題，並透過進場與頂部切換帳號密碼檢查防止混用帳號及新設備歸零蓋寫雲端。
 
 ================================================================================
 📖 二、單一真實來源細節 (Single-Source Detailed Specifications)
@@ -284,3 +285,14 @@ window.KET_DATA = {
   1. **共享文章合併 (`groupPrintQuestionsByPart` + `normalizePrintHtml`)**：同一單元、同一 `ketPart` 且具備相同非空 `passageTitle` 之多題（例如 RWP2 5–7 題、RWP3 5 題、RWP4 6 題、LSP5 5 題），僅於群組頁首印出一次 `.ket-paper-passage` 與共同插圖（`sharedImage`）；各小題仍會核對 `normalizePrintHtml(q.passageHtml)` 是否與頁首一致，僅一致時略過重複渲染，確保跨版面零缺漏且節省紙張。
   2. **空白卷零劇透隔離**：`showAnswers === false` 時隱藏全部答案框（`.ket-paper-answer-box`）與聽力逐字稿（僅保留 `.ket-paper-listening-meta` 提示由老師網頁播放錄音）；`showAnswers === true` 才展開標準答案、四維詳解、13/15 盾寫作範例與含 `[★關鍵線索]` / `[⚠干擾陷阱]` 標記之聽力逐字稿。
   3. **紙筆排版防切頁**：`style.css` `@media print` 嚴格設定 `.ket-paper-passage`, `.ket-paper-q-row`, `.ket-paper-writing-box`, `.ket-paper-answer-box`, `.ket-notice-box`, `.ket-sms-box`, `.ket-email-box`, `.ket-triple-grid` 禁止題中跨頁截斷（`break-inside: avoid`），標題（`.ket-paper-section-bar`, `.ket-paper-part-head`）禁止孤立留於頁尾（`break-after: avoid`）。
+
+---
+
+### [#WHY-13] iPhone WebKit 靜音撥片繞過 / 語音防吞音 (`TTSEngine`) 與進場選帳號密碼閘門設計原因
+- **iPhone 按喇叭無聲四大根因與解法**：
+  1. **靜音模式通道差異 (`ambient` vs `playback`)**：iPhone 具側邊靜音開關（新款 iPad 無），預設 `SpeechSynthesis` 與 `AudioContext` 走 `ambient` 通道導致靜音開關一開即完全消音。改由 `navigator.audioSession.type = 'playback'` 搭配合法 8-bit 8kHz PCM 靜音 WAV `<audio>` 橋接器（`SILENT_WAV_DATA_URI`）強制切換 iOS 至媒體播放通道。
+  2. **`touchstart` 假解鎖與區域變數 GC**：移除無法真正啟用 WebKit 音訊且會提早鎖死的 `touchstart` 單次監聽，改為 `click` / `touchend` 解鎖（並在進場登入按鈕同步執行）；並將所有 `SpeechSynthesisUtterance` 留存於全域 `window.__ttsUtterancePool` 防止中途遭 GC 回收。
+  3. **非同步 `cancel()` 吞音與多句計時器中斷**：閒置時 (`!synth.speaking && !synth.pending`) 嚴禁呼叫 `cancel()` 而直接於點擊手勢內同步發音；聽力雙遍／對話連播改由 `TTSEngine.speakSequence()` 在單次點擊內一次排入第一遍、`Now listen again.` 與第二遍，消滅 iOS Timer 攔截第 2 句問題；並優先選用 `localService !== false` 之系統內建英式語音。
+- **進場選帳號・大小寫不限密碼閘門 (`#ac-login-modal`) 與跨設備安全同步**：
+  1. 每次開頁／重整於 `initApp()` 強制顯示 `#ac-login-modal`（`@media print` 自動隱藏）；`rex` / `hugo` 密碼預設為不限大小寫之英文帳號名稱（`.trim().toLowerCase()` 比對），`test1` / `test2` 免密碼直接進入；頂部膠囊切換回 `rex` / `hugo` 時同樣觸發密碼檢查，且切換帳號自動清空前一位考生的畫面暫存（`arenaUserAnswers` 等）。
+  2. 修正 `AccountManager.loadAccount()` 不主動 `pushToCloud()` 歸零預設值，確保 Rex/Hugo 於新裝置初次登入時能先透過 `syncFromCloud()` 拉取雲端既有成績，不因新設備無本機快取而覆寫 Firebase。

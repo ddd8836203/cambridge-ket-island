@@ -4,12 +4,12 @@
 --------------------------------------------------------------------------------
 - 建立日期：2026-11-12
 - 最後更新：2026-11-14
-- 當前狀態：Phase A ~ G 全數完工並正式上線 GitHub Pages（`data/ket_exam_bank.js` 完成 **154 題 / 550.6 KB**，U1/U2/U3 各自 100% 覆蓋官方 14 Part；`Rex` 與 `Hugo` 帳號已透過 Firebase 覆寫與 `LAUNCH_RESET_EPOCH = '20261114_official_v1'` 完成全新歸零，保留 `test1`/`test2`）
+- 當前狀態：Phase A ~ G 完工並已推送 GitHub Pages（完成 **iPhone WebKit 語音通道與同步佇列修復** 暨 **進場強制選帳號・密碼驗證閘門 (`#ac-login-modal`)** 實作並全數通過驗收）
 - 線上網址 (GitHub Pages)：https://ddd8836203.github.io/cambridge-ket-island/
 - GitHub 倉庫：https://github.com/ddd8836203/cambridge-ket-island
 - 適用對象：AI Agent 跨視窗無縫交接、專案進度追蹤
 - 下一步待辦 (Next Actions)：
-  1. 線上版已同步更新，供 Rex 與 Hugo 正式使用。
+  1. 線上版已更新，Rex 與 Hugo 可於跨裝置登入使用（`test1` / `test2` 免密碼）。
   2. 後續如有 Unit 4~12 擴充需求再依 `build_exam_bank.js` 推進。
 --------------------------------------------------------------------------------
 
@@ -29,6 +29,7 @@
 - [#MEM-12] 2026-11-14 Phase E 考場 UX、全鍵入「看答案＋紙筆自評」、全部恢復未答與聯動膠囊數字完工：新增底部上下題導覽與鍵盤快捷鍵、移除 Revision 佔位劇透、完成 `resetAllArenaProgress` 與 `matchesArenaUnitFilter` 交叉計算，通過 `verify_phase_e.js` 20 項全檢。
 - [#MEM-13] 2026-11-14 Phase F Unit 1~3 全 14 大 Part 零缺口擴充至 154 題完工：平行擴充 U1(+15=49), U2(+17=49), U3(+22=50) 並編譯為 154 題 (`550.6 KB`) `ket_exam_bank.js`，消除 `./temp/` 並通過 `verify_phase_f.js` 9 項全檢。
 - [#MEM-14] 2026-11-14 Phase G Cambridge 官方 A4 考卷列印引擎重構與全系統總驗收完工：重寫 `#view-print` 接入 154 題自足題庫與個人化 KET 錯題卷，實作共享短文去重與教師四維詳解/聽力稿雙模態，通過 `verify_phase_g.js` 及全套回歸閘門 100% PASS。
+- [#MEM-15] 2026-11-14 Rex/Hugo 正式歸零上線、iPhone 語音徹底修復與進場選帳號密碼閘門實作：完成 Firebase/本機歸零推版，並針對 iPhone 修復 `playback` 音訊橋接與 `speakSequence` 同步連播，且建立進場／切帳強制驗證機制（待本機測試後推上 GitHub）。
 
 ================================================================================
 📖 二、單一真實來源細節 (Single-Source Detailed Specifications)
@@ -232,3 +233,13 @@
   2. 實作 `groupPrintQuestionsByPart()` 自動合併同單元、同 Part、同標題之共享文章與圖片，並強制區分學生空白卷（零答案與逐字稿劇透）與教師詳解卷（標準答案、四維詳解、13/15 盾範文與含關鍵線索／陷阱標記之聽力逐字稿）。
 - **Git 狀態備註**：依使用者先前回饋保留於本機測試，未推送 GitHub。
 - **驗收結果**：Phase A–G 全部自動化驗證腳本與 `154` 題執行期全掃描全數 100% PASS（`verify_phase_e.js` 20 PASS、`verify_phase_f.js` 9 PASS、`verify_phase_g.js` 44 PASS）。
+
+---
+
+### [#MEM-15] 2026-11-14 Rex/Hugo 正式歸零上線、iPhone 語音徹底修復與進場選帳號密碼閘門實作
+- **執行重點與細節**：
+  1. **帳號歸零與同步防護**：已以 REST `PUT` 將 Firebase `/ket_prep_v1_users/rex` 與 `/hugo` 歸零為 `0` 哩 `0` 盾並寫入 `resetEpoch: '20261114_official_v1'`（保留 `test1`/`test2`）；修正 `AccountManager.loadAccount()` 不在初次本機讀檔時主動 `pushToCloud()` 蓋寫雲端，僅於用戶真實作答或偵測無新 Epoch 舊雲端時才寫回。
+  2. **iPhone Safari / Chrome 語音修復 (`TTSEngine`)**：實作 `navigator.audioSession.type = 'playback'` + 8-bit PCM 靜音 WAV `<audio>` 橋接器繞過靜音撥片限制；移除 `touchstart` 假解鎖並改用 `click`/`touchend`；加入 `window.__ttsUtterancePool` 抗 GC、iOS `localService` 語音篩選、Idle 免 `cancel()` 與 `speakSequence()`（含考場雙遍 `"Now listen again."` 同步排入）消除後續句無聲。
+  3. **進場選帳號＋密碼驗證 (`#ac-login-modal`)**：修改 `index.html`、`style.css`（嚴守 0 `backdrop-filter: blur()` 與 16px 防 iOS 輸入自動放大）與 `app.js`：`rex`/`hugo` 進場與頂部切換皆須驗證大小寫不限之英文名密碼，`test1`/`test2` 免密進入；切換帳號自動清除前考生 UI 暫存，登入卡片另附「🔊 測試 iPhone / 平板發音」鈕及頁尾「👤 換人登入」鎖定鈕。
+- **Git 狀態備註**：已於本機測試確認完畢並執行 commit & `git push origin main` 部署至 GitHub Pages。
+- **驗收結果**：`verify_phase_g.js` 擴充至 **55 PASS, 0 FAILED**，全套 `verify_phase_a..g` 與 `verify_phase_6_e2e.js` 全數 100% PASS。
